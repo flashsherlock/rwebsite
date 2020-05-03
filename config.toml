@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://gufei.netlify.app/"
 languageCode = "en-us"
 hasCJKLanguages = "true"
 title = "Fei"
