@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="chinese">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="dist\favicon1.ico">
+    <!-- 包含 bootstrap 样式表和font-awsome字体和自己的样式表 -->
+    <link rel="stylesheet" href="dist\css\bootstrap.min.css">
+    <link rel="stylesheet" href="dist\css\font-awesome.min.css">
+    <link rel="stylesheet" href="dist\css\jqueryandbootstrap.css">
+    <title>JQuery和Bootstrap</title>
+</head>
+
+<body data-spy="scroll" data-target="#navbar1">
+    <nav id="navbar1" class="nabar navbar-default navbar-fixed-top">
+        <div class="container">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+  <span class="sr-only">Toggle navigation</span>
+  <span class="icon-bar"></span>
+  <span class="icon-bar"></span>
+  <span class="icon-bar"></span>
+</button>
+                <a id="image-igem" class="navbar-brand" href="#"><img src="dist\iGEM.jpg" alt="iGEM作业" height="50px"></a>
+            </div>
+            <!--导航栏开始-->
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#date">前言</a></li>
+                    <!--下拉菜单部分-->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">JQuery <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#jchar">特点</a></li>
+                            <li><a href="#jprob">问题</a></li>
+                        </ul>
+                    </li>
+                    <!--下拉菜单部分-->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Bootstrap <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#bchar">特点</a></li>
+                            <li><a href="#bprob">问题</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!--搜索表单-->
+                <form class="navbar-form navbar-right" action="https://www.baidu.com/baidu" target="_blank">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div id="in" class="input-group-addon" style="border-top-left-radius:15px;border-bottom-left-radius:15px"><i class="icon-search"></i></div>
+                            <input type="text" name="word" class="form-control" placeholder="Search(百度)">
+                            <span class="input-group-btn">
+                   <button type="submit" class="btn btn-default" style="border-top-right-radius:15px;border-bottom-right-radius:15px">搜索</button>
+               </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--导航栏结束 -->
+        </div>
+        <!--navbar-container -->
+    </nav>
+    <!--导航条结束 -->
+    <div class="container">
+        <div class="article">
+            <h1 id="head">网页前端：JQuery和Bootstrap</h1>
+            <div id="author">
+                <img class="img-circle" id="author-img" src="dist\IMG_9250.png" alt="作者">
+                <span id="infor1"><span class="glyphicon glyphicon-user"></span> 作者</span>
+                <span id="infor2">谷菲</span>
+                <span id="infor3"><a href="http://psych.bnu.edu.cn" target="_blank" style="text-decoration:none;color:rgb(255, 255, 255)"><i class="icon-home" style="font-size:16px;padding-top:2px"></i> 心理学院</a></span>
+                <div id="date">
+                    <span>2017-2-2 18:46:57</span>
+                </div>
+            </div>
+            <!--author结束-->
+            <h3 id="pre">前言</h3>
+            <p class="first">虽然我并没有打算在iGEM比赛中承担做Wiki的任务，但是由于这学期的实验心理学实验课接触了太多软件和代码，是我感觉到用代码实现自己想法的控制感还是很不错的，再加上寒假的时间还是比较充裕的，所以我就大致看了一下HTML、CSS、JavaScript、JQuery、Bootstrap等。因为只是简单的看了一遍，除了一些例子之外没有什么实践的经验，所以在完成这个作业的时候还是遇到了很多麻烦的，不过好在有参考的实例（不过532那个恐怕就没有了……）。所以其实我还只是一个很不熟练的初学者，我对JQuery和Bootstrap的“哲学”的认识也并不深入，只能算是我的一些感受。</p>
+            <h3>JQuery</h3>
+            <h4 id="jchar">特点</h4>
+            <p style="padding:0px 0px 5px 0px;">JQuery是一个JavaScript库，所以JavaScript是它的基础。虽然我也看了一些JavaScript的内容，但是因为在真正实践的时候并没有怎么用到（正如师兄当时培训的时候说的），所以我对JavaScript没有深入的认识，不过感觉要实现一些动态的交互效果它还是必不可少的。不过虽然没有自己动手使用JavaScript，但事实上在几乎每次实践之中都会间接用到它，这大概就是JQuery的功劳了（应该也有Bootstrap的功劳）。</p>
+            <p>在我看来JQuery就是简化增强的JavaScript，它已经将常用的效果写成了一些函数，只要简单的用toggle、fade之类的就可以实现不错的动画效果。另外，JQuery优化了对元素的选择和对事件的处理，使用JQuery可以像CSS一样对元素进行选择，不用再用繁琐的getElementBy之类的了，处理事件好像也只用.click之类就行了，不用addEventListener或者标签内的onclick之类的了（我的印象，可能有误）。这与一本书中介绍JQuery中所说的用最少的代码做最少的事十分符合。</p>
+            <h4 id="jprob">问题</h4>
+            <p>因为没有对比，并且我也没有什么经验，所以在我看来JQuery并没有什么实际的缺点。不过就像所有的现成的框架，虽然它们让我们可以省去很多麻烦，可以偷懒，但在想要做出个性化的修改的时候会麻烦一些，很可能会牵一发而动全身，特别是像我这样并没有深入的理解的初学者。另外我还觉得用JQuery的时候各种小括号和大括号有些多，虽然有匹配的提示，但还是让我有些混乱，经常找不到后来的部分应该加在哪里……（这显然不是JQuery的问题……HTML的标签有时候也让我很混乱）</p>
+            <h3>Bootstrap</h3>
+            <h4 id="bchar">特点</h4>
+            <p>JQuery可以说是JavaScript的增强版，而与之相比Bootstrap则包含了更加丰富的内容，主要内容应该是CSS文件中的，包括的各种部件样式，甚至还有一套Glyphicons字体（在fonts文件夹中），当然也有js文件中的依赖于JQuery（间接就是依赖JavaScript）的内容，这里面主要应该是下拉菜单、弹出框之类所需的内容。我感觉制作网页的过程就像搭积木，将一个一个部件修饰好，并按照合适的方式搭起来就好，最重要和最困难的是把每个部件放在合适的位置，并且在不同设备和浏览器上看起来都比较美观，而不像编程序解决问题的时候主要需要思考解决问题的方法。而Bootstrap中的这些现成的框架给了我们更多漂亮的积木，设置一些已经搭起来的半成品。另外，Bootstrap还有现成的响应式布局来应对不同的设备，这都是已经写好的，因此在使用一些部件的时候已经不用考虑不同设备的呈现问题了，即使有的部件没有现成的响应式的功能，也可以通过Bootstrap提供的每行12列的表格以及内置的不同设备的分界点来控制不同屏幕的呈现效果，这省去了不少的麻烦，这种响应式的布局好像也是Bootstrap的哲学所在（不过没怎么看其他的几个前端框架）。</p>
+            <h4 id="bprob">问题</h4>
+            <p>要实现Bootstrap提供的效果，需要把相应的部件归为相应的类，有的甚至需要叠加好几个不同的类，这些类的名称虽然有相应的意义，但还是难以记住（可能是我实践的太少），需要经常查询，而且稍有不慎写错了一个字母都会出现问题，而且比较难发现（特别是对于像我这样的初学者）。另外正如在JQuery的问题中提到的，现成的积木想要按自己的想法修饰相对要困难很多，在Bootstrap中更是如此，因为JQuery更多的是简化和增强的JavaScript，只是对一些语句做了改变，没有提供很多现成的样式，而Bootstrap则不同，提供了大量的样式，所以想要修改这些样式要相对困难许多（CSS的优先级的问题就在这里涉及到了）。而且涉及的内容越多也越容易出现各种各样的问题，导致不能正常的呈现。比如右下角返回顶部按钮的弹出框（tooltip）在我开始使用的时候总是不能正常弹出，而我是直接复制的样例的代码，这让我大惑不解，后来仔细看手册（手册的介绍还是十分详细的，而且有很不错的实例）的相应的介绍的内容才发现需要手动添加一段JQuery的语句进行初始化（就是下面这样，之后我发现手册中的这个部分的介绍在遇到问题的时候真的十分有用）。</p>
+            <div class="bs-callout bs-callout-danger" id="callout-tooltip-opt-in" style="margin-top:-10px;">
+                <h4 style="padding:0px">Opt-in functionality</h4>
+                <p>For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning <strong>you must initialize them yourself</strong>.</p>
+                <p>One way to initialize all tooltips on a page would be to select them by their <code>data-toggle</code> attribute:</p>
+                <figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'[data-toggle="tooltip"]'</span><span class="p">).</span><span class="nx">tooltip</span><span class="p">()</span>
+<span class="p">})</span></code></pre></figure>
+            </div>
+        </div>
+        <!--article结束-->
+    </div>
+    <!--页脚-->
+    <footer>
+        <a id="Back" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="返回开头" href="#">
+            <span id="backtop" class="glyphicon glyphicon-menu-up" style="font-size:2.5em;padding-top:8px;color:rgba(26, 169, 194,0.6)"></span>
+        </a>
+        <div id="email">
+            <span>©2017 GuFei &nbsp &nbsp<i class="icon-envelope-alt"></i> email: gufei@mail.bnu.edu.cn</span>
+        </div>
+
+        <div id="link">
+            <span id="ziyuan">资源链接: </span>
+            <span id="link1"><a href="http://jquery.com/" target="_blank"> &nbsp JQuery &nbsp</a> |</span>
+            <span id="link2"><a href="http://v3.bootcss.com/"target="_blank"> &nbsp Bootstrap &nbsp</a> |</span>
+            <span id="link3"><a href="http://glyphicons.com/"target="_blank"> &nbsp Glyphicons &nbsp</a> |</span>
+            <span id="link4"><a href="http://www.bootcss.com/p/font-awesome/"target="_blank"> &nbsp Font-awsome &nbsp</a></span>
+        </div>
+    </footer>
+    <!-- JavaScript 放置在文档最后面可以使页面加载速度更快 -->
+    <!-- 包含 jQuery 库 -->
+    <script src="dist\jquery-3.1.1.min.js"></script>
+    <!-- 合并了 Bootstrap JavaScript 插件 -->
+    <script src="dist\js\bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip(); //初始化弹提示栏tooltip
+        })
+    </script>
+</body>
+
+</html>

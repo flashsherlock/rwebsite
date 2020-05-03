@@ -1,5 +1,6 @@
 baseurl = "/"
 languageCode = "en-us"
+hasCJKLanguages = "true"
 title = "Fei"
 theme = "hugo-lithium"
 googleAnalytics = ""
@@ -8,14 +9,23 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
-
+    
+[[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
 [[menu.main]]
     name = "About"
     url = "/about/"
+    weight = 4
 [[menu.main]]
     name = "GitHub"
     url = "https://github.com/flashsherlock/rwebsite"
-
+    weight = 3
+[[menu.main]]
+    name = "Lab"
+    url = "http://zhouw.psych.ac.cn/"
+    weight = 2
 
 [params]
     description = "A website built through Hugo and blogdown."

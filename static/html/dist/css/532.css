@@ -1,0 +1,358 @@
+/*导航条和里面的高度*/
+nav#navbar1, div#navcontain,
+a#image-igem, .navbar-nav>li>a,
+#sea{
+    height: 32px;
+}
+/*导航条中532movie的边距*/
+a#image-igem {
+    padding: 5px 10px;
+    margin-right: 20px;
+}
+/*导航条中的字体（不含532movie部分）*/
+#navbar,.dropdown-menu {
+    font-family: "Microsoft yahei";
+    font-size: 10px;
+}
+/*导航条中链接的边距*/
+.navbar-nav>li>a {
+    padding: 5px 10px;
+}
+/*导航条中表单*/
+#sea {
+    margin: 0px;
+    padding: 2px 10px;
+}
+/*搜索框*/
+#sou {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    color: white;
+    background-color: transparent;
+    border-color: #242424;
+    height: 23px;
+    width: 80px;
+    margin-top: 2px;
+}
+
+.navbar-inverse #sou {
+    background-color: rgb(80, 80, 80);
+}
+
+#sou:focus {
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(222, 222, 222, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(222, 222, 222, .6);
+}
+
+
+/*搜索框的占位符*/
+input#sou::-webkit-input-placeholder {
+    color: #f0f0f0;
+    font-size: 8px;
+}
+input#sou:-moz-placeholder {
+    /* Firefox 18- */
+    color: #f0f0f0;
+    font-size: 8px;
+}
+input#sou::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #f0f0f0;
+    font-size: 8px;
+}
+input#sou:-ms-input-placeholder {
+    color: #f0f0f0;
+    font-size: 8px;
+}
+
+/*搜索按钮的*/
+#an {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    color: white;
+    background: -webkit-linear-gradient(#4f4f4f, #2f2f2f);
+    background: -o-linear-gradient(#4f4f4f, #2f2f2f);
+    background: linear-gradient(#4f4f4f, #2f2f2f);
+    border-color: #3c3c3c;
+    height: 23px;
+    width: 30px;
+    margin-top: 2px;
+    font-size: 10px;
+    padding: 0px;
+    /*图标居中*/
+}
+
+#an:hover, #an:focus {
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(222, 222, 222, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(222, 222, 222, .6);
+}
+
+/*下拉菜单的背景和颜色*/
+.dropdown-menu {
+    background-color: #282828;
+    border-color: #282828;
+}
+
+.dropdown-menu>li>a {
+    color: #9d9d9d;
+}
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    color: white;
+    background-color: black;
+}
+
+
+/*解决下拉菜单打开后的问题*/
+@media (max-width: 767px) {
+    .navbar-nav .open .dropdown-menu {
+        position: absolute;
+        background-color: #282828;
+    }
+    .navbar-nav .open .dropdown-menu>li>a {
+        padding: 3.5px 20px;
+    }
+}
+
+/*slide的图像*/
+.carousel img {
+    width: 100%;
+    margin: auto;
+}
+
+/*幻灯片的下边距*/
+#carousel-1 {
+    margin-bottom: 9px;
+}
+
+/*slide的图像底部白色*/
+#carousel-1 .gra {
+    width: 100%;
+    height: 7%;
+    position: absolute;
+    bottom: 0px;
+    -webkit-box-shadow: inset 0 -5px 5px rgba(255, 255, 255, 1);
+    box-shadow: inset 0 -5px 5px rgba(255, 255, 255, 1);
+    background: -webkit-linear-gradient(rgba(145, 145, 145, 0), rgba(222, 222, 222, 0.6) 60%, rgba(255, 255, 255, 1));
+    background: -o-linear-gradient(rgba(145, 145, 145, 0), rgba(222, 222, 222, 0.6) 60%, rgba(255, 255, 255, 1));
+    background: linear-gradient(rgba(145, 145, 145, 0), rgba(222, 222, 222, 0.6) 60%, rgba(255, 255, 255, 1));
+}
+
+/*532movie和其它字在两种情况的颜色和高度*/
+.nav1 a#image-igem, .nav1 .navbar-nav>li>a {
+    color: #f0f0f0;
+}
+
+.navbar-inverse a#image-igem, .navbar-inverse .navbar-nav>li>a {
+    color: #9d9d9d;
+}
+
+/*透明的时候focus、hover的背景*/
+.nav1 a#image-igem:hover, .nav1 .navbar-nav>li>a:hover, .nav1 a#image-igem:focus, .nav1 .navbar-nav>li>a:focus, .nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+    background: -webkit-linear-gradient(rgba(6, 6, 6, 0.8), rgba(6, 6, 6, 0.5) 50%, rgba(6, 6, 6, 0.3) 75%, rgba(0, 0, 0, 0));
+    background: -o-linear-gradient(rgba(6, 6, 6, 0.8), rgba(6, 6, 6, 0.5) 50%, rgba(6, 6, 6, 0.3) 75%, rgba(0, 0, 0, 0));
+    background: linear-gradient(rgba(6, 6, 6, 0.8), rgba(6, 6, 6, 0.5) 50%, rgba(6, 6, 6, 0.3) 75%, rgba(0, 0, 0, 0));
+    border-radius: 3px;
+    color: white;
+}
+
+
+/*黑色的时候的背景*/
+.navbar-inverse a#image-igem:hover, .navbar-inverse .navbar-nav>li>a:hover {
+    background-color: black;
+    border-radius: 3px;
+    color: white;
+}
+
+
+/*透明的时候的背景*/
+#navbar1.nav1 {
+    background: -webkit-linear-gradient(rgba(8, 8, 8, 0.8), rgba(8, 8, 8, 0.5) 50%, rgba(8, 8, 8, 0.3) 75%, rgba(8, 8, 8, 0));
+    background: -o-linear-gradient(rgba(8, 8, 8, 0.8), rgba(8, 8, 8, 0.5) 50%, rgba(8, 8, 8, 0.3) 75%, rgba(8, 8, 8, 0));
+    background: linear-gradient(rgba(8, 8, 8, 0.8), rgba(8, 8, 8, 0.5) 50%, rgba(8, 8, 8, 0.3) 75%, rgba(8, 8, 8, 0));
+}
+
+
+/*搜索框和登录的位置*/
+#login, #sea {
+    float: left;
+}
+
+@media (min-width:970px) {
+    #login, #sea {
+        float: right;
+    }
+}
+
+/*导航条的不同位置*/
+#navbar1 {
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    z-index: 1030;
+    min-width: 970px;
+    /*导航条的长度-解决颜色长度问题*/
+}
+
+#navbar1.navbar-inverse {
+    position: fixed;
+    min-width: 970px;
+}
+
+/*页脚返回按钮*/
+
+#backtop {
+    font-size: 1.5em;
+    padding-top: 8px;
+}
+
+#Back {
+    position: fixed;
+    text-align: center;
+    bottom: 40px;
+    right: 40px;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(5, 5, 5, 0.8);
+    height: 40px;
+    width: 40px;
+    border-radius: 50px;
+    display: none;
+}
+
+a#Back:hover {
+    color: white;
+    background-color: rgba(115, 115, 115, 0.5);
+}
+
+a#Back:active {
+    color: white;
+    background-color: rgba(3, 3, 3, 0.9);
+}
+
+/*页脚*/
+footer {
+    background-color: #f5f5f5;
+    text-align: center;
+    padding: 25px 0px;
+    margin-top: 50px;
+}
+
+/*页脚文字*/
+p {
+    font-family: "Microsoft yahei";
+    font-size: 5px;
+    line-height: 15px;
+}
+
+/*图片按钮位置*/
+#bai.carousel-indicators {
+    bottom: 30px;
+}
+
+/*白色图片按钮*/
+#bai.bai li {
+    border-color: rgb(80, 80, 80);
+}
+
+#bai.bai li.active {
+    background-color: rgb(80, 80, 80);
+}
+
+/*海报图片的大小10:7*/
+#gal1 img, #gal2 img, #gal3 img {
+    width: 126px;
+    height: 175px;
+}
+
+
+/*海报图片的链接*/
+a.thu {
+    width: 130px;/*海报图片宽度+4*/
+    padding: 1px 0px 1px 0px;
+    display: block;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+    text-align: center;
+}
+
+a.thu:hover {
+    border-color: #337ab7;
+    -webkit-box-shadow: 2px 2px 8px #337ab7, -2px -2px 8px#337ab7;
+    box-shadow: 2px 2px 8px #337ab7, -2px -2px 8px #337ab7;
+}
+
+/*海报上面的部分*/
+div.bord {
+    border-bottom: 1px solid;
+    border-color: #759fa3;
+    position: relative;
+    margin: 50px 0px 30px 0px;
+}
+
+/*左侧标题*/
+span.zuo {
+    font-weight: bold;
+    font-size: 24px;
+    letter-spacing: 3px;
+    width: 100px;
+    border-bottom: 2px solid;
+    border-color: #c80c0c;
+    float: left;
+    line-height: 34px;
+    position: relative;
+    top: 1px;
+}
+
+/*右侧*/
+span.you {
+    font-size: 8px;
+    position: absolute;
+    right: 3px;
+    bottom: 5px;
+    margin: auto;
+}
+
+/*右侧有上下按钮时再向左偏移*/
+span.you.b {
+    right: 28px;
+}
+
+/*上下按钮和位置*/
+#up, #down {
+    font-size: 2px;
+    font-weight: lighter;
+    position: absolute;
+}
+#up {
+    right: 0px;
+    bottom: 9px;
+}
+#down {
+    right: 0px;
+    bottom: -1px;
+}
+
+/*上面的链接颜色*/
+div.bord a {
+    color: #555555;
+}
+
+div.bord a:hover {
+    color: #337ab7;
+    text-decoration: none;
+}
+
+/*海报文字*/
+p.pic {
+    font-size: 8px;
+    text-align: center;
+}
