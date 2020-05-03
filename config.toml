@@ -3,13 +3,13 @@ languageCode = "en-us"
 hasCJKLanguages = "true"
 title = "Fei"
 theme = "hugo-lithium"
-googleAnalytics = ""
+googleAnalytics = "UA-165298048-1"
 disqusShortname = ""
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
-    
+
 [[menu.main]]
     name = "Home"
     url = "/"
@@ -47,4 +47,3 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     width = 50
     height = 50
     alt = "Logo"
-
