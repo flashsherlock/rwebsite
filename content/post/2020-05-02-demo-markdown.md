@@ -1,9 +1,11 @@
 ---
-title: Demo Markdown Post
+title: Demo Markdown
 author: Fei
 date: '2020-05-02'
 categories:
   - R
+tags:
+  - Markdown
 weight: 2
 ---
 
@@ -26,3 +28,12 @@ When creating a new post, you have to decide whether the post format is Markdown
 ```r
 blogdown::new_post("Post Title", ext = '.Rmd')
 ```
+Use a img tag to define the width of a figure.
+
+```markdown
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" width="50%"/>
+![pie](/post/2020-05-02-demo-markdown_files/pie-1.png)
+```
+
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" width="50%"/>
+![pie](/post/2020-05-02-demo-markdown_files/pie-1.png)

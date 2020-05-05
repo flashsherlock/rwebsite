@@ -30,7 +30,7 @@ fit
 # Including Plots
 
 You can also embed plots. See Figure \@ref(fig:pie) for example:
-
+The width of the plot can be set by `fig.width`, but the output width of it should be set by `out.width`, e.g. `out.width='100%'`.
 ```{r pie, fig.cap='A fancy pie chart.',tidy=FALSE,fig.align='center'}
 par(mar = c(0, 1, 0, 1))
 pie(

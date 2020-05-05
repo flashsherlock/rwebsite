@@ -29,6 +29,11 @@ code {
   background-color: rgba(0, 0, 0, 0.02);
 }
 
+div.figure img,
+p img {
+  width: 100%
+}
+
 .wrapper {
   overflow: hidden;
   position: relative;
