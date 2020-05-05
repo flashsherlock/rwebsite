@@ -41,7 +41,8 @@ Images can be insert by `![]()` or a img tag.
 However, the width is defined by a attribute style in the tag, which can be overwrite by css styles. Therefore, a embedded style sheet should be used.
 
 ```html
-<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 50%; text-align: center"/>
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie"
+style="width: 80%; display: block; margin:0 auto"/>
 ```
 
-<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 50%;text-align: center"/>
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 80%; display: block; margin:0 auto"/>
