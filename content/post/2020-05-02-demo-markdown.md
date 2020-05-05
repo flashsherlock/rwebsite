@@ -28,7 +28,7 @@ When creating a new post, you have to decide whether the post format is Markdown
 ```r
 blogdown::new_post("Post Title", ext = '.Rmd')
 ```
-Images can be insert by `![]()` or a img tag. 
+Images can be insert by `![]()` or a img tag.
 
 ```markdown
 ![pie](/post/2020-05-02-demo-markdown_files/pie-1.png)
@@ -38,10 +38,10 @@ Images can be insert by `![]()` or a img tag.
 <img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" width="50%"/>
 ```
 
-However, the width is defined by a command in the tag, which can be overwrite by css styles. Therefore, a embedded style sheet should be used. 
+However, the width is defined by a command in the tag, which can be overwrite by css styles. Therefore, a embedded style sheet should be used.
 
 ```html
-<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style"width: 50%"/>
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 50%; align: center"/>
 ```
 
-<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 50%"/>
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 50%;align: center"/>
