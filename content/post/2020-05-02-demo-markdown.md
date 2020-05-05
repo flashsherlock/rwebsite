@@ -28,12 +28,20 @@ When creating a new post, you have to decide whether the post format is Markdown
 ```r
 blogdown::new_post("Post Title", ext = '.Rmd')
 ```
-Use a img tag to define the width of a figure.
+Images can be insert by `![]()` or a img tag. 
 
 ```markdown
-<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" width="50%"/>
 ![pie](/post/2020-05-02-demo-markdown_files/pie-1.png)
 ```
-
+ The img tag can also define the width of a figure.
+```html
 <img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" width="50%"/>
-![pie](/post/2020-05-02-demo-markdown_files/pie-1.png)
+```
+
+However, the width is defined by a command in the tag, which can be overwrite by css styles. Therefore, a embedded style sheet should be used. 
+
+```html
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style"width: 50%"/>
+```
+
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 50%"/>
