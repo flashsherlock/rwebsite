@@ -4,7 +4,7 @@ hasCJKLanguages = "true"
 title = "Fei"
 theme = "hugo-lithium"
 googleAnalytics = "UA-165298048-1"
-disqusShortname = ""
+disqusShortname = "gufei"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [permalinks]

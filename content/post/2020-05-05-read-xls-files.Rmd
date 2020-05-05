@@ -1,0 +1,28 @@
+---
+title: Read xls files
+author: Fei
+date: '2020-05-05'
+slug: read-xls-files
+categories:
+  - R
+tags:
+  - data
+  - readfile
+  - homework
+weight: 1
+---
+
+Read xlsx files that contain time records for the online course videos.
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+setwd("/Volumes/WD_D/allsub/ana4")
+```
+
+```{r}
+filename <- dir(pattern = "*.xlsx")
+for (f in filename) {
+  
+}
+```
+

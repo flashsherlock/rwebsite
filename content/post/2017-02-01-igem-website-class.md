@@ -2,10 +2,12 @@
 title: iGEM website class
 author: Fei
 date: '2017-02-01'
-slug: igem-website-class
 categories:
   - Homework
-tags: ["website","homework"]
+tags:
+  - homework
+  - website
+slug: igem-website-class
 ---
 
 # iGEM培训

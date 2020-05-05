@@ -7,6 +7,7 @@ categories:
 tags:
   - Markdown
 weight: 2
+disable_comments: true
 ---
 
 This is a post written in plain Markdown (`*.md`) instead of R Markdown (`*.Rmd`). The major differences are:
