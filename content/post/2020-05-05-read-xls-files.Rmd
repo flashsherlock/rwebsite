@@ -43,6 +43,7 @@ I have stored the data in the [.RData](/post/course_time.RData) file (you can cl
 load("../../static/post/course_time.RData")
 library(DT)
 datatable(results,rownames = FALSE,
+          colnames = c('Click', 'Times_all', 'Class', 'H', 'M','S'),
           caption = htmltools::tags$caption(
             style = 'caption-side: top; text-align: center;',
             htmltools::strong('Watching times of the classes')# bold text

@@ -11,5 +11,5 @@ vendor
 public
 static/figures
 blogdown
-.Rproj.user
+*.Rproj
 /public
