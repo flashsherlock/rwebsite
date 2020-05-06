@@ -1,28 +1,47 @@
 ---
-title: Read xls files
+title: Use gdata package to read xls files
 author: Fei
-date: '2020-05-05'
-slug: read-xls-files
+date: '2020-05-06'
 categories:
   - R
 tags:
   - data
-  - readfile
   - homework
+  - xls
+slug: read-xls-files
 weight: 1
 ---
 
-Read xlsx files that contain time records for the online course videos.
+Openxlsx package can read xlsx files, but not xls files. To read xlsx files that contain time records for the online course videos, gdata package should be used.
 
 ```{r include=FALSE}
-knitr::opts_chunk$set(warning = F, message = F,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
-setwd("/Volumes/WD_D/allsub/ana4")
+knitr::opts_chunk$set(warning = F, message = F, tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+library(gdata)
 ```
 
-```{r}
-filename <- dir(pattern = "*.xlsx")
+```{r eval=FALSE}
+filename <- dir(pattern = "*.xls")
+results <- data.frame(row.names = c("click_times","times","class"))
 for (f in filename) {
-  
-}
+  all_data <- read.xls(f)
+  my_data <- subset(all_data,all_data[2]=="2019******005",select = c(3,4))
+  if (nrow(my_data)) {
+    all_data <- cbind(my_data,substring(f,3,5))
+    results <- rbind(results,all_data)
+  }
+
+# extract hours minutes and seconds
+times <- strsplit(as.character(results$总时长),"[时分秒]")
+# transpose
+times <- t(sapply(times,'[',1:3))
+results <- cbind(results,times)
+names(results) <- c("click_times","times","class","hour","minute","second")
+```
+
+I have stored the data in the [.RData](/post/course_time.RData) file (you can click the link to download it), because the local files can not be accessed when Netlify build the website.
+```{r}
+load("../../static/post/course_time.RData")
+library(DT)
+datatable(results)
 ```
 
