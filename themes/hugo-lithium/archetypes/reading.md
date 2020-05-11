@@ -3,8 +3,7 @@ title: ''
 date: ''
 categories:
   - reading
-draft:
-  - true
+draft: true
 weight: 10
 ---
 
