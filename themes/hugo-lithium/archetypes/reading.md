@@ -1,8 +1,11 @@
 ---
 title: ''
 date: ''
+categories:
+  - reading
+draft:
+  - true
 weight: 10
-draft: true
 ---
 
 # [Title]

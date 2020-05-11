@@ -9,6 +9,7 @@ tags:
   - paper
   - note
 weight: 10
+draft: true
 ---
 
 # [Title]
