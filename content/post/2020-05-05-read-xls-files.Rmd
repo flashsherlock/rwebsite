@@ -17,6 +17,7 @@ Openxlsx package can read xlsx files, but not xls files. To read xlsx files that
 ```{r include=FALSE}
 knitr::opts_chunk$set(warning = F, message = F, tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
 library(gdata)
+load("../../static/post/2020-05-05-read-xls-files_files/course_time.RData")
 ```
 
 ```{r eval=FALSE}
@@ -38,9 +39,8 @@ results <- cbind(results,times)
 names(results) <- c("click_times","times","class","hour","minute","second")
 ```
 
-I have stored the data in the [.RData](/post/course_time.RData) file (you can click the link to download it), because the local files can not be accessed when Netlify build the website.
+I have stored the data in the [.RData](/post/2020-05-05-read-xls-files_files/course_time.RData) file (you can click the link to download it), because the local files can not be accessed when Netlify build the website.
 ```{r}
-load("../../static/post/course_time.RData")
 library(DT)
 datatable(results,rownames = FALSE,
           colnames = c('Click', 'Times_all', 'Class', 'H', 'M','S'),
@@ -49,4 +49,3 @@ datatable(results,rownames = FALSE,
             htmltools::strong('Watching times of the classes')# bold text
           ))
 ```
-
