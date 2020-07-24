@@ -1,0 +1,122 @@
+---
+title: Statistics course
+author: Fei
+date: '2020-07-21'
+slug: statistics-course
+categories:
+  - Homework
+tags:
+  - homework
+weight: 1
+draft: true
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+
+```
+
+# 一元统计总结
+
+## 集中趋势
+
+### 百分位数
+根据百分位求分数
+
+### 百分位分数
+其实就是百分位数，只是有分组的
+
+### 百分等级分数
+知道原始分数，求百分数
+
+## 离散程度
+
+### 方差
+$S^2=\dfrac{\displaystyle \sum_{i=1}^n (X_i-\bar{X})^2}{n-1}=\dfrac{\displaystyle \sum_{i=1}^{n}X_i^2}{n-1}-\bar{X}^2$
+
+### 变异系数
+$CV_\sigma=\dfrac{\sigma}{\mu}$
+
+## 偏态和峰度
+测量有不同的方法，上课讲的是一下两个。
+
+### 偏态
+偏度$a_3= \dfrac{\displaystyle\sum_{i=1}^{n} (X_i-\bar{X})^3}{nS^3}$
+
+### 峰度
+峰度$a_4= \dfrac{\displaystyle \sum_{i=1}^{n} (X_i-\bar{X})^4}{nS^4}$
+
+## 相关分析
+
+### 积差相关
+$r=\dfrac{\displaystyle \sum_{i=1}^{n}(X_i-\bar{X})(Y_i-\bar{Y})}{\sqrt{\displaystyle \sum_{i=1}^{n}(X_i-\bar{X})^2\sum_{i=1}^{n}(Y_i-\bar{Y})^2}}$
+
+### 等级相关
+没有相同的等级的时候比较简单，$r_k=1-\dfrac{6\displaystyle \sum_{i=1}^{n} D_i^2}{n(n^2-1)}$
+
+有没有相同的等级的时候都可以用下面的方法计算，有相同等级的需要计算等级的平均值。其实和积差相关的方法是一样的。
+$r_R=\dfrac{\sum x^2+\sum y^2 -\sum D^2}{2\sqrt{\sum x^2\sum y^2}}$
+
+### 肯德尔和谐系数
+如果是评分是一致的，被评事物的等级和的方差达到最大，此时和谐系数为1
+
+### 点二列相关
+$r_pb=\dfrac{\bar{X_p}-\bar{X_q}}{S_t}\sqrt{pq}$
+
+### $\varphi$系数
+$\varphi=\dfrac{|ad-bc|}{\sqrt{(a+b)(c+d)(a+c)(b+d)}}$
+
+## 随机变量及其分布
+
+### 二项分布
+$np,nq\ge5$的时候近似正态分布，可以直接用正态分布的临界值
+
+## 参数估计
+
+### 常见的抽样分布和理论分布的关系
+样本平均数的分布$\bar{X} \sim N(\mu,\dfrac{\sigma^2}{n})$
+
+样本方差的分布$\dfrac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$
+
+样本比例的分布$\hat{p} \sim N(p,\dfrac{pq}{n})$
+
+两个独立样本方差比的分布$\dfrac{1}{F}=\dfrac{S_1^2}{S_2^2} \sim F(n_1-1,n_2-1)$
+
+相关系数的分布，无论总体相关系数和n如何，都可以进行Fisher-Z变换，$Z_r=\dfrac{1}{2}\cdot\ln\dfrac{1+r}{1-r}$，标准误$SE_r=\dfrac{1}{\sqrt{n-3}}$
+
+## 区间估计
+
+### 两个总体均值
+如果总体方差已知，$SE=\sqrt{\dfrac{\sigma_1^2}{n_1}+\dfrac{\sigma_2^2}{n_2}}$
+
+如果总体方差未知，方差齐性
+$SE=S_p\sqrt{\dfrac{1}{n_1}+\dfrac{1}{n_2}}$，$S_p=\dfrac{df_1S_1^2+df_2S_2^2}{df_1+df_2}$
+
+方差不齐的时候需要校正自由度，但是如果样本量都很大的时候就不用了，$df=\dfrac{(SE_1+SE_2)^2}{\dfrac{SE_1^2}{n_1-1}+\dfrac{SE_2^2}{n_2-1}}$，$SE_1=\dfrac{S_1^2}{n_1}$，$SE_2=\dfrac{S_2^2}{n_2}$
+
+### 两个总体比例之差
+$Z=\dfrac{\hat p_1 - \hat p_2}{\sqrt{p_eq_e\left(\dfrac{1}{n_1}+\dfrac{1}{n_2}\right)}}$
+，其中$p_e=\dfrac{n_1\hat p_1+n_2\hat p_2}{n_1+n_2}$
+
+### 正态总体方差
+
+### 正态总体方差比
+
+### 相关系数
+进行Fisher-Z变换，$Z_r=\dfrac{1}{2}\cdot\ln\dfrac{1+r}{1-r}$，标准误$SE_r=\dfrac{1}{\sqrt{n-3}}$，以此得到估计的区间后再变换回相关系数$r=\dfrac{e^{2Z_r}-1}{e^{2Z_r}+1}$
+
+## 假设检验
+
+## 列联分析
+
+## 回归分析
+预测的置信区间
+估计值（均值）的置信区间
+$$\hat{Y_0} \pm t_{\frac{\alpha}{2}}(n-2)\sqrt{MS_e\left[\dfrac{1}{n}+\dfrac{(X_0-\bar{X})^2}{\displaystyle \sum_{i=1}^n(X_i-\bar{X})^2}\right]}$$
+观测值的置信区间
+$$\hat{Y_0} \pm t_{\frac{\alpha}{2}}(n-2)\sqrt{MS_e\left[1+\dfrac{1}{n}+\dfrac{(X_0-\bar{X})^2}{\displaystyle \sum_{i=1}^n(X_i-\bar{X})^2}\right]}$$
