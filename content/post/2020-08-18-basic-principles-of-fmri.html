@@ -1,0 +1,81 @@
+---
+title: Basic principles of fMRI
+author: Fei
+date: '2020-08-18'
+slug: basic-principles-of-fmri
+categories:
+  - reading
+tags:
+  - fMRI
+weight: 1
+draft: false
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#mr-signal-generation"><span class="toc-section-number">1</span> MR Signal Generation</a><ul>
+<li><a href="#magnetic-moment"><span class="toc-section-number">1.1</span> Magnetic Moment</a></li>
+<li><a href="#angular-momentum"><span class="toc-section-number">1.2</span> Angular Momentum</a></li>
+<li><a href="#spins-in-an-external-magnetic-field"><span class="toc-section-number">1.3</span> Spins in an External Magnetic Field</a></li>
+<li><a href="#energy-difference-between-parallel-and-antiparallel-states"><span class="toc-section-number">1.4</span> Energy Difference between Parallel and Antiparallel States</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="mr-signal-generation" class="section level1">
+<h1><span class="header-section-number">1</span> MR Signal Generation</h1>
+<div id="magnetic-moment" class="section level2">
+<h2><span class="header-section-number">1.1</span> Magnetic Moment</h2>
+<p>Consider a simple rectangular current loop of length (L) and width (W). Magnetic moment µ is defined as the maximum torque divided by the magnetic field strength (B). The maximum torque exerted by the magnetic field when it is perpendicular to the rectangular current is given by multiplying the maximum force exerted on the current element by its width.
+<span class="math display">\[\vec\mu=\dfrac{\vec\tau_{max}}{\vec{B}}=\dfrac{I\vec{B}LW}{\vec{B}}=IA\]</span></p>
+</div>
+<div id="angular-momentum" class="section level2">
+<h2><span class="header-section-number">1.2</span> Angular Momentum</h2>
+<p>The angular momentum is defined as the product of the mass (m), the angular velocity (w), and the radius (r) squared.
+<span class="math display">\[\vec{J}=m \omega r^2\]</span>
+The vectors defining the current flow and rotation have the same direction, so there should exist a scalar factor between the magnetic moment and angular momentum.
+<span class="math display">\[\vec\mu=\gamma\vec{J}\]</span>
+To understand what g represents, let’s consider the simplest atomic nucleus, a single proton. First we must make some assumptions, namely that the charge (q) of the proton is an infinitely small point source, the proton rotates about a radius (r), and its rotation has a period (T).
+<span class="math display">\[\vec\mu=IA=\frac{q}{T} \pi  r^2\]</span>
+<span class="math display">\[\vec{J}=m \omega r^2=m\frac{2\pi}{T}r^2\]</span>
+<span class="math display">\[\therefore \gamma=\frac{\vec\mu}{\vec{J}}=\frac{q}{2m}\]</span>
+Since the charge and mass of the proton (or any other atomic nucleus) never change, <span class="math inline">\(\gamma\)</span> is a constant for a given nucleus, regardless of the magnetic field strength, temperature, or any other factor. The constant <span class="math inline">\(\gamma\)</span> is known as the <strong>gyromagnetic ratio</strong>, and it is critical for MRI.</p>
+</div>
+<div id="spins-in-an-external-magnetic-field" class="section level2">
+<h2><span class="header-section-number">1.3</span> Spins in an External Magnetic Field</h2>
+<p>If we place a magnetic bar that is not spinning into a static magnetic field at an angle θ, it will oscillate back and forth across the main field. However, if the magnetic bar is spinning about its axis, it will wobble around this field instead of oscillating back and forth.</p>
+<div class="figure">
+<img src="/post/2020-08-18-basic-principles-of-fmri_files/spin_in_magnetic_field.png" alt="spin in magnetic field" style="width:80.0%" />
+<p class="caption">spin in magnetic field</p>
+</div>
+<p>A moving charge experiences torque (<span class="math inline">\(\tau\)</span> ) equal to the cross product of the magnitude of its magnetic moment (µ) and main field strength (<span class="math inline">\(B_0\)</span>).
+<span class="math display">\[\vec{\tau}=\vec{\mu} \times \vec{B_0}\]</span>
+Since torque indicates the change in angular momentum over time, it can be defined as the derivative of angular momentum over the derivative of time.
+<span class="math display">\[\vec{\tau}=\frac{\mathrm{d}\vec{J}}{\mathrm{d}t}=\frac{\mathrm{d}\vec{\mu}}{\gamma\mathrm{d}t}=\vec{\mu} \times \vec{B_0}\]</span>
+<span class="math display">\[\therefore \frac{\mathrm{d}\vec{\mu}}{\mathrm{d}t}=\gamma(\vec{\mu} \times \vec{B_0})\]</span>
+We can transform this equation into three separate scalar equations, representing three different dimensions.
+<span class="math display">\[
+\left \{ 
+\begin{array}{l}
+\dfrac{\mathrm{d}{\mu_x}}{\mathrm{d}t}=\gamma\mu_yB_0 \\ 
+\dfrac{\mathrm{d}{\mu_y}}{\mathrm{d}t}=-\gamma\mu_xB_0 \\ 
+\dfrac{\mathrm{d}{\mu_z}}{\mathrm{d}t}=0
+\end{array}
+\right.
+\]</span>
+At time zero, the components along the three directions can be defined as <span class="math inline">\(\mu_{x0}\)</span>, <span class="math inline">\(\mu_{y0}\)</span>, and <span class="math inline">\(\mu_{z0}\)</span>. The total magnetic moment, <span class="math inline">\(\vec\mu(0)\)</span>, is simply the sum of the three components. Here, <span class="math inline">\(\vec{x}\)</span>, <span class="math inline">\(\vec{y}\)</span>, and <span class="math inline">\(\vec{z}\)</span> are unit vectors along the three cardinal directions.
+<span class="math display">\[\vec\mu(0)=\mu_{x0}\vec{x}+\mu_{y0}\vec{y}+\mu_{z0}\vec{z}\]</span>
+Solving the set of differential equations with given the initial conditions at time zero, we can get:
+<span class="math display">\[\vec\mu(t)=(\mu_{x0}\cos ωt+ \mu_{y0}\sin ωt)\vec{x} + (\mu_{y0}\cos ωt − \mu_{x0}\sin ωt)\vec{y}+ \mu_{z0}\vec{z}\]</span>
+Importantly, the angular velocity <span class="math inline">\(\omega\)</span> is given by <span class="math inline">\(\gamma B_0\)</span>, which is the <strong>Larmor frequency</strong>.</p>
+</div>
+<div id="energy-difference-between-parallel-and-antiparallel-states" class="section level2">
+<h2><span class="header-section-number">1.4</span> Energy Difference between Parallel and Antiparallel States</h2>
+</div>
+</div>

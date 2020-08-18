@@ -1,0 +1,72 @@
+---
+title: Basic principles of fMRI
+author: Fei
+date: '2020-08-18'
+slug: basic-principles-of-fmri
+categories:
+  - reading
+tags:
+  - fMRI
+weight: 1
+draft: false
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+
+```
+
+# MR Signal Generation
+## Magnetic Moment
+Consider a simple rectangular current loop of length (L) and width (W). Magnetic moment µ is defined as the maximum torque divided by the magnetic field strength (B). The maximum torque exerted by the magnetic field when it is perpendicular to the rectangular current is given by multiplying the maximum force exerted on the current element by its width.
+$$\vec\mu=\dfrac{\vec\tau_{max}}{\vec{B}}=\dfrac{I\vec{B}LW}{\vec{B}}=IA$$
+
+## Angular Momentum
+The angular momentum is defined as the product of the mass (m), the angular velocity (w), and the radius (r) squared.
+$$\vec{J}=m \omega r^2$$
+The vectors defining the current flow and rotation have the same direction, so there should exist a scalar factor between the magnetic moment and angular momentum.
+$$\vec\mu=\gamma\vec{J}$$
+To understand what g represents, let’s consider the simplest atomic nucleus, a single proton. First we must make some assumptions, namely that the charge (q) of the proton is an infinitely small point source, the proton rotates about a radius (r), and its rotation has a period (T).
+$$\vec\mu=IA=\frac{q}{T} \pi  r^2$$
+$$\vec{J}=m \omega r^2=m\frac{2\pi}{T}r^2$$
+$$\therefore \gamma=\frac{\vec\mu}{\vec{J}}=\frac{q}{2m}$$
+Since the charge and mass of the proton (or any other atomic nucleus) never change, $\gamma$ is a constant for a given nucleus, regardless of the magnetic field strength, temperature, or any other factor. The constant $\gamma$ is known as the **gyromagnetic ratio**, and it is critical for MRI.
+
+## Spins in an External Magnetic Field
+If we place a magnetic bar that is not spinning into a static magnetic field at an angle θ, it will oscillate back and forth across the main field. However, if the magnetic bar is spinning about its axis, it will wobble around this field instead of oscillating back and forth.
+
+![spin in magnetic field](/post/2020-08-18-basic-principles-of-fmri_files/spin_in_magnetic_field.png){width=80%}
+
+A moving charge experiences torque ($\tau$ ) equal to the cross product of the magnitude of its magnetic moment (µ) and main field strength ($B_0$).
+$$\vec{\tau}=\vec{\mu} \times \vec{B_0}$$
+Since torque indicates the change in angular momentum over time, it can be defined as the derivative of angular momentum over the derivative of time.
+$$\vec{\tau}=\frac{\mathrm{d}\vec{J}}{\mathrm{d}t}=\frac{\mathrm{d}\vec{\mu}}{\gamma\mathrm{d}t}=\vec{\mu} \times \vec{B_0}$$
+$$\therefore \frac{\mathrm{d}\vec{\mu}}{\mathrm{d}t}=\gamma(\vec{\mu} \times \vec{B_0})$$
+We can transform this equation into three separate scalar equations, representing three different dimensions.
+$$
+\left \{ 
+\begin{array}{l}
+\dfrac{\mathrm{d}{\mu_x}}{\mathrm{d}t}=\gamma\mu_yB_0 \\ 
+\dfrac{\mathrm{d}{\mu_y}}{\mathrm{d}t}=-\gamma\mu_xB_0 \\ 
+\dfrac{\mathrm{d}{\mu_z}}{\mathrm{d}t}=0
+\end{array}
+\right.
+$$
+At time zero, the components along the three directions can be defined as $\mu_{x0}$, $\mu_{y0}$, and $\mu_{z0}$. The total magnetic moment, $\vec\mu(0)$, is simply the sum of the three components. Here, $\vec{x}$, $\vec{y}$, and $\vec{z}$ are unit vectors along the three cardinal directions.
+$$\vec\mu(0)=\mu_{x0}\vec{x}+\mu_{y0}\vec{y}+\mu_{z0}\vec{z}$$
+Solving the set of differential equations with given the initial conditions at time zero, we can get:
+$$\vec\mu(t)=(\mu_{x0}\cos ωt+ \mu_{y0}\sin ωt)\vec{x} + (\mu_{y0}\cos ωt − \mu_{x0}\sin ωt)\vec{y}+ \mu_{z0}\vec{z}$$
+Importantly, the angular velocity $\omega$ is given by $\gamma B_0$, which is the **Larmor frequency**.
+
+## Energy Difference between Parallel and Antiparallel States
+
+
+
+
+
+
