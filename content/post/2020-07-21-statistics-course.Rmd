@@ -28,11 +28,28 @@ knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='c
 ### 百分位数
 根据百分位求分数
 
+计算指数$i=\dfrac{m}{100}\times{n}$,不是整数i向上取整找到对应的数，是整数求i与i+1对应的数的均值。
+
 ### 百分位分数
 其实就是百分位数，只是有分组的
 
+$P_m=L+\dfrac{\frac{m}{100}+N-F_b}{f}+i$
+
+* $P_m$是第m个百分位分数
+* L是$P_m$所在组的下限
+* f是$P_m$所在组的次数
+* $F_b$是小于L的累积次数
+
 ### 百分等级分数
 知道原始分数，求百分数
+
+$PR=\dfrac{F_b+\frac{f(P_m-L)}{i}}{N}\times{100}$
+
+* PR是百分等级分数
+* L是某特定原始变量所在组的下限
+* f是某特定原始变量所在组的次数
+* $F_b$是小于L的累积次数
+* i是组距
 
 ## 离散程度
 
@@ -43,7 +60,7 @@ $S^2=\dfrac{\displaystyle \sum_{i=1}^n (X_i-\bar{X})^2}{n-1}=\dfrac{\displaystyl
 $CV_\sigma=\dfrac{\sigma}{\mu}$
 
 ## 偏态和峰度
-测量有不同的方法，上课讲的是一下两个。
+测量有不同的方法，上课讲的是下面两个。
 
 ### 偏态
 偏度$a_3= \dfrac{\displaystyle\sum_{i=1}^{n} (X_i-\bar{X})^3}{nS^3}$
@@ -57,13 +74,23 @@ $CV_\sigma=\dfrac{\sigma}{\mu}$
 $r=\dfrac{\displaystyle \sum_{i=1}^{n}(X_i-\bar{X})(Y_i-\bar{Y})}{\sqrt{\displaystyle \sum_{i=1}^{n}(X_i-\bar{X})^2\sum_{i=1}^{n}(Y_i-\bar{Y})^2}}$
 
 ### 等级相关
-没有相同的等级的时候比较简单，$r_k=1-\dfrac{6\displaystyle \sum_{i=1}^{n} D_i^2}{n(n^2-1)}$
+没有相同的等级的时候比较简单
+
+$r_k=1-\dfrac{6\displaystyle \sum_{i=1}^{n} D_i^2}{n(n^2-1)}$
 
 有没有相同的等级的时候都可以用下面的方法计算，有相同等级的需要计算等级的平均值。其实和积差相关的方法是一样的。
+
 $r_R=\dfrac{\sum x^2+\sum y^2 -\sum D^2}{2\sqrt{\sum x^2\sum y^2}}$
 
 ### 肯德尔和谐系数
+就是用等级的方差除以如果所有人评价都一致时的方差（此时方差最大）。
+
 如果是评分是一致的，被评事物的等级和的方差达到最大，此时和谐系数为1
+
+$W=\dfrac{\displaystyle \sum_{i=1}^{n}R_i^2-\frac{(\displaystyle \sum_{i=1}^{n}R_i)^2}{n}}{\frac{1}{12}K^2(n^3-n)}$
+
+* K是评价者数目
+* n是被评价事务数目
 
 ### 点二列相关
 $r_pb=\dfrac{\bar{X_p}-\bar{X_q}}{S_t}\sqrt{pq}$
@@ -104,19 +131,70 @@ $Z=\dfrac{\hat p_1 - \hat p_2}{\sqrt{p_eq_e\left(\dfrac{1}{n_1}+\dfrac{1}{n_2}\r
 ，其中$p_e=\dfrac{n_1\hat p_1+n_2\hat p_2}{n_1+n_2}$
 
 ### 正态总体方差
+$(\dfrac{(n-1)S^2}{\chi_{\frac{\alpha}{2}}^{2}(n-1)},\dfrac{(n-1)S^2}{\chi_{1-\frac{\alpha}{2}}^{2}(n-1)})$
+
+注意分母中的(n-1)是卡方的自由度，不是乘数。
 
 ### 正态总体方差比
+$(\dfrac{S_1^2}{S_2^2}\times{\dfrac{1}{F_{\frac{\alpha}{2}}(n_1-1,n_2-1)}},\dfrac{S_1^2}{S_2^2}\times{F_{\frac{\alpha}{2}}(n_2-1,n_1-1)})$
 
 ### 相关系数
 进行Fisher-Z变换，$Z_r=\dfrac{1}{2}\cdot\ln\dfrac{1+r}{1-r}$，标准误$SE_r=\dfrac{1}{\sqrt{n-3}}$，以此得到估计的区间后再变换回相关系数$r=\dfrac{e^{2Z_r}-1}{e^{2Z_r}+1}$
 
 ## 假设检验
 
+### 非参检验
+非参数检验不能处理交互作用
+
+#### 两个独立样本的差异显著性检验
+* 秩和检验（Mann-Whitney U检验）
+  - 两个样本量都小于10，找小的样本的秩和T，查表
+  - 样本量大于10，T服从正态分布，拿小样本的进行Z检验
+* 中数检验法
+  - 两个样本是否有相同的中数
+  - 混合排列找中数，根据大于和小于中数的个数列出四格表，然后卡方检验
+
+#### 两个相关样本的差异显著性检验
+* 符号检验法
+  - 零假设是差值的中数为零
+  - 样本量小于25时，对于差值只记符号，零不计（也不算到N中）。找出符号中小的数量，查表大于临界值则不显著
+  - 样本量大于25时，正负服从二项分布，进行一点矫正（+0.5）计算z分数
+* 符号等级检验法（Wilcoxon T检验）
+  - 同时考虑到差值的符号和大小
+  - 样本量小于25时，对差值的绝对值进行排列，计算正的差值的和T+和负的差值的和T-然后查表
+  - 样本量大于25时，对T进行z检验
+
+#### 方差分析
+* 克-瓦氏单项方差分析（Kruskal-Wallis检验，独立测量方差分析）
+  - 3组，每组n小于等于5，混合在一起排等级，计算等级之和T，然后计算统计量H并查表。H的分布接近卡方分布。
+  - 组数大于3，n大于5时，可以查卡方表
+* 弗里德曼双向等级方差分析（Friedman检验，重复测量方差分析）
+  - 每个区组（被试）的几个条件排列等级，求每个条件的等级和，计算等级卡方值，然后查表（df=k-1），或者卡方分布表
+
 ## 列联分析
+### k个分组
+计算卡方值，使用实际与预期差的平方除以预期，然后求和.
+
+$\chi^2=\displaystyle \sum_{i=1}^{k}\dfrac{(f_i-e_i)^2}{e_i}$
+
+自由度是k-1
+
+### RC列联表
+自由度$df=(R-1)(C-1)$
 
 ## 回归分析
+$b1=\dfrac{\displaystyle \sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\displaystyle \sum_{i=1}^n(x_i-\bar{x})^2}=\dfrac{\sum {XY}-\dfrac{(\sum {X})(\sum{Y})}{n}}{\sum {X^2}-\dfrac{(\sum {X})^2}{n}}$
+
+$b_0=\bar{y}-b_1\bar{x}$
+
+方程的显著性
+$SST=SSR+SSE \iff \sum(y-\bar{y})^2=\sum(\hat{y}-\bar{y})^2+\sum(y-\hat{y})^2$
+
+其中$\hat{y}$是预测值，y是实际值，$\bar{y}$是实际值的平均值。
+
 预测的置信区间
-估计值（均值）的置信区间
+
+* 估计值（均值）的置信区间
 $$\hat{Y_0} \pm t_{\frac{\alpha}{2}}(n-2)\sqrt{MS_e\left[\dfrac{1}{n}+\dfrac{(X_0-\bar{X})^2}{\displaystyle \sum_{i=1}^n(X_i-\bar{X})^2}\right]}$$
-观测值的置信区间
+* 观测值的置信区间
 $$\hat{Y_0} \pm t_{\frac{\alpha}{2}}(n-2)\sqrt{MS_e\left[1+\dfrac{1}{n}+\dfrac{(X_0-\bar{X})^2}{\displaystyle \sum_{i=1}^n(X_i-\bar{X})^2}\right]}$$

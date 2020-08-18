@@ -1,0 +1,252 @@
+---
+title: Statistics course
+author: Fei
+date: '2020-07-21'
+slug: statistics-course
+categories:
+  - Homework
+tags:
+  - homework
+weight: 1
+draft: true
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#一元统计总结"><span class="toc-section-number">1</span> 一元统计总结</a><ul>
+<li><a href="#集中趋势"><span class="toc-section-number">1.1</span> 集中趋势</a></li>
+<li><a href="#离散程度"><span class="toc-section-number">1.2</span> 离散程度</a></li>
+<li><a href="#偏态和峰度"><span class="toc-section-number">1.3</span> 偏态和峰度</a></li>
+<li><a href="#相关分析"><span class="toc-section-number">1.4</span> 相关分析</a></li>
+<li><a href="#随机变量及其分布"><span class="toc-section-number">1.5</span> 随机变量及其分布</a></li>
+<li><a href="#参数估计"><span class="toc-section-number">1.6</span> 参数估计</a></li>
+<li><a href="#区间估计"><span class="toc-section-number">1.7</span> 区间估计</a></li>
+<li><a href="#假设检验"><span class="toc-section-number">1.8</span> 假设检验</a></li>
+<li><a href="#列联分析"><span class="toc-section-number">1.9</span> 列联分析</a></li>
+<li><a href="#回归分析"><span class="toc-section-number">1.10</span> 回归分析</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="一元统计总结" class="section level1">
+<h1><span class="header-section-number">1</span> 一元统计总结</h1>
+<div id="集中趋势" class="section level2">
+<h2><span class="header-section-number">1.1</span> 集中趋势</h2>
+<div id="百分位数" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> 百分位数</h3>
+<p>根据百分位求分数</p>
+<p>计算指数<span class="math inline">\(i=\dfrac{m}{100}\times{n}\)</span>,不是整数i向上取整找到对应的数，是整数求i与i+1对应的数的均值。</p>
+</div>
+<div id="百分位分数" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> 百分位分数</h3>
+<p>其实就是百分位数，只是有分组的</p>
+<p><span class="math inline">\(P_m=L+\dfrac{\frac{m}{100}+N-F_b}{f}+i\)</span></p>
+<ul>
+<li><span class="math inline">\(P_m\)</span>是第m个百分位分数</li>
+<li>L是<span class="math inline">\(P_m\)</span>所在组的下限</li>
+<li>f是<span class="math inline">\(P_m\)</span>所在组的次数</li>
+<li><span class="math inline">\(F_b\)</span>是小于L的累积次数</li>
+</ul>
+</div>
+<div id="百分等级分数" class="section level3">
+<h3><span class="header-section-number">1.1.3</span> 百分等级分数</h3>
+<p>知道原始分数，求百分数</p>
+<p><span class="math inline">\(PR=\dfrac{F_b+\frac{f(P_m-L)}{i}}{N}\times{100}\)</span></p>
+<ul>
+<li>PR是百分等级分数</li>
+<li>L是某特定原始变量所在组的下限</li>
+<li>f是某特定原始变量所在组的次数</li>
+<li><span class="math inline">\(F_b\)</span>是小于L的累积次数</li>
+<li>i是组距</li>
+</ul>
+</div>
+</div>
+<div id="离散程度" class="section level2">
+<h2><span class="header-section-number">1.2</span> 离散程度</h2>
+<div id="方差" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> 方差</h3>
+<p><span class="math inline">\(S^2=\dfrac{\displaystyle \sum_{i=1}^n (X_i-\bar{X})^2}{n-1}=\dfrac{\displaystyle \sum_{i=1}^{n}X_i^2}{n-1}-\bar{X}^2\)</span></p>
+</div>
+<div id="变异系数" class="section level3">
+<h3><span class="header-section-number">1.2.2</span> 变异系数</h3>
+<p><span class="math inline">\(CV_\sigma=\dfrac{\sigma}{\mu}\)</span></p>
+</div>
+</div>
+<div id="偏态和峰度" class="section level2">
+<h2><span class="header-section-number">1.3</span> 偏态和峰度</h2>
+<p>测量有不同的方法，上课讲的是下面两个。</p>
+<div id="偏态" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> 偏态</h3>
+<p>偏度<span class="math inline">\(a_3= \dfrac{\displaystyle\sum_{i=1}^{n} (X_i-\bar{X})^3}{nS^3}\)</span></p>
+</div>
+<div id="峰度" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> 峰度</h3>
+<p>峰度<span class="math inline">\(a_4= \dfrac{\displaystyle \sum_{i=1}^{n} (X_i-\bar{X})^4}{nS^4}\)</span></p>
+</div>
+</div>
+<div id="相关分析" class="section level2">
+<h2><span class="header-section-number">1.4</span> 相关分析</h2>
+<div id="积差相关" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> 积差相关</h3>
+<p><span class="math inline">\(r=\dfrac{\displaystyle \sum_{i=1}^{n}(X_i-\bar{X})(Y_i-\bar{Y})}{\sqrt{\displaystyle \sum_{i=1}^{n}(X_i-\bar{X})^2\sum_{i=1}^{n}(Y_i-\bar{Y})^2}}\)</span></p>
+</div>
+<div id="等级相关" class="section level3">
+<h3><span class="header-section-number">1.4.2</span> 等级相关</h3>
+<p>没有相同的等级的时候比较简单</p>
+<p><span class="math inline">\(r_k=1-\dfrac{6\displaystyle \sum_{i=1}^{n} D_i^2}{n(n^2-1)}\)</span></p>
+<p>有没有相同的等级的时候都可以用下面的方法计算，有相同等级的需要计算等级的平均值。其实和积差相关的方法是一样的。</p>
+<p><span class="math inline">\(r_R=\dfrac{\sum x^2+\sum y^2 -\sum D^2}{2\sqrt{\sum x^2\sum y^2}}\)</span></p>
+</div>
+<div id="肯德尔和谐系数" class="section level3">
+<h3><span class="header-section-number">1.4.3</span> 肯德尔和谐系数</h3>
+<p>就是用等级的方差除以如果所有人评价都一致时的方差（此时方差最大）。</p>
+<p>如果是评分是一致的，被评事物的等级和的方差达到最大，此时和谐系数为1</p>
+<p><span class="math inline">\(W=\dfrac{\displaystyle \sum_{i=1}^{n}R_i^2-\frac{(\displaystyle \sum_{i=1}^{n}R_i)^2}{n}}{\frac{1}{12}K^2(n^3-n)}\)</span></p>
+<ul>
+<li>K是评价者数目</li>
+<li>n是被评价事务数目</li>
+</ul>
+</div>
+<div id="点二列相关" class="section level3">
+<h3><span class="header-section-number">1.4.4</span> 点二列相关</h3>
+<p><span class="math inline">\(r_pb=\dfrac{\bar{X_p}-\bar{X_q}}{S_t}\sqrt{pq}\)</span></p>
+</div>
+<div id="varphi系数" class="section level3">
+<h3><span class="header-section-number">1.4.5</span> <span class="math inline">\(\varphi\)</span>系数</h3>
+<p><span class="math inline">\(\varphi=\dfrac{|ad-bc|}{\sqrt{(a+b)(c+d)(a+c)(b+d)}}\)</span></p>
+</div>
+</div>
+<div id="随机变量及其分布" class="section level2">
+<h2><span class="header-section-number">1.5</span> 随机变量及其分布</h2>
+<div id="二项分布" class="section level3">
+<h3><span class="header-section-number">1.5.1</span> 二项分布</h3>
+<p><span class="math inline">\(np,nq\ge5\)</span>的时候近似正态分布，可以直接用正态分布的临界值</p>
+</div>
+</div>
+<div id="参数估计" class="section level2">
+<h2><span class="header-section-number">1.6</span> 参数估计</h2>
+<div id="常见的抽样分布和理论分布的关系" class="section level3">
+<h3><span class="header-section-number">1.6.1</span> 常见的抽样分布和理论分布的关系</h3>
+<p>样本平均数的分布<span class="math inline">\(\bar{X} \sim N(\mu,\dfrac{\sigma^2}{n})\)</span></p>
+<p>样本方差的分布<span class="math inline">\(\dfrac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)\)</span></p>
+<p>样本比例的分布<span class="math inline">\(\hat{p} \sim N(p,\dfrac{pq}{n})\)</span></p>
+<p>两个独立样本方差比的分布<span class="math inline">\(\dfrac{1}{F}=\dfrac{S_1^2}{S_2^2} \sim F(n_1-1,n_2-1)\)</span></p>
+<p>相关系数的分布，无论总体相关系数和n如何，都可以进行Fisher-Z变换，<span class="math inline">\(Z_r=\dfrac{1}{2}\cdot\ln\dfrac{1+r}{1-r}\)</span>，标准误<span class="math inline">\(SE_r=\dfrac{1}{\sqrt{n-3}}\)</span></p>
+</div>
+</div>
+<div id="区间估计" class="section level2">
+<h2><span class="header-section-number">1.7</span> 区间估计</h2>
+<div id="两个总体均值" class="section level3">
+<h3><span class="header-section-number">1.7.1</span> 两个总体均值</h3>
+<p>如果总体方差已知，<span class="math inline">\(SE=\sqrt{\dfrac{\sigma_1^2}{n_1}+\dfrac{\sigma_2^2}{n_2}}\)</span></p>
+<p>如果总体方差未知，方差齐性
+<span class="math inline">\(SE=S_p\sqrt{\dfrac{1}{n_1}+\dfrac{1}{n_2}}\)</span>，<span class="math inline">\(S_p=\dfrac{df_1S_1^2+df_2S_2^2}{df_1+df_2}\)</span></p>
+<p>方差不齐的时候需要校正自由度，但是如果样本量都很大的时候就不用了，<span class="math inline">\(df=\dfrac{(SE_1+SE_2)^2}{\dfrac{SE_1^2}{n_1-1}+\dfrac{SE_2^2}{n_2-1}}\)</span>，<span class="math inline">\(SE_1=\dfrac{S_1^2}{n_1}\)</span>，<span class="math inline">\(SE_2=\dfrac{S_2^2}{n_2}\)</span></p>
+</div>
+<div id="两个总体比例之差" class="section level3">
+<h3><span class="header-section-number">1.7.2</span> 两个总体比例之差</h3>
+<p><span class="math inline">\(Z=\dfrac{\hat p_1 - \hat p_2}{\sqrt{p_eq_e\left(\dfrac{1}{n_1}+\dfrac{1}{n_2}\right)}}\)</span>
+，其中<span class="math inline">\(p_e=\dfrac{n_1\hat p_1+n_2\hat p_2}{n_1+n_2}\)</span></p>
+</div>
+<div id="正态总体方差" class="section level3">
+<h3><span class="header-section-number">1.7.3</span> 正态总体方差</h3>
+<p><span class="math inline">\((\dfrac{(n-1)S^2}{\chi_{\frac{\alpha}{2}}^{2}(n-1)},\dfrac{(n-1)S^2}{\chi_{1-\frac{\alpha}{2}}^{2}(n-1)})\)</span></p>
+<p>注意分母中的(n-1)是卡方的自由度，不是乘数。</p>
+</div>
+<div id="正态总体方差比" class="section level3">
+<h3><span class="header-section-number">1.7.4</span> 正态总体方差比</h3>
+<p><span class="math inline">\((\dfrac{S_1^2}{S_2^2}\times{\dfrac{1}{F_{\frac{\alpha}{2}}(n_1-1,n_2-1)}},\dfrac{S_1^2}{S_2^2}\times{F_{\frac{\alpha}{2}}(n_2-1,n_1-1)})\)</span></p>
+</div>
+<div id="相关系数" class="section level3">
+<h3><span class="header-section-number">1.7.5</span> 相关系数</h3>
+<p>进行Fisher-Z变换，<span class="math inline">\(Z_r=\dfrac{1}{2}\cdot\ln\dfrac{1+r}{1-r}\)</span>，标准误<span class="math inline">\(SE_r=\dfrac{1}{\sqrt{n-3}}\)</span>，以此得到估计的区间后再变换回相关系数<span class="math inline">\(r=\dfrac{e^{2Z_r}-1}{e^{2Z_r}+1}\)</span></p>
+</div>
+</div>
+<div id="假设检验" class="section level2">
+<h2><span class="header-section-number">1.8</span> 假设检验</h2>
+<div id="非参检验" class="section level3">
+<h3><span class="header-section-number">1.8.1</span> 非参检验</h3>
+<p>非参数检验不能处理交互作用</p>
+<div id="两个独立样本的差异显著性检验" class="section level4">
+<h4><span class="header-section-number">1.8.1.1</span> 两个独立样本的差异显著性检验</h4>
+<ul>
+<li>秩和检验（Mann-Whitney U检验）
+<ul>
+<li>两个样本量都小于10，找小的样本的秩和T，查表</li>
+<li>样本量大于10，T服从正态分布，拿小样本的进行Z检验</li>
+</ul></li>
+<li>中数检验法
+<ul>
+<li>两个样本是否有相同的中数</li>
+<li>混合排列找中数，根据大于和小于中数的个数列出四格表，然后卡方检验</li>
+</ul></li>
+</ul>
+</div>
+<div id="两个相关样本的差异显著性检验" class="section level4">
+<h4><span class="header-section-number">1.8.1.2</span> 两个相关样本的差异显著性检验</h4>
+<ul>
+<li>符号检验法
+<ul>
+<li>零假设是差值的中数为零</li>
+<li>样本量小于25时，对于差值只记符号，零不计（也不算到N中）。找出符号中小的数量，查表大于临界值则不显著</li>
+<li>样本量大于25时，正负服从二项分布，进行一点矫正（+0.5）计算z分数</li>
+</ul></li>
+<li>符号等级检验法（Wilcoxon T检验）
+<ul>
+<li>同时考虑到差值的符号和大小</li>
+<li>样本量小于25时，对差值的绝对值进行排列，计算正的差值的和T+和负的差值的和T-然后查表</li>
+<li>样本量大于25时，对T进行z检验</li>
+</ul></li>
+</ul>
+</div>
+<div id="方差分析" class="section level4">
+<h4><span class="header-section-number">1.8.1.3</span> 方差分析</h4>
+<ul>
+<li>克-瓦氏单项方差分析（Kruskal-Wallis检验，独立测量方差分析）
+<ul>
+<li>3组，每组n小于等于5，混合在一起排等级，计算等级之和T，然后计算统计量H并查表。H的分布接近卡方分布。</li>
+<li>组数大于3，n大于5时，可以查卡方表</li>
+</ul></li>
+<li>弗里德曼双向等级方差分析（Friedman检验，重复测量方差分析）
+<ul>
+<li>每个区组（被试）的几个条件排列等级，求每个条件的等级和，计算等级卡方值，然后查表（df=k-1），或者卡方分布表</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="列联分析" class="section level2">
+<h2><span class="header-section-number">1.9</span> 列联分析</h2>
+<div id="k个分组" class="section level3">
+<h3><span class="header-section-number">1.9.1</span> k个分组</h3>
+<p>计算卡方值，使用实际与预期差的平方除以预期，然后求和.</p>
+<p><span class="math inline">\(\chi^2=\displaystyle \sum_{i=1}^{k}\dfrac{(f_i-e_i)^2}{e_i}\)</span></p>
+<p>自由度是k-1</p>
+</div>
+<div id="rc列联表" class="section level3">
+<h3><span class="header-section-number">1.9.2</span> RC列联表</h3>
+<p>自由度<span class="math inline">\(df=(R-1)(C-1)\)</span></p>
+</div>
+</div>
+<div id="回归分析" class="section level2">
+<h2><span class="header-section-number">1.10</span> 回归分析</h2>
+<p><span class="math inline">\(b1=\dfrac{\displaystyle \sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\displaystyle \sum_{i=1}^n(x_i-\bar{x})^2}=\dfrac{\sum {XY}-\dfrac{(\sum {X})(\sum{Y})}{n}}{\sum {X^2}-\dfrac{(\sum {X})^2}{n}}\)</span></p>
+<p><span class="math inline">\(b_0=\bar{y}-b_1\bar{x}\)</span></p>
+<p>方程的显著性
+<span class="math inline">\(SST=SSR+SSE \iff \sum(y-\bar{y})^2=\sum(\hat{y}-\bar{y})^2+\sum(y-\hat{y})^2\)</span></p>
+<p>其中<span class="math inline">\(\hat{y}\)</span>是预测值，y是实际值，<span class="math inline">\(\bar{y}\)</span>是实际值的平均值。</p>
+<p>预测的置信区间</p>
+<ul>
+<li>估计值（均值）的置信区间
+<span class="math display">\[\hat{Y_0} \pm t_{\frac{\alpha}{2}}(n-2)\sqrt{MS_e\left[\dfrac{1}{n}+\dfrac{(X_0-\bar{X})^2}{\displaystyle \sum_{i=1}^n(X_i-\bar{X})^2}\right]}\]</span></li>
+<li>观测值的置信区间
+<span class="math display">\[\hat{Y_0} \pm t_{\frac{\alpha}{2}}(n-2)\sqrt{MS_e\left[1+\dfrac{1}{n}+\dfrac{(X_0-\bar{X})^2}{\displaystyle \sum_{i=1}^n(X_i-\bar{X})^2}\right]}\]</span></li>
+</ul>
+</div>
+</div>
