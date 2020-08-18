@@ -40,7 +40,8 @@ Since the charge and mass of the proton (or any other atomic nucleus) never chan
 ## Spins in an External Magnetic Field
 If we place a magnetic bar that is not spinning into a static magnetic field at an angle θ, it will oscillate back and forth across the main field. However, if the magnetic bar is spinning about its axis, it will wobble around this field instead of oscillating back and forth.
 
-![spin in magnetic field](/post/2020-08-18-basic-principles-of-fmri_files/spin_in_magnetic_field.png){width=80%}
+<img src="/post/2020-08-18-basic-principles-of-fmri_files/spin_in_magnetic_field.png" alt="spin in magnetic field" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![spin in magnetic field](/post/2020-08-18-basic-principles-of-fmri_files/spin_in_magnetic_field.png){width=80%} -->
 
 A moving charge experiences torque ($\tau$ ) equal to the cross product of the magnitude of its magnetic moment (µ) and main field strength ($B_0$).
 $$\vec{\tau}=\vec{\mu} \times \vec{B_0}$$
