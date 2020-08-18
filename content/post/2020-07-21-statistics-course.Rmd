@@ -8,7 +8,7 @@ categories:
 tags:
   - homework
 weight: 1
-draft: true
+draft: false
 output:
   blogdown::html_page:
     toc: true
