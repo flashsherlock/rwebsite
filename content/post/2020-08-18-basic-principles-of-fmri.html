@@ -24,16 +24,27 @@ output:
 <li><a href="#angular-momentum"><span class="toc-section-number">1.2</span> Angular Momentum</a></li>
 <li><a href="#spins-in-an-external-magnetic-field"><span class="toc-section-number">1.3</span> Spins in an External Magnetic Field</a></li>
 <li><a href="#energy-difference-between-parallel-and-antiparallel-states"><span class="toc-section-number">1.4</span> Energy Difference between Parallel and Antiparallel States</a></li>
+<li><a href="#magnetization-of-a-spin-system"><span class="toc-section-number">1.5</span> Magnetization of a Spin System</a></li>
+<li><a href="#excitation-of-a-spin-system-and-signal-reception"><span class="toc-section-number">1.6</span> Excitation of a Spin System and Signal Reception</a></li>
+<li><a href="#relaxation-mechanisms-of-a-spin-system"><span class="toc-section-number">1.7</span> Relaxation Mechanisms of a Spin System</a></li>
+<li><a href="#the-bloch-equation-for-mr-signal-generation"><span class="toc-section-number">1.8</span> The Bloch Equation for MR Signal Generation</a></li>
+</ul></li>
+<li><a href="#basic-principles-of-mr-image-formation"><span class="toc-section-number">2</span> Basic Principles of MR Image Formation</a><ul>
+<li><a href="#analysis-of-the-mr-signal"><span class="toc-section-number">2.1</span> Analysis of the MR Signal</a></li>
 </ul></li>
 </ul>
 </div>
 
 <div id="mr-signal-generation" class="section level1">
 <h1><span class="header-section-number">1</span> MR Signal Generation</h1>
+<p><img src="/post/2020-08-18-basic-principles-of-fmri_files/signal_generation.png" alt="signal generation" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/signal_generation.png) --></p>
 <div id="magnetic-moment" class="section level2">
 <h2><span class="header-section-number">1.1</span> Magnetic Moment</h2>
-<p>Consider a simple rectangular current loop of length (L) and width (W). Magnetic moment µ is defined as the maximum torque divided by the magnetic field strength (B). The maximum torque exerted by the magnetic field when it is perpendicular to the rectangular current is given by multiplying the maximum force exerted on the current element by its width.
-<span class="math display">\[\vec\mu=\dfrac{\vec\tau_{max}}{\vec{B}}=\dfrac{I\vec{B}LW}{\vec{B}}=IA\]</span></p>
+<p>Consider a simple rectangular current loop of length (L) and width (W). Magnetic moment µ is defined as the maximum torque divided by the magnetic field strength (B). The maximum torque exerted by the magnetic field when it is perpendicular to the rectangular current is given by multiplying the maximum force exerted on the current element by its width.</p>
+<p><img src="/post/2020-08-18-basic-principles-of-fmri_files/rectangular_current.png" alt="rectangular current" style="width: 50%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/rectangular_current.png) --></p>
+<p><span class="math display">\[\vec\mu=\dfrac{\vec\tau_{max}}{\vec{B}}=\dfrac{I\vec{B}LW}{\vec{B}}=IA\]</span></p>
 </div>
 <div id="angular-momentum" class="section level2">
 <h2><span class="header-section-number">1.2</span> Angular Momentum</h2>
@@ -75,5 +86,121 @@ Importantly, the angular velocity <span class="math inline">\(\omega\)</span> is
 </div>
 <div id="energy-difference-between-parallel-and-antiparallel-states" class="section level2">
 <h2><span class="header-section-number">1.4</span> Energy Difference between Parallel and Antiparallel States</h2>
+<p>Energy difference between the states (∆E) can be calculated by integrating the torque over the 180º rotation angle during this flip, which is also the energy emitted or absorbed in the form of an electromagnetic pulse.
+<span class="math display">\[\Delta E=h\nu=\int_0^{\pi}\tau \mathrm{d}\theta =\int_0^{\pi}\mu B_0 \sin\theta \mathrm{d}\theta=-\mu B_0 \cos\theta\Big|_0^\pi=2\mu B_0\]</span>
+<span class="math display">\[\therefore \nu=\dfrac{2\mu B_0}{h}\]</span>
+It was shown experimentally that the longitudinal component (i.e., along the magnetic field) of the angular momentum J of a proton is h/4π.
+<span class="math display">\[\nu=\dfrac{2\mu B_0}{h}=\gamma J\dfrac{2B_0}{h}=\gamma(\dfrac{h}{4\pi})\dfrac{2B_0}{h}=\dfrac{\gamma}{2\pi}B_0\]</span>
+The correspondence between <span class="math inline">\(\omega\)</span>(rad per second) and <span class="math inline">\(\nu\)</span> (cycle per second) means that a single quantity, the Larmor frequency, governs two aspects of a spin within a magnetic field: the energy that the spin emits or absorbs when changing energy states and the frequency at which it precesses around the axis of the external magnetic field.</p>
+</div>
+<div id="magnetization-of-a-spin-system" class="section level2">
+<h2><span class="header-section-number">1.5</span> Magnetization of a Spin System</h2>
+<p>In the absence of a magnetic field, the spin axes of the nuclei in bulk matter are oriented in random directions, so that the net magnetization (i.e., the sum of all individual magnetic moments) is zero. Once the bulk matter is moved into a magnetic field, each magnetic moment must align itself in either the parallel or antiparallel state. We will refer to the parallel state as p and the antiparallel state as a, and their probabilities are <span class="math inline">\(P_p\)</span> and <span class="math inline">\(P_a\)</span> respectively.
+<span class="math display">\[P_p+P_a=1\]</span>
+The relative proportion of the two spin states depends on their energy difference (∆E) and the temperature (T). This proportion can be determined using Boltzmann’s constant, <span class="math inline">\(k_B\)</span> (1.3806 × 10 –23 J/K), which governs the probabilities of spin distribution under thermal equilibrium.
+<span class="math display">\[\dfrac{P_p}{P_a}=e^{\frac{\Delta E}{Tk_B}}\]</span>
+Given the very small value of Boltzmann’s constant, ∆E/T<span class="math inline">\(k_B\)</span> will be much less than 1 under normal conditions. For very small exponents x, the exponential <span class="math inline">\(e^x\)</span>can be approximated by 1 + x (high-temperature approximation).
+<span class="math display">\[\dfrac{P_p}{P_a}\approx 1+\frac{\Delta E}{Tk_B}\]</span>
+<span class="math display">\[\therefore P_p-P_a=\dfrac{1+\frac{\Delta E}{Tk_B}}{2+\frac{\Delta E}{Tk_B}}-\dfrac{1}{2+\frac{\Delta E}{Tk_B}}=\dfrac{\Delta E}{2Tk_B+\Delta E} \approx \dfrac{\Delta E}{2Tk_B}\]</span>
+Thus, the total magnetic moment, which is called the bulk magnetization or net magnetization, is simply this proportion multiplied by the number of protons per unit volume (n) multiplied by the magnetic moment of each spin in the z direction. The net magnetization is represented by the symbol <span class="math inline">\(\vec M\)</span>, where z is a unit vector in the <span class="math inline">\(\vec z\)</span> direction
+<span class="math display">\[\vec M=(P_p-P_a)n\mu_z\vec z=\dfrac{\Delta E}{2Tk_B}n\mu_z\vec z\]</span>
+Although the net magnetization is initially aligned with the main magnetic field, its precession angle is 0° at equilibrium. When tipped away from this starting position by an excitation pulse, the net magnetization will precess around the main axis of the field, just like a single magnetic moment described previously.
+<span class="math display">\[
+\begin{aligned}
+\vec M(t)&amp;=(M_{x0}\cos ωt+ M_{y0}\sin ωt)\vec{x} + (M_{y0}\cos ωt − M_{x0}\sin ωt)\vec{y}+ M_{z0}\vec{z}\\
+&amp;=M_{x0}（\vec{x}\cos ωt-\vec{y}\sin ωt) + M_{y0}(\vec{x}\sin ωt+\vec{y}\cos ωt )+ M_{z0}\vec{z}
+\end{aligned}
+\]</span></p>
+</div>
+<div id="excitation-of-a-spin-system-and-signal-reception" class="section level2">
+<h2><span class="header-section-number">1.6</span> Excitation of a Spin System and Signal Reception</h2>
+<div id="spin-excitation" class="section level3">
+<h3><span class="header-section-number">1.6.1</span> Spin excitation</h3>
+<p>For hydrogen, the net magnetization oscillates around the main field vector (3T) approximately 128 million times per second. Because the magnetization rotates so rapidly, it is extremely difficult to change the magnetization with a single pulse of electromagnetic energy. Instead, energy is applied at a given frequency for an extended period of time. Let’s take a backyard swing set for example. If you apply energy at the swing’s natural frequency by pushing each time the swing is in the same place, even very small pushes will help increase the velocity of the swing, and thereby increase the energy in the system. This phenomenon—where small applications of energy at a particular frequency can induce large changes in a system—is known as resonance. For similar reasons, MRI scanners use specialized radiofrequency coils to transmit an electromagnetic excitation pulse (<span class="math inline">\(B_1\)</span>) at the spin precession (i.e., Larmor) frequency to exert torque on the spins and perturb them.
+<span class="math display">\[\vec B_1 = B_1 \vec x \cos \omega t − B_1 \vec y \sin \omega t\]</span>
+For clarity, we will refer to the normal frame of reference that is aligned with the magnetic field of the scanner as the laboratory frame and the frame of reference rotating at the Larmor frequency as the rotating frame。</p>
+<p><img src="/post/2020-08-18-basic-principles-of-fmri_files/frame.png" alt="frames" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/frame.png) -->
+The unit vectors in the transverse plane within the rotating frame are represented by <span class="math inline">\(\vec{x^′}\)</span> and <span class="math inline">\(\vec{y^′}\)</span> and correspond to the following unit vectors in the laboratory frame.
+<span class="math display">\[
+\left \{ 
+\begin{array}{l}
+\vec{x&#39;}=\vec{x}\cos ωt-\vec{y}\sin ωt \\ 
+\vec{y&#39;}=\vec{x}\sin ωt+\vec{y}\cos ωt
+\end{array}
+\right.
+\]</span>
+Within the rotating frame, both the spins and the excitation pulse become stationary, making subsequent formulas much simpler.
+<span class="math display">\[\vec M= M_0 \vec z\]</span>
+<span class="math display">\[\vec B_1 = B_1 \vec{x^′}\]</span>
+Similarly to single magnetic moment, applying a torque to the net magnetization will rotate its direction over time.
+<span class="math display">\[\frac{\mathrm{d}\vec{M}}{\mathrm{d}t}=\gamma(\vec{M} \times \vec{B})\]</span>
+The torque on the net magnetization depends on the total magnetic field <span class="math inline">\(\vec{B}\)</span> experienced by the spin system, which is the sum of <span class="math inline">\(\vec{B_0}\)</span> and <span class="math inline">\(\vec{B_1}\)</span>. If the pulse is presented at the resonant frequency of the sample, called <strong>on-resonance excitation</strong>, it will rotate the net magnetization vector from the z direction toward the transverse plane. If the pulse is presented at a slightly different frequency, called <strong>off-resonance excitation</strong>, its efficiency greatly decreases. We define the changing magnetization in the rotating frame as <span class="math inline">\(\frac{\delta \vec{M}}{\delta t}\)</span> (in contrast to the changing magnetization in the laboratory frame <span class="math inline">\(\frac{\mathrm{d}\vec{M}}{\mathrm{d}t}\)</span>).
+<span class="math display">\[
+\begin{aligned}
+\frac{\mathrm{d}\vec{M}}{\mathrm{d}t}
+&amp;=\frac{\mathrm{d}(\vec{x&#39;}M_{x&#39;}+\vec{y&#39;}M_{y&#39;}+\vec{z&#39;}M_{z&#39;})}{\mathrm{d}t}\\
+&amp;=(M_{x&#39;}\frac{\mathrm{d}\vec{x&#39;}}{\mathrm{d}t}+M_{y&#39;}\frac{\mathrm{d}\vec{y&#39;}}{\mathrm{d}t})+(\vec{x&#39;}\frac{\mathrm{d}M_{x&#39;}}{\mathrm{d}t}+\vec{y&#39;}\frac{\mathrm{d}M_{y&#39;}}{\mathrm{d}t}+\vec{z&#39;}\frac{\mathrm{d}M_{z&#39;}}{\mathrm{d}t})\\
+&amp;=[M_{x&#39;}\frac{\mathrm{d}{(\vec{x}\cos ωt-\vec{y}\sin ωt)}}{\mathrm{d}t}+M_{y&#39;}\frac{\mathrm{d}(\vec{x}\sin ωt+\vec{y}\cos ωt)}{\mathrm{d}t}]+\frac{\delta \vec{M}}{\delta t}\\
+&amp;=[M_{x&#39;}\omega(-\vec{y&#39;})+M_{y&#39;}\omega(\vec{x&#39;})]+\frac{\delta \vec{M}}{\delta t}\\
+&amp;=-\omega\vec{z}\times \vec M+\frac{\delta \vec{M}}{\delta t}
+\end{aligned}
+\]</span>
+Within the rotating frame, the change in the net magnetization over time, notated as <span class="math inline">\(\frac{\delta M}{\delta t}\)</span>, is determined by the quantity <span class="math inline">\(B_{1\mathrm{eff}}\)</span>, not by <span class="math inline">\(B_1\)</span> alone.
+<span class="math display">\[\frac{\delta \vec{M}}{\delta t}=\frac{\mathrm{d}\vec{M}}{\mathrm{d}t}+\omega\vec{z}\times \vec M=\gamma(\vec{M}\times\vec{B})+\omega\vec{z}\times \vec M=\gamma\vec{M}\times(\vec{B}-\frac{\omega\vec{z}}{\gamma})\]</span>
+<span class="math display">\[\therefore \vec{B_{1\mathrm{eff}}}=\vec{B}-\frac{\omega\vec{z}}{\gamma}=\vec{z}(B_0-\frac{\omega}{\gamma})+\vec{x&#39;}B_1\]</span>
+If the excitation pulse (B1 ) is at the resonant frequency of the spin system, so that the term <span class="math inline">\((B_0-\frac{\omega}{\gamma})\)</span> will be equal to zero. In other words, if the excitation pulse is <strong>on-resonance</strong>, the net magnetization vector (in the rotating frame) will simply rotate around the x′ component with an angular velocity <span class="math inline">\(ω_{rot}\)</span>.
+<span class="math display">\[ω_{rot}=\gamma B_{1\mathrm{eff}}=\gamma B_1\]</span>
+Note that this equation nicely illustrates why g is known as the gyromagnetic ratio, in that it determines the rate at which an introduced magnetic field, in this case <span class="math inline">\(B_1\)</span>, causes a gyroscopic rotation of the net magnetization. In the rotating frame of reference (A), it would look like a simple rotation downward. In the laboratory frame of reference (B), however, the longitudinal magnetization would trace out a complex wobbling path as it rotates downward to the transverse plane. This wobbling motion is known as nutation.</p>
+<p><img src="/post/2020-08-18-basic-principles-of-fmri_files/b1effect.png" alt="b1effect" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/b1effect.png) --></p>
+<p>The flip angle <span class="math inline">\(\theta\)</span> around which the net magnetization rotates following excitation is determined by the duration T of the applied electromagnetic pulse.
+<span class="math display">\[\theta=\gamma B_1 T\]</span>
+An excitation pulse along the same direction as <span class="math inline">\(B_0\)</span> would have absolutely no effect, but full excitation can be reached using a slightly off-resonance pulse at the cost of additional time (required to traverse the longer path to the transverse plane).
+<img src="/post/2020-08-18-basic-principles-of-fmri_files/offresonance.png" alt="off-resonance" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/offresonance.png) --></p>
+</div>
+<div id="signal-reception" class="section level3">
+<h3><span class="header-section-number">1.6.2</span> Signal reception</h3>
+<p>Change of flux induces an electromotive force (emf) in the coil. By definition, its magnitude is given by
+<span class="math display">\[\mathrm{emf}=-\frac{\mathrm{d}\Phi}{\mathrm{d}t}\]</span>
+where the magnetic flux penetrating the coil area is given by
+<span class="math display">\[Φ =\int_S B\cdot \mathrm{d}S\]</span>
+The volume magnetic flux generated by the sample and penetrating through the receiver coil can be represented as
+<span class="math display">\[\Phi(t)=\int_S \bar{B_1}\cdot M(t)\mathrm{d}v \]</span>
+where <span class="math inline">\(\bar{B_1}\)</span> is the magnetic field per unit current of the receiver coil and M(t) is the magnetization created by the sample.</p>
+<p>If a radiofrequency coil can generate a homogeneous magnetic field within a sample, it can also receive signals uniformly from the sample. This relationship is known as the principle of reciprocity.The additional scaling factor <span class="math inline">\(\omega_0\)</span> comes from taking the time derivative of M(t), which contains the term <span class="math inline">\(\omega_0t\)</span>.
+<span class="math display">\[\mathrm{emf}=-i\omega_0\int_{v} \bar{B_1}\cdot M(t)\mathrm{d}v\]</span>
+The amount of MR signal received by the detector coil increases with the square of the magnetic field strength. Unfortunately, the amplitude of noise in the MR signal is proportional to the strength of the magnetic field, so the signal-to-noise ratio increases only linearly with <span class="math inline">\(B_0\)</span>.</p>
+</div>
+</div>
+<div id="relaxation-mechanisms-of-a-spin-system" class="section level2">
+<h2><span class="header-section-number">1.7</span> Relaxation Mechanisms of a Spin System</h2>
+<p>When the excitation pulse is taken away, the spin system gradually loses energy absorbed during the excitation so that spins in the high-energy (antiparallel) state go back to their original state. This phenomenon is known as <strong>longitudinal relaxation</strong>, or <strong>spin–lattice relaxation</strong>, because the individual spins lose energy to the surrounding environment, or lattice of nuclei.</p>
+<p><img src="/post/2020-08-18-basic-principles-of-fmri_files/relaxation.png" alt="relaxation" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/relaxation.png) --></p>
+<p>Because the total magnetization is constant, the growth in the longitudinal magnetization corresponds with a reduction in transverse magnetization and a smaller MR signal. The time constant associated with this longitudinal relaxation process is called <strong><span class="math inline">\(\textbf T_1\)</span></strong>, and the relaxation process is called <strong><span class="math inline">\(\textbf T_1\)</span> recovery</strong>. The longitudinal magnetization, <span class="math inline">\(M_z\)</span>, present at time t following an excitation pulse is
+<span class="math display">\[M_z=M_0(1-e^{-\frac{t}{T_1}})\]</span>
+where <span class="math inline">\(M_0\)</span> is the original magnetization.</p>
+<p>Decay in transverse magnetization <span class="math inline">\(M_{xy}\)</span> is known as <strong>transverse relaxation</strong>, or <strong>spin–spin relaxation</strong>. In general, there are two causes for transverse relaxation(spin–spin interaction), one intrinsic and the other extrinsic (local magnetic field inhomogeneities).
+<span class="math display">\[M_{xy}=M_0e^{-\frac{t}{T_2}}\]</span>
+The equation for <span class="math inline">\(T_2^*\)</span> decay is similar to that for <span class="math inline">\(T_2\)</span> decay.</p>
+</div>
+<div id="the-bloch-equation-for-mr-signal-generation" class="section level2">
+<h2><span class="header-section-number">1.8</span> The Bloch Equation for MR Signal Generation</h2>
+<p>Because these components are related, we can describe MR phenomena in a single equation, the <strong>Bloch quation</strong>, which provides the theoretical foundation for all MRI experiments.
+<span class="math display">\[\frac{\mathrm{d}\vec{M}}{\mathrm{d}t}=\gamma\vec{M} \times \vec{B}+\frac{1}{T_1}(\vec M_0-\vec M_z)-\frac{1}{T_2}(\vec M_x+\vec M_y)\]</span></p>
+</div>
+</div>
+<div id="basic-principles-of-mr-image-formation" class="section level1">
+<h1><span class="header-section-number">2</span> Basic Principles of MR Image Formation</h1>
+<p><img src="/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png" alt="relaxation" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png) --></p>
+<div id="analysis-of-the-mr-signal" class="section level2">
+<h2><span class="header-section-number">2.1</span> Analysis of the MR Signal</h2>
+<p>The central innovation that made MR imaging possible was the introduction of superimposed gradient (spatially varying) magnetic fields. To resolve spatial information in three dimensions, we need at least three gradient fields. The gradient magnetic fields along the x, y, and z directions indicate how the strength of that static magnetic field changes in each of the three directions.</p>
+<p><img src="/post/2020-08-18-basic-principles-of-fmri_files/gradient.png" alt="relaxation" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/gradient.png) --></p>
+<p>It is critical to remember that the direction of the magnetic field is always along the longitudinal axis; gradient fields change the strength of the static magnetic field at a given spatial location, but not its direction.</p>
 </div>
 </div>
