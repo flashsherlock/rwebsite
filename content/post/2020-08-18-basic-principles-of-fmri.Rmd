@@ -1,19 +1,19 @@
 ---
-title: Basic principles of fMRI
+title: 'fMRI: Basic principles of signal generation'
 author: Fei
 date: '2020-08-18'
-slug: basic-principles-of-fmri
 categories:
   - reading
 tags:
   - fMRI
+slug: fmri-basic-principles-of-signal-generation
 weight: 1
-draft: false
+draft: no
 output:
   blogdown::html_page:
-    toc: true
+    toc: yes
     toc_depth: 2
-    number_sections: true
+    number_sections: yes
 ---
 
 ```{r include=FALSE}
@@ -181,7 +181,7 @@ $$\frac{\mathrm{d}\vec{M}}{\mathrm{d}t}=\gamma\vec{M} \times \vec{B}+\frac{1}{T_
 <img src="/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png" alt="relaxation" style="width: 100%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png) -->
 
-## Analysis of the MR Signal
+## Conceptual Path
 The central innovation that made MR imaging possible was the introduction of superimposed gradient (spatially varying) magnetic fields. To resolve spatial information in three dimensions, we need at least three gradient fields. The gradient magnetic fields along the x, y, and z directions indicate how the strength of that static magnetic field changes in each of the three directions.
 
 <img src="/post/2020-08-18-basic-principles-of-fmri_files/gradient.png" alt="relaxation" style="width: 80%; display: block; margin:0 auto"/>
@@ -189,8 +189,10 @@ The central innovation that made MR imaging possible was the introduction of sup
 
 It is critical to remember that the direction of the magnetic field is always along the longitudinal axis; gradient fields change the strength of the static magnetic field at a given spatial location, but not its direction.
 
+The formation of a three-dimensional MR image requires several steps: first, the selection of a slice in which spins will be excited at a particular resonant frequency; then the pre-application of one spatial gradient during phase encoding; and last the application of another gradient for frequency encoding during acquisition of the MR signal.
 
-
+<img src="/post/2020-08-18-basic-principles-of-fmri_files/image_formation_step.png" alt="image formation steos" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/image_formation_step.png) -->
 
 
 

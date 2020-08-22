@@ -1,19 +1,19 @@
 ---
-title: Basic principles of fMRI
+title: 'fMRI: Basic principles of signal generation'
 author: Fei
 date: '2020-08-18'
-slug: basic-principles-of-fmri
 categories:
   - reading
 tags:
   - fMRI
+slug: fmri-basic-principles-of-signal-generation
 weight: 1
-draft: false
+draft: no
 output:
   blogdown::html_page:
-    toc: true
+    toc: yes
     toc_depth: 2
-    number_sections: true
+    number_sections: yes
 ---
 
 
@@ -30,7 +30,7 @@ output:
 <li><a href="#the-bloch-equation-for-mr-signal-generation"><span class="toc-section-number">1.8</span> The Bloch Equation for MR Signal Generation</a></li>
 </ul></li>
 <li><a href="#basic-principles-of-mr-image-formation"><span class="toc-section-number">2</span> Basic Principles of MR Image Formation</a><ul>
-<li><a href="#analysis-of-the-mr-signal"><span class="toc-section-number">2.1</span> Analysis of the MR Signal</a></li>
+<li><a href="#conceptual-path"><span class="toc-section-number">2.1</span> Conceptual Path</a></li>
 </ul></li>
 </ul>
 </div>
@@ -196,11 +196,14 @@ The equation for <span class="math inline">\(T_2^*\)</span> decay is similar to 
 <h1><span class="header-section-number">2</span> Basic Principles of MR Image Formation</h1>
 <p><img src="/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png" alt="relaxation" style="width: 100%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png) --></p>
-<div id="analysis-of-the-mr-signal" class="section level2">
-<h2><span class="header-section-number">2.1</span> Analysis of the MR Signal</h2>
+<div id="conceptual-path" class="section level2">
+<h2><span class="header-section-number">2.1</span> Conceptual Path</h2>
 <p>The central innovation that made MR imaging possible was the introduction of superimposed gradient (spatially varying) magnetic fields. To resolve spatial information in three dimensions, we need at least three gradient fields. The gradient magnetic fields along the x, y, and z directions indicate how the strength of that static magnetic field changes in each of the three directions.</p>
 <p><img src="/post/2020-08-18-basic-principles-of-fmri_files/gradient.png" alt="relaxation" style="width: 80%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/gradient.png) --></p>
 <p>It is critical to remember that the direction of the magnetic field is always along the longitudinal axis; gradient fields change the strength of the static magnetic field at a given spatial location, but not its direction.</p>
+<p>The formation of a three-dimensional MR image requires several steps: first, the selection of a slice in which spins will be excited at a particular resonant frequency; then the pre-application of one spatial gradient during phase encoding; and last the application of another gradient for frequency encoding during acquisition of the MR signal.</p>
+<p><img src="/post/2020-08-18-basic-principles-of-fmri_files/image_formation_step.png" alt="image formation steos" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/image_formation_step.png) --></p>
 </div>
 </div>
