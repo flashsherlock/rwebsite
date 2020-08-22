@@ -147,7 +147,8 @@ output:
 <p>如果总体方差已知，<span class="math inline">\(SE=\sqrt{\dfrac{\sigma_1^2}{n_1}+\dfrac{\sigma_2^2}{n_2}}\)</span></p>
 <p>如果总体方差未知，方差齐性
 <span class="math inline">\(SE=S_p\sqrt{\dfrac{1}{n_1}+\dfrac{1}{n_2}}\)</span>，<span class="math inline">\(S_p=\dfrac{df_1S_1^2+df_2S_2^2}{df_1+df_2}\)</span></p>
-<p>方差不齐的时候需要校正自由度，但是如果样本量都很大的时候就不用了，<span class="math inline">\(df=\dfrac{(SE_1+SE_2)^2}{\dfrac{SE_1^2}{n_1-1}+\dfrac{SE_2^2}{n_2-1}}\)</span>，<span class="math inline">\(SE_1=\dfrac{S_1^2}{n_1}\)</span>，<span class="math inline">\(SE_2=\dfrac{S_2^2}{n_2}\)</span></p>
+<p>方差不齐的时候需要校正自由度，但是如果样本量都很大的时候就不用了，<span class="math inline">\(df=\dfrac{(SE_1+SE_2)^2}{\dfrac{SE_1^2}{n_1-1}+\dfrac{SE_2^2}{n_2-1}}\)</span></p>
+<p>其中<span class="math inline">\(SE_1=\dfrac{S_1^2}{n_1}\)</span>，<span class="math inline">\(SE_2=\dfrac{S_2^2}{n_2}\)</span></p>
 </div>
 <div id="两个总体比例之差" class="section level3">
 <h3><span class="header-section-number">1.7.2</span> 两个总体比例之差</h3>
@@ -161,7 +162,7 @@ output:
 </div>
 <div id="正态总体方差比" class="section level3">
 <h3><span class="header-section-number">1.7.4</span> 正态总体方差比</h3>
-<p><span class="math inline">\((\dfrac{S_1^2}{S_2^2}\times{\dfrac{1}{F_{\frac{\alpha}{2}}(n_1-1,n_2-1)}},\dfrac{S_1^2}{S_2^2}\times{F_{\frac{\alpha}{2}}(n_2-1,n_1-1)})\)</span></p>
+<p><span class="math display">\[(\dfrac{S_1^2}{S_2^2}\times{\dfrac{1}{F_{\frac{\alpha}{2}}(n_1-1,n_2-1)}},\dfrac{S_1^2}{S_2^2}\times{F_{\frac{\alpha}{2}}(n_2-1,n_1-1)})\]</span></p>
 </div>
 <div id="相关系数" class="section level3">
 <h3><span class="header-section-number">1.7.5</span> 相关系数</h3>
@@ -236,10 +237,10 @@ output:
 </div>
 <div id="回归分析" class="section level2">
 <h2><span class="header-section-number">1.10</span> 回归分析</h2>
-<p><span class="math inline">\(b1=\dfrac{\displaystyle \sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\displaystyle \sum_{i=1}^n(x_i-\bar{x})^2}=\dfrac{\sum {XY}-\dfrac{(\sum {X})(\sum{Y})}{n}}{\sum {X^2}-\dfrac{(\sum {X})^2}{n}}\)</span></p>
+<p><span class="math display">\[b1=\dfrac{\displaystyle \sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\displaystyle \sum_{i=1}^n(x_i-\bar{x})^2}=\dfrac{\sum {XY}-\dfrac{(\sum {X})(\sum{Y})}{n}}{\sum {X^2}-\dfrac{(\sum {X})^2}{n}}\]</span></p>
 <p><span class="math inline">\(b_0=\bar{y}-b_1\bar{x}\)</span></p>
 <p>方程的显著性
-<span class="math inline">\(SST=SSR+SSE \iff \sum(y-\bar{y})^2=\sum(\hat{y}-\bar{y})^2+\sum(y-\hat{y})^2\)</span></p>
+<span class="math display">\[SST=SSR+SSE \iff \sum(y-\bar{y})^2=\sum(\hat{y}-\bar{y})^2+\sum(y-\hat{y})^2\]</span></p>
 <p>其中<span class="math inline">\(\hat{y}\)</span>是预测值，y是实际值，<span class="math inline">\(\bar{y}\)</span>是实际值的平均值。</p>
 <p>预测的置信区间</p>
 <ul>

@@ -124,7 +124,9 @@ $np,nq\ge5$的时候近似正态分布，可以直接用正态分布的临界值
 如果总体方差未知，方差齐性
 $SE=S_p\sqrt{\dfrac{1}{n_1}+\dfrac{1}{n_2}}$，$S_p=\dfrac{df_1S_1^2+df_2S_2^2}{df_1+df_2}$
 
-方差不齐的时候需要校正自由度，但是如果样本量都很大的时候就不用了，$df=\dfrac{(SE_1+SE_2)^2}{\dfrac{SE_1^2}{n_1-1}+\dfrac{SE_2^2}{n_2-1}}$，$SE_1=\dfrac{S_1^2}{n_1}$，$SE_2=\dfrac{S_2^2}{n_2}$
+方差不齐的时候需要校正自由度，但是如果样本量都很大的时候就不用了，$df=\dfrac{(SE_1+SE_2)^2}{\dfrac{SE_1^2}{n_1-1}+\dfrac{SE_2^2}{n_2-1}}$
+
+其中$SE_1=\dfrac{S_1^2}{n_1}$，$SE_2=\dfrac{S_2^2}{n_2}$
 
 ### 两个总体比例之差
 $Z=\dfrac{\hat p_1 - \hat p_2}{\sqrt{p_eq_e\left(\dfrac{1}{n_1}+\dfrac{1}{n_2}\right)}}$
@@ -136,7 +138,7 @@ $(\dfrac{(n-1)S^2}{\chi_{\frac{\alpha}{2}}^{2}(n-1)},\dfrac{(n-1)S^2}{\chi_{1-\f
 注意分母中的(n-1)是卡方的自由度，不是乘数。
 
 ### 正态总体方差比
-$(\dfrac{S_1^2}{S_2^2}\times{\dfrac{1}{F_{\frac{\alpha}{2}}(n_1-1,n_2-1)}},\dfrac{S_1^2}{S_2^2}\times{F_{\frac{\alpha}{2}}(n_2-1,n_1-1)})$
+$$(\dfrac{S_1^2}{S_2^2}\times{\dfrac{1}{F_{\frac{\alpha}{2}}(n_1-1,n_2-1)}},\dfrac{S_1^2}{S_2^2}\times{F_{\frac{\alpha}{2}}(n_2-1,n_1-1)})$$
 
 ### 相关系数
 进行Fisher-Z变换，$Z_r=\dfrac{1}{2}\cdot\ln\dfrac{1+r}{1-r}$，标准误$SE_r=\dfrac{1}{\sqrt{n-3}}$，以此得到估计的区间后再变换回相关系数$r=\dfrac{e^{2Z_r}-1}{e^{2Z_r}+1}$
@@ -183,12 +185,12 @@ $\chi^2=\displaystyle \sum_{i=1}^{k}\dfrac{(f_i-e_i)^2}{e_i}$
 自由度$df=(R-1)(C-1)$
 
 ## 回归分析
-$b1=\dfrac{\displaystyle \sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\displaystyle \sum_{i=1}^n(x_i-\bar{x})^2}=\dfrac{\sum {XY}-\dfrac{(\sum {X})(\sum{Y})}{n}}{\sum {X^2}-\dfrac{(\sum {X})^2}{n}}$
+$$b1=\dfrac{\displaystyle \sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\displaystyle \sum_{i=1}^n(x_i-\bar{x})^2}=\dfrac{\sum {XY}-\dfrac{(\sum {X})(\sum{Y})}{n}}{\sum {X^2}-\dfrac{(\sum {X})^2}{n}}$$
 
 $b_0=\bar{y}-b_1\bar{x}$
 
 方程的显著性
-$SST=SSR+SSE \iff \sum(y-\bar{y})^2=\sum(\hat{y}-\bar{y})^2+\sum(y-\hat{y})^2$
+$$SST=SSR+SSE \iff \sum(y-\bar{y})^2=\sum(\hat{y}-\bar{y})^2+\sum(y-\hat{y})^2$$
 
 其中$\hat{y}$是预测值，y是实际值，$\bar{y}$是实际值的平均值。
 
