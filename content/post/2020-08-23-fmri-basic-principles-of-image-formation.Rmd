@@ -21,5 +21,17 @@ knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='c
 ```
 
 # MR Image Formation
+
 <img src="/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png" alt="relaxation" style="width: 100%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png) -->
+
+## Analysis of the MR Signal
+
+
+
+
+
+
+
+
+
