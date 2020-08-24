@@ -8,7 +8,7 @@ categories:
 tags:
   - fMRI
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: yes
@@ -26,6 +26,85 @@ knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='c
 <!-- ![](/post/2020-08-18-basic-principles-of-fmri_files/image_formation.png) -->
 
 ## Analysis of the MR Signal
+The Bloch equation describes the change in net magnetization over time as the sum of three terms.
+$$\frac{\mathrm{d}\vec{M}}{\mathrm{d}t}=\gamma\vec{M} \times \vec{B}+\frac{1}{T_1}(\vec M_0-\vec M_z)-\frac{1}{T_2}(\vec M_x+\vec M_y)$$
+We next solve the Bloch equation to determine the MR signal at each point in time, $M_{(t)}$. First we break down the Bloch equation, which describes the MR signal in a three-dimensional vector format, into a simplified scalar form along each axis.
+$$
+\left \{ 
+\begin{array}{l}
+\dfrac{\mathrm{d}{M_x}}{\mathrm{d}t}=M_y\cdot\gamma B-\dfrac{M_x}{T_2} \\ 
+\dfrac{\mathrm{d}{M_y}}{\mathrm{d}t}=-M_x\cdot\gamma B-\dfrac{M_y}{T_2} \\ 
+\dfrac{\mathrm{d}{M_z}}{\mathrm{d}t}=-\dfrac{(M_z-M_0)}{T_1}
+\end{array}
+\right.
+$$
+
+### Longitudinal magnetization ($M_z$)
+The magnitude of the longitudinal magnetization ($M_z$) depends only on a single first-order differential equation. Thus, its solution is an exponential recovery function that describes the return of the main magnetization to the original state. We assume that the initial magnetization at time zero is given by $M_{z0}$,
+$$
+\begin{aligned}
+&\qquad\qquad\dfrac{\mathrm{d}{M_z}}{\mathrm{d}t}={}-\dfrac{(M_z-M_0)}{T_1}\\
+&\Rightarrow \qquad\dfrac{\mathrm{d}{(M_z-M_0)}}{\mathrm{d}t}={}-\dfrac{(M_z-M_0)}{T_1}\\
+&\Rightarrow \qquad\dfrac{\mathrm{d}{(M_z-M_0)}}{(M_z-M_0)}={}-\dfrac{\mathrm{d}t}{T_1}\\
+&\Rightarrow \qquad\ln(M_z(t)-M_0)\Big|_0^{t'}={}-\dfrac{t}{T_1}\Big|_0^{t'}\\
+&\Rightarrow \qquad M_z=M_0+(M_{z0}-M_0)e^{-\frac{t}{T_1}}
+\end{aligned}
+$$
+To illustrate $T_1$ recovery, let’s consider some extreme values for the initial magnetization, $M_{z0}$. Consider the situation in which the net magnetization is fully relaxed. Here, $M_{z0}$ is equal to $M_0$ , so that $M_{z0}$ will not change. After an excitation pulse is applied, the net longitudinal magnetization is zero. The subsequent recovery of longitudinal magnetization is given by $M_z=M_0(1-e^{-\frac{t}{T_1}})$.
+
+<img src="/post/2020-08-23-fmri-basic-principles-of-image-formation_files/t1.png" alt="T1 relaxation" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-23-fmri-basic-principles-of-image-formation_files/t1.png) -->
+
+### Transverse magnetization ($M_{xy}$)
+Solving for $M_x$ and $M_y$, given an initial magnetization of $(M_{x0} ,\  M_{y0})$, we get the equation pair
+$$
+\left \{ 
+\begin{array}{l}
+M_x=(M_{x0}\cos ωt+M_{y0}\sin ωt)e^{-\frac{t}{T_2}}\\
+M_y=(-M_{x0}\sin ωt + M_{y0}\cos ωt )e^{-\frac{t}{T_2}}
+\end{array}
+\right.
+$$
+We can combine the x and y components of the net magnetization into a more generalized single quantity, $M_{xy}$ , which represents the transverse magnetization. The quantity $M_{xy}$ is traditionally represented as a complex number.
+$$M_{xy}=M_x+iM_y$$
+For an arbitrary initial magnitude of the transverse magnetization $M_{xy0} = M_{x0} + iM_{y0}$ , the transverse magnetization can be represented as: 
+$$
+\begin{aligned}
+M_{xy}&=(M_{x0} + iM_{y0})e^{-\frac{t}{T_2}}(\cos ωt-i\sin ωt)\\
+&=e^{-\frac{t}{T_2}}e^{-i \omega t}
+\end{aligned}
+$$
+<img src="/post/2020-08-23-fmri-basic-principles-of-image-formation_files/t2.png" alt="T2 relaxation" style="width: 90%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-23-fmri-basic-principles-of-image-formation_files/t2.png) -->
+
+After excitation, spins experience a magnetic field, B, that depends on the large static field, B0, and the smaller gradient field, G. Note that, the direction of B is always aligned with the main field. Therefore, we can describe the magnitude of the total magnetic field (B) experienced by a spin system at a given spatial location (x, y, z) and time point (t) as a linear combination of the static field and gradient fields.
+$$B(\tau)=B_0+G_x(\tau)x+G_y(\tau)y+G_z(\tau)z$$
+Knowing that $\omega = \gamma B$, we can substitute the $\omega$ term in previous equation using the magnitude of the total magnetic field described currently.
+$$M_{xy}(x,y,z,t) = M_{xy0}(x,y,z)e^{-\frac{t}{T_2}}e^{−iγB_0t}e^{−iγ\int_0^t (G_x(\tau)x+G_y(\tau)y+G_z(\tau)z) \mathrm{d}\tau}$$
+It states that the transverse magnetization for a given spatial location and time point, $M_{xy} (x, y, z, t)$, is governed by four factors:
+
+1. the original magnetization at that spatial location, $M_{xy0}(x,y,z)$; 
+2. the signal loss due to $e^{-\frac{t}{T_2}}$; 
+3. the accumulated phase due to the main magnetic field, $e^{−iγB_0t}$;
+4. the accumulated phase due to the gradient fields, which can be expressed as 
+$$e^{−iγ\int_0^t (G_x(\tau)x+G_y(\tau)y+G_z(\tau)z) \mathrm{d}\tau}$$
+
+### The MR signal equation
+The MR signal measured by that antenna reflects the sum of the transverse magnetizations of all voxels within the excited sample. This can be restated in the formal mathematical terms, which expresses the MR signal at a given point in time, $S_{(t)}$, as the spatial summation of the MR signal from every voxel.
+$$S(t)=\int_x\int_y\int_zM_{xy}(x,y,z,t)\mathrm{d}x\mathrm{d}y\mathrm{d}z$$
+Combining with previous equation results in
+$$S(t) = \int_x\int_y\int_zM_{xy0}(x,y,z)e^{-\frac{t}{T_2}}e^{−iγB_0t}e^{−iγ\int_0^t (G_x(\tau)x+G_y(\tau)y+G_z(\tau)z) \mathrm{d}\tau}$$
+This vastly important equation is known as the **MR signal equation** because it reveals the relationship between the acquired signal, $S(t)$, and the properties of the object being imaged, $M (x, y, z)$.
+
+In practice, the term $e^{−i γω_0 t}$ is not necessary for calculation of the MR signal, because modern MRI scanners demodulate the detected signal with the resonance frequency $\omega_0$. That is, they synchronize data acquisition to the resonance frequency, which is analogous to the idea of transforming from laboratory to rotating reference frames.The $T_2$ decay term, $e^{−\frac{t}{T_2}}$, affects the magnitude of the signal but not its spatial location, so we can ignore it for the moment and arrive at a simpler version of the MR signal equation.
+$$S(t) = \int_x\int_y\int_zM_{xy0}(x,y,z)e^{−iγ\int_0^t (G_x(\tau)x+G_y(\tau)y+G_z(\tau)z) \mathrm{d}\tau}$$
+In principle, we can collect a single 3-D MR image by systematically turning on gradient fields along the x, y, and z-axes. However, because 3-D imaging sequences present addtional technical challenges and are less tolerant of hardware imperfections than other methods, most forms of imaging relevant to fMRI studies use two-dimensional imaging sequences.
+
+## Slice Selection, Spatial Encoding, and Image Reconstruction
+
+### Slice selection
+
+
 
 
 

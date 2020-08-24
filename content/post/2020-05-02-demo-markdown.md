@@ -35,6 +35,7 @@ Images can be insert by `![]()` or a img tag.
 ![pie](/post/2020-05-02-demo-markdown_files/pie-1.png)
 ```
  The img tag can also define the width of a figure.
+ 
 ```html
 <img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" width="50%"/>
 ```
@@ -42,8 +43,7 @@ Images can be insert by `![]()` or a img tag.
 However, the width is defined by a attribute style in the tag, which can be overwrite by css styles. Therefore, a embedded style sheet should be used.
 
 ```html
-<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie"
-style="width: 80%; display: block; margin:0 auto"/>
+<img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 80%; display: block; margin:0 auto"/>
 ```
 
 <img src="/post/2020-05-02-demo-markdown_files/pie-1.png" alt="pie" style="width: 80%; display: block; margin:0 auto"/>

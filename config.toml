@@ -47,3 +47,9 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     width = 50
     height = 50
     alt = "Logo"
+
+[markup]
+  defaultMarkdownHandler = "blackfriday"
+  [markup.highlight]
+    codeFences = false
+    guessSyntax = true
