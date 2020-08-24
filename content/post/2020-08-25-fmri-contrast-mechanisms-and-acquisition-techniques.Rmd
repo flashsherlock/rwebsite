@@ -1,0 +1,47 @@
+---
+title: 'fMRI: Contrast mechanisms and acquisition techniques'
+author: Fei
+date: '2020-08-25'
+slug: fmri-contrast-mechanisms-and-acquisition-techniques
+categories:
+  - reading
+tags:
+  - fMRI
+weight: 1
+draft: yes
+output:
+  blogdown::html_page:
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+```
+
+**To PP: Happy Valentine's Day!**
+<img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598296144226&di=d1fbdc95403519afa7deebde60ad19a2&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F23%2F129242b07cddc994fb3997bd4b0fb990.jpg" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![Valentine's Day](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598295915704&di=7f8b53ef030fc6fd911b8b4ba06bf342&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F22%2F6fe93b140b497a6b36ca5a1e81a8d756.jpg){width=80%} -->
+
+# Contrast Mechanisms and Acquisition Techniques
+Two primary types of contrast are used in MRI. 
+
+1. Static contrasts
+
+Sensitive to the type, number, relaxation, and resonance properties of atomic nuclei within a voxel. Typical static contrasts are based on density (e.g., proton density), relaxation time (e.g., T1 , T2 , T2 *), chemical concentration (e.g., glutamate produced during cerebral metabolism), and even concentrations of particular types of molecules (e.g., macromolecules). We often use images sensitive to static contrast to determine brain anatomy in fMRI experiments. 
+
+2. Motion contrasts
+
+Sensitive to the movement of atomic nuclei. Typical motion contrasts provide information about the dynamic characteristics of the protons in the brain, such as blood oxygenation in fMRI, blood flow in MR angiography, water diffusion in diffusion-weighted imaging, and capillary irrigation in perfusion-weighted imaging.
+
+## Static Contrasts
+
+## Motion Contrasts
+
+## Image Acquisition Techniques
+
+
+
+
+
