@@ -240,9 +240,9 @@ In practice, field inhomogeneities can lead to two distinct types of artifacts:<
 <h3><span class="header-section-number">1.4.2</span> nonlinearities in the gradient fields</h3>
 <p>Depending on the pulse sequences and their distinct k-space trajectories, the nonlinearities in the gradient fields will be manifested differently. Here we use an example to illustrate these artifacts using a typical gradient-echo pulse sequence.</p>
 <ol style="list-style-type: decimal">
-<li>If the x-gradient G x is off by a small amount, the resulting k-space trajectories will have an error along the k x direction.</li>
-<li>If the y-gradient G y is off, the k-space trajectories will be skewed along the k y direction. Note that this skew affects both the onset of each line in k-space as well as the path taken through k-space. The magnitude of this skew depends on the time integral of the gradient amount.</li>
-<li>If the z-gradient G z is off, the slope of the excitation gradient will be altered, leading to changes in slice thickness and signal intensity, but the shape of the object would not be distorted.</li>
+<li>If the x-gradient <span class="math inline">\(G_x\)</span> is off by a small amount, the resulting k-space trajectories will have an error along the <span class="math inline">\(k_x\)</span> direction.</li>
+<li>If the y-gradient <span class="math inline">\(G_y\)</span> is off, the k-space trajectories will be skewed along the <span class="math inline">\(k_y\)</span> direction. Note that this skew affects both the onset of each line in k-space as well as the path taken through k-space. The magnitude of this skew depends on the time integral of the gradient amount.</li>
+<li>If the z-gradient <span class="math inline">\(G_z\)</span> is off, the slope of the excitation gradient will be altered, leading to changes in slice thickness and signal intensity, but the shape of the object would not be distorted.</li>
 </ol>
 <p><img src="/post/2020-08-23-fmri-basic-principles-of-image-formation_files/nonlinearity.png" alt="nonlinearity" style="width: 80%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-08-23-fmri-basic-principles-of-image-formation_files/nonlinearity.png) --></p>
