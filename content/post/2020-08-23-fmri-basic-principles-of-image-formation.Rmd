@@ -71,7 +71,7 @@ For an arbitrary initial magnitude of the transverse magnetization $M_{xy0} = M_
 $$
 \begin{aligned}
 M_{xy}&=(M_{x0} + iM_{y0})e^{-\frac{t}{T_2}}(\cos ωt-i\sin ωt)\\
-&=e^{-\frac{t}{T_2}}e^{-i \omega t}
+&=M_{xy0}e^{-\frac{t}{T_2}}e^{-i \omega t}
 \end{aligned}
 $$
 <img src="/post/2020-08-23-fmri-basic-principles-of-image-formation_files/t2.png" alt="T2 relaxation" style="width: 90%; display: block; margin:0 auto"/>

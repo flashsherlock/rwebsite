@@ -38,7 +38,7 @@ results <- cbind(results,times)
 names(results) <- c("click_times","times","class","hour","minute","second")
 ```
 
-I have stored the data in the [.RData](/post/course_time.RData) file (you can click the link to download it), because the local files can not be accessed when Netlify build the website.
+I have saved the data in the [.RData](/post/course_time.RData) file (you can click the link to download it), because the local files are not accessible when Netlify build and host the website.
 ```{r}
 load("../../static/post/course_time.RData")
 library(DT)

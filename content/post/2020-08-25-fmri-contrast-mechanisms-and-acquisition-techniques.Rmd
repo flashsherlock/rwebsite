@@ -38,6 +38,22 @@ Sensitive to the movement of atomic nuclei. Typical motion contrasts provide inf
 ## Static Contrasts
 
 Static contrast mechanisms have been widely used in MRI thanks to their ability to illustrate basic tissue structural characteristics. There are two equations for magnetization after an initial excitation of a fully recovered spin system.
+$$
+\left \{ 
+\begin{array}{l}
+M_z(t)=M_0(1-e^{-\frac{t}{T_1}})\\
+M_{xy}(t)=M_0e^{-\frac{t}{T_2}}
+\end{array}
+\right.
+$$
+
+
+
+
+
+
+
+
 
 ## Motion Contrasts
 

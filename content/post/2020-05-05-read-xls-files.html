@@ -40,7 +40,7 @@ times &lt;- strsplit(as.character(results$总时长),&quot;[时分秒]&quot;)
 times &lt;- t(sapply(times,&#39;[&#39;,1:3))
 results &lt;- cbind(results,times)
 names(results) &lt;- c(&quot;click_times&quot;,&quot;times&quot;,&quot;class&quot;,&quot;hour&quot;,&quot;minute&quot;,&quot;second&quot;)</code></pre>
-<p>I have stored the data in the <a href="/post/course_time.RData">.RData</a> file (you can click the link to download it), because the local files can not be accessed when Netlify build the website.</p>
+<p>I have saved the data in the <a href="/post/course_time.RData">.RData</a> file (you can click the link to download it), because the local files are not accessible when Netlify build and host the website.</p>
 <pre class="r"><code>load(&quot;../../static/post/course_time.RData&quot;)
 library(DT)
 datatable(results,rownames = FALSE,
