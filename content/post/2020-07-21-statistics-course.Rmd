@@ -200,3 +200,5 @@ $$SST=SSR+SSE \iff \sum(y-\bar{y})^2=\sum(\hat{y}-\bar{y})^2+\sum(y-\hat{y})^2$$
 $$\hat{Y_0} \pm t_{\frac{\alpha}{2}}(n-2)\sqrt{MS_e\left[\dfrac{1}{n}+\dfrac{(X_0-\bar{X})^2}{\displaystyle \sum_{i=1}^n(X_i-\bar{X})^2}\right]}$$
 * 观测值的置信区间
 $$\hat{Y_0} \pm t_{\frac{\alpha}{2}}(n-2)\sqrt{MS_e\left[1+\dfrac{1}{n}+\dfrac{(X_0-\bar{X})^2}{\displaystyle \sum_{i=1}^n(X_i-\bar{X})^2}\right]}$$
+
+[潇月师姐的总结](/post/xiaoyue.pdf)
