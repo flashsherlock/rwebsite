@@ -20,7 +20,7 @@ output:
 knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
 ```
 
-**To PP: Happy Valentine's Day!**
+<!-- **To PP: Happy Valentine's Day!** -->
 <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598296144226&di=d1fbdc95403519afa7deebde60ad19a2&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F23%2F129242b07cddc994fb3997bd4b0fb990.jpg" style="width: 80%; display: block; margin:0 auto"/>
 <!-- ![Valentine's Day](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598295915704&di=7f8b53ef030fc6fd911b8b4ba06bf342&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F22%2F6fe93b140b497a6b36ca5a1e81a8d756.jpg){width=80%} -->
 
@@ -46,11 +46,70 @@ M_{xy}(t)=M_0e^{-\frac{t}{T_2}}
 \end{array}
 \right.
 $$
+ 
+Under a short TR (The time interval between successive excitation pulses), which is not long enough to allow full recovery of the longitudinal magnetization ($M_0(1− e^{−TR/T1})$), the subsequent transverse magnetization is described as
 
+$$M_{xy}(t) = M_0(1− e^{−\frac{TR}{T_1}})e^{−\frac{t}{T_2}}$$ 
+<!-- rough values for the time constants T 1and T 2at a field strength of 1.5 T -->
+<!-- |      | Gray Matter   | White Matter    | -->
+<!-- |----- | ---------     | -------         | -->
+<!-- |$T_1$ | 1400ms        | 1100ms          | -->
+<!-- |$T_2$ | 70ms          | 55ms            | -->
 
+The echo time (TE), which is the time interval between excitation and data acquisition (defined as the time when the signal from the center of k-space is acquired). For simplicity, we can replace the term t with TE to illustrate the MR signal for an image with a given TE:
+$$M_{xy}(t) = M_0(1− e^{−\frac{TR}{T_1}})e^{−\frac{TE}{T_2}}$$
+Moreover, in MRI, we are interested in comparing MR signals from multiple tissue types. To do so, we need to measure a difference in signal between any two types of tissue, known as contrast ($C_{AB}$).
+$$C_{AB}= M_{0A}(1− e^{−\frac{TR_A}{T_1}})e^{−\frac{TE_A}{T_2}}− M_{0B}(1− e^{−\frac{TR_B}{T_1}})e^{−\frac{TE_B}{T_2}}$$
 
+### Proton-density contrast
 
+Proton-density images, as the name implies, provide contrast based on the sheer number of protons in a voxel, which, of course, differs in different tissue types. 
 
+To maximize proton-density contrast, researchers use pulse sequences that minimize T1 and T2 contrasts. To minimize T1 contrast, a pulse sequence must use very long TR (e.g., three times as long as T1) to ensure full T1 recovery, and to minimize T2 contrast, a pulse sequence must use a very short TE (e.g., one-tenth as long as T2) to prevent any significant T2 decay.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/LongTRshortTE.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/LongTRshortTE.png) -->
+
+One disadvantage of using a very long TR is that it greatly increases imaging time. To reduce acquisition time while still maintaining proton-density contrast, a smaller flip angle (less than 90°) may be used for excitation, to only partially tip the longitudinal magnetization toward the transverse plane.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/pd.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/pd.png) -->
+
+To facilitate tissue segmentation, protondensity images are frequently acquired at the same slice locations as T1 - or T2 -weighted images (see below) so that complementary anatomical information can be acquired.
+
+### T1 contrast
+For any two tissues that differ in T1 , there is an optimal TR value that maximally differentiates between them. To have exclusive T1 contrast, we must also have a very short TE in order to minimize T 2contrast. Note that the proton density of the tissues always contributes to the contrast, because the number of spins in the imaging volume determines the original net magnetization.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/intermediateTRshortTE.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/intermediateTRshortTE.png) -->
+
+Images of T 1contrast elicit the most signal from white matter and bone marrow, due to their short T1  values, and an intermediate amount of signal from gray matter.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T1.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T1.png) -->
+
+To boost T1 contrast, researchers often use a technique called **inversion recovery**, which begins the sequence with a 180° inversion pulse rather than the more common 90° pulse. Because the inversion pulse flips the net magnetization to the negative state, it effectively doubles the dynamic range of the signal.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/inversion.png" style="width: 50%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/inversion.png) -->
+
+### T2 contrast
+To have exclusive T2 contrast, we must have a very long TR so that the longitudinal recovery is almost complete and T1 contrast is minimal. At an intermediate TE, the difference in transverse magnetization can be maximized.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/LongTRintermediateTE.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/LongTRintermediateTE.png) -->
+
+T2-weighted images can only be generated using spin-echo-based pulse sequences because only SE sequences allow true spin–spin relaxation that does not depend on the field inhomogeneity.
+
+T2 values depend on spin–spin interactions; thus, homogeneous tissues tend to have longer T2 relaxation periods than other regions.（CSF > gray matter > white matter).
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2.png) -->
+
+### T2* contrast
+Quantitatively, the relationship between T2 and T2* is given by 1/T2* = (1/T2 ) + (1/T2ʹ), where T2 ʹ reflects the dephasing effect caused by field inhomogeneity.
+
+### Chemical contrast
 
 
 

@@ -20,15 +20,21 @@ output:
 <div id="TOC">
 <ul>
 <li><a href="#contrast-mechanisms-and-acquisition-techniques"><span class="toc-section-number">1</span> Contrast Mechanisms and Acquisition Techniques</a><ul>
-<li><a href="#static-contrasts"><span class="toc-section-number">1.1</span> Static Contrasts</a></li>
+<li><a href="#static-contrasts"><span class="toc-section-number">1.1</span> Static Contrasts</a><ul>
+<li><a href="#proton-density-contrast"><span class="toc-section-number">1.1.1</span> Proton-density contrast</a></li>
+<li><a href="#t1-contrast"><span class="toc-section-number">1.1.2</span> T1 contrast</a></li>
+<li><a href="#t2-contrast"><span class="toc-section-number">1.1.3</span> T2 contrast</a></li>
+<li><a href="#t2-contrast-1"><span class="toc-section-number">1.1.4</span> T2* contrast</a></li>
+<li><a href="#chemical-contrast"><span class="toc-section-number">1.1.5</span> Chemical contrast</a></li>
+</ul></li>
 <li><a href="#motion-contrasts"><span class="toc-section-number">1.2</span> Motion Contrasts</a></li>
 <li><a href="#image-acquisition-techniques"><span class="toc-section-number">1.3</span> Image Acquisition Techniques</a></li>
 </ul></li>
 </ul>
 </div>
 
-<p><strong>To PP: Happy Valentine’s Day!</strong>
-<img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598296144226&di=d1fbdc95403519afa7deebde60ad19a2&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F23%2F129242b07cddc994fb3997bd4b0fb990.jpg" style="width: 80%; display: block; margin:0 auto"/>
+<!-- **To PP: Happy Valentine's Day!** -->
+<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598296144226&di=d1fbdc95403519afa7deebde60ad19a2&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F23%2F129242b07cddc994fb3997bd4b0fb990.jpg" style="width: 80%; display: block; margin:0 auto"/>
 <!-- ![Valentine's Day](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598295915704&di=7f8b53ef030fc6fd911b8b4ba06bf342&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F22%2F6fe93b140b497a6b36ca5a1e81a8d756.jpg){width=80%} --></p>
 <div id="contrast-mechanisms-and-acquisition-techniques" class="section level1">
 <h1><span class="header-section-number">1</span> Contrast Mechanisms and Acquisition Techniques</h1>
@@ -52,6 +58,57 @@ M_{xy}(t)=M_0e^{-\frac{t}{T_2}}
 \end{array}
 \right.
 \]</span></p>
+<p>Under a short TR (The time interval between successive excitation pulses), which is not long enough to allow full recovery of the longitudinal magnetization (<span class="math inline">\(M_0(1− e^{−TR/T1})\)</span>), the subsequent transverse magnetization is described as</p>
+<p><span class="math display">\[M_{xy}(t) = M_0(1− e^{−\frac{TR}{T_1}})e^{−\frac{t}{T_2}}\]</span>
+<!-- rough values for the time constants T 1and T 2at a field strength of 1.5 T -->
+<!-- |      | Gray Matter   | White Matter    | -->
+<!-- |----- | ---------     | -------         | -->
+<!-- |$T_1$ | 1400ms        | 1100ms          | -->
+<!-- |$T_2$ | 70ms          | 55ms            | --></p>
+<p>The echo time (TE), which is the time interval between excitation and data acquisition (defined as the time when the signal from the center of k-space is acquired). For simplicity, we can replace the term t with TE to illustrate the MR signal for an image with a given TE:
+<span class="math display">\[M_{xy}(t) = M_0(1− e^{−\frac{TR}{T_1}})e^{−\frac{TE}{T_2}}\]</span>
+Moreover, in MRI, we are interested in comparing MR signals from multiple tissue types. To do so, we need to measure a difference in signal between any two types of tissue, known as contrast (<span class="math inline">\(C_{AB}\)</span>).
+<span class="math display">\[C_{AB}= M_{0A}(1− e^{−\frac{TR_A}{T_1}})e^{−\frac{TE_A}{T_2}}− M_{0B}(1− e^{−\frac{TR_B}{T_1}})e^{−\frac{TE_B}{T_2}}\]</span></p>
+<div id="proton-density-contrast" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> Proton-density contrast</h3>
+<p>Proton-density images, as the name implies, provide contrast based on the sheer number of protons in a voxel, which, of course, differs in different tissue types.</p>
+<p>To maximize proton-density contrast, researchers use pulse sequences that minimize T1 and T2 contrasts. To minimize T1 contrast, a pulse sequence must use very long TR (e.g., three times as long as T1) to ensure full T1 recovery, and to minimize T2 contrast, a pulse sequence must use a very short TE (e.g., one-tenth as long as T2) to prevent any significant T2 decay.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/LongTRshortTE.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/LongTRshortTE.png) --></p>
+<p>One disadvantage of using a very long TR is that it greatly increases imaging time. To reduce acquisition time while still maintaining proton-density contrast, a smaller flip angle (less than 90°) may be used for excitation, to only partially tip the longitudinal magnetization toward the transverse plane.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/pd.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/pd.png) --></p>
+<p>To facilitate tissue segmentation, protondensity images are frequently acquired at the same slice locations as T1 - or T2 -weighted images (see below) so that complementary anatomical information can be acquired.</p>
+</div>
+<div id="t1-contrast" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> T1 contrast</h3>
+<p>For any two tissues that differ in T1 , there is an optimal TR value that maximally differentiates between them. To have exclusive T1 contrast, we must also have a very short TE in order to minimize T 2contrast. Note that the proton density of the tissues always contributes to the contrast, because the number of spins in the imaging volume determines the original net magnetization.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/intermediateTRshortTE.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/intermediateTRshortTE.png) --></p>
+<p>Images of T 1contrast elicit the most signal from white matter and bone marrow, due to their short T1 values, and an intermediate amount of signal from gray matter.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T1.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T1.png) --></p>
+<p>To boost T1 contrast, researchers often use a technique called <strong>inversion recovery</strong>, which begins the sequence with a 180° inversion pulse rather than the more common 90° pulse. Because the inversion pulse flips the net magnetization to the negative state, it effectively doubles the dynamic range of the signal.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/inversion.png" style="width: 50%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/inversion.png) --></p>
+</div>
+<div id="t2-contrast" class="section level3">
+<h3><span class="header-section-number">1.1.3</span> T2 contrast</h3>
+<p>To have exclusive T2 contrast, we must have a very long TR so that the longitudinal recovery is almost complete and T1 contrast is minimal. At an intermediate TE, the difference in transverse magnetization can be maximized.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/LongTRintermediateTE.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/LongTRintermediateTE.png) --></p>
+<p>T2-weighted images can only be generated using spin-echo-based pulse sequences because only SE sequences allow true spin–spin relaxation that does not depend on the field inhomogeneity.</p>
+<p>T2 values depend on spin–spin interactions; thus, homogeneous tissues tend to have longer T2 relaxation periods than other regions.（CSF &gt; gray matter &gt; white matter).</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2.png) --></p>
+</div>
+<div id="t2-contrast-1" class="section level3">
+<h3><span class="header-section-number">1.1.4</span> T2* contrast</h3>
+<p>Quantitatively, the relationship between T2 and T2* is given by 1/T2* = (1/T2 ) + (1/T2ʹ), where T2 ʹ reflects the dephasing effect caused by field inhomogeneity.</p>
+</div>
+<div id="chemical-contrast" class="section level3">
+<h3><span class="header-section-number">1.1.5</span> Chemical contrast</h3>
+</div>
 </div>
 <div id="motion-contrasts" class="section level2">
 <h2><span class="header-section-number">1.2</span> Motion Contrasts</h2>
