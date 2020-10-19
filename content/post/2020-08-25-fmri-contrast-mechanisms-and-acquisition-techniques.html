@@ -27,7 +27,11 @@ output:
 <li><a href="#t2-contrast-1"><span class="toc-section-number">1.1.4</span> T2* contrast</a></li>
 <li><a href="#chemical-contrast"><span class="toc-section-number">1.1.5</span> Chemical contrast</a></li>
 </ul></li>
-<li><a href="#motion-contrasts"><span class="toc-section-number">1.2</span> Motion Contrasts</a></li>
+<li><a href="#motion-contrasts"><span class="toc-section-number">1.2</span> Motion Contrasts</a><ul>
+<li><a href="#mr-angiography"><span class="toc-section-number">1.2.1</span> MR angiography</a></li>
+<li><a href="#diffusion-weighted-contrast"><span class="toc-section-number">1.2.2</span> Diffusion-weighted contrast</a></li>
+<li><a href="#perfusion-weighted-contrast"><span class="toc-section-number">1.2.3</span> Perfusion-weighted contrast</a></li>
+</ul></li>
 <li><a href="#image-acquisition-techniques"><span class="toc-section-number">1.3</span> Image Acquisition Techniques</a></li>
 </ul></li>
 </ul>
@@ -104,14 +108,63 @@ Moreover, in MRI, we are interested in comparing MR signals from multiple tissue
 </div>
 <div id="t2-contrast-1" class="section level3">
 <h3><span class="header-section-number">1.1.4</span> T2* contrast</h3>
-<p>Quantitatively, the relationship between T2 and T2* is given by 1/T2* = (1/T2 ) + (1/T2ʹ), where T2 ʹ reflects the dephasing effect caused by field inhomogeneity.</p>
+<p>Quantitatively, the relationship between T2 and T2* is given by 1/T2* = (1/T2 ) + (1/T2ʹ), where T2 ʹ reflects the dephasing effect caused by field inhomogeneity. Like T2 contrast, T2* contrast is provided by pulse sequences with long TR and intermediate TE values. An additional requirement is that the pulse sequence must use magnetic field gradients (and GRE pulse sequences) to generate the signal echo.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2star.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2star.png) --></p>
 </div>
 <div id="chemical-contrast" class="section level3">
 <h3><span class="header-section-number">1.1.5</span> Chemical contrast</h3>
+<p>An important technique used to measure these substances is called chemical shift imaging. The chemical shift reflects the difference in proton resonance frequencies in different molecules.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/chemicalshift.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/chemicalshift.png) --></p>
 </div>
 </div>
 <div id="motion-contrasts" class="section level2">
 <h2><span class="header-section-number">1.2</span> Motion Contrasts</h2>
+<ul>
+<li>Structural techniques
+<ul>
+<li>MR angiography-neurovascular system</li>
+<li>Diffusion tensor imaging-white-matter tracts</li>
+</ul></li>
+<li>Functional techniques
+<ul>
+<li>Dynamic diffusion imaging-water molecules</li>
+<li>Perfusion imaging-blood flow</li>
+</ul></li>
+</ul>
+<div id="mr-angiography" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> MR angiography</h3>
+<p>For a typical contrastenhanced MRA, a small quantity (or bolus) of a gadolinium-based contrast agent is injected into the patient’s bloodstream. The gadolinium itself is not visible on MR images, but it radically shortens the T 1 recovery period for nearby blood, allowing the use of specialized pulse sequences with extremely short TRs (3 to 7 ms) and TEs (1 to 3 ms).</p>
+<p>There are two primary techniques for endogenous, contrast MRA. The most common is <strong>time-of-flight (TOF) MRA</strong>. By repeatedly and frequently applying excitation pulses (SE) or gradient pulses (GRE) to a single imaging plane, the signal within that plane can be suppressed (spin satuation). Thus, tissues whose spins remain within the plane, such as gray or white matter, will produce little MR signal. Blood vessels, however, are constantly replenished with new spins from outside the plane, which contribute normal levels of MR signal. The TR and slice thickness of a TOF image must be chosen based on the expected flow.</p>
+<p>The imaging plane is presaturated by the electromagnetic excitation pulse and gradient saturation pulses. After a brief waiting period during which fresh blood can enter the plane, the MR signals are acquired by a GRE acquisition technique, so that only the signal from this new blood will be present.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/TOF.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/TOF.png) --></p>
+<p>A second technique is <strong>velocity-encoded phase RF contrast (VENC-PC) MRA</strong>, which uses gradient fields to produce a difference in precession phase between the vasculature and the surrounding tissue. Typical VENC-PC protocols involve the acquisition of two sets of images: one with a strong gradient and the other with either no gradient or a gradient in the opposite direction. The difference between these images indicates the magnitude of the phase difference at each voxel, so the brightness at each voxel is proportional to flow.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/VENC-PC.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/VENC-PC.png) --></p>
+</div>
+<div id="diffusion-weighted-contrast" class="section level3">
+<h3><span class="header-section-number">1.2.2</span> Diffusion-weighted contrast</h3>
+<p>Diffusion weighting is the application of controlled gradient magnetic fields to quantify the amplitude and direction of diffusion. The attenuation effect (A) due to diffusion weighting (assuming a constant amplitude for the diffusion weighting gradient) is given by the exponential
+<span class="math display">\[A=e^{-bD}=e^{-D∫_0^T [ γ G(t)t ]^2 dt}\]</span>
+where D is the apparent diffusion coefficient (ADC) (i.e., the measured value of the diffusion coefficient), G is the strength of the diffusion-weighting gradient, and T is the duration of the diffusion-weighting gradient.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusion.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusion.png) --></p>
+<p>To determine the coefficients of diffusion along different directions (i.e., axes of a diffusion tensor), we need to apply controlled gradients in a pulse sequence. These gradients must be balanced in time to preserve the MR signal.</p>
+<ul>
+<li>spin-echo sequences: presenting the gradients before and after the refocusing pulse.</li>
+<li>gradient-echo sequences: successive positive and negative gradients.</li>
+</ul>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusionw.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusionw.png) --></p>
+</div>
+<div id="perfusion-weighted-contrast" class="section level3">
+<h3><span class="header-section-number">1.2.3</span> Perfusion-weighted contrast</h3>
+<p>The irrigation of tissues via blood delivery is known as perfusion, and the family of imaging procedures that measure this process is known as perfusion MRI. In the human brain, gray-matter perfusion is approximately 60 mL/100 g/min; white-matter perfusion is lower, about 20 mL/100 g/min. Perfusion MRI is used most frequently to generate images of blood flow in capillaries and other small vessels.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/perfusion.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/perfusion.png) --></p>
+</div>
 </div>
 <div id="image-acquisition-techniques" class="section level2">
 <h2><span class="header-section-number">1.3</span> Image Acquisition Techniques</h2>

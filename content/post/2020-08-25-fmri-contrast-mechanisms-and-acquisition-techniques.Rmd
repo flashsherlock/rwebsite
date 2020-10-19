@@ -107,16 +107,82 @@ T2 values depend on spin–spin interactions; thus, homogeneous tissues tend to 
 <!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2.png) -->
 
 ### T2* contrast
-Quantitatively, the relationship between T2 and T2* is given by 1/T2* = (1/T2 ) + (1/T2ʹ), where T2 ʹ reflects the dephasing effect caused by field inhomogeneity.
+Quantitatively, the relationship between T2 and T2* is given by 1/T2* = (1/T2 ) + (1/T2ʹ), where T2 ʹ reflects the dephasing effect caused by field inhomogeneity. Like T2 contrast, T2* contrast is provided by pulse sequences with long TR and intermediate TE values. An additional requirement is that the pulse sequence must use magnetic field gradients (and GRE pulse sequences) to generate the signal echo.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2star.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/T2star.png) -->
 
 ### Chemical contrast
+An important technique used to measure these substances is called chemical shift imaging. The chemical shift reflects the difference in proton resonance frequencies in different molecules.
 
-
-
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/chemicalshift.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/chemicalshift.png) -->
 
 ## Motion Contrasts
 
+* Structural techniques
+	* MR angiography-neurovascular system
+	* Diffusion tensor imaging-white-matter tracts
+* Functional techniques
+	* Dynamic diffusion imaging-water molecules
+  * Perfusion imaging-blood flow
+
+### MR angiography
+
+For a typical contrastenhanced MRA, a small quantity (or bolus) of a gadolinium-based contrast agent is injected into the patient’s bloodstream. The gadolinium itself is not visible on MR images, but it radically shortens the T 1 recovery period for nearby blood, allowing the use of specialized pulse sequences with extremely short TRs (3 to 7 ms) and TEs (1 to 3 ms).
+
+There are two primary techniques for endogenous, contrast MRA. The most common is **time-of-flight (TOF) MRA**. By repeatedly and frequently applying excitation pulses (SE) or gradient pulses (GRE) to a single imaging plane, the signal within that plane can be suppressed (spin satuation). Thus, tissues whose spins remain within the plane, such as gray or white matter, will produce little MR signal. Blood vessels, however, are constantly replenished with new spins from outside the plane, which contribute normal levels of MR signal. The TR and slice thickness of a TOF image must be chosen based on the expected flow.
+
+The imaging plane is presaturated by the electromagnetic excitation pulse and gradient saturation pulses. After a brief waiting period during which fresh blood can enter the plane, the MR signals are acquired by a GRE acquisition technique, so that only the signal from this new blood will be present.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/TOF.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/TOF.png) -->
+
+A second technique is **velocity-encoded phase RF contrast (VENC-PC) MRA**, which uses gradient fields to produce a difference in precession phase between the vasculature and the surrounding tissue. Typical VENC-PC protocols involve the acquisition of two sets of images: one with a strong gradient and the other with either no gradient or a gradient in the opposite direction. The difference between these images indicates the magnitude of the phase difference at each voxel, so the brightness at each voxel is proportional to flow.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/VENC-PC.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/VENC-PC.png) -->
+
+### Diffusion-weighted contrast
+
+Diffusion weighting is the application of controlled gradient magnetic fields to quantify the amplitude and direction of diffusion. The attenuation effect (A) due to diffusion weighting (assuming a constant amplitude for the diffusion weighting gradient) is given by the exponential
+$$A=e^{-bD}=e^{-D∫_0^T [ γ G(t)t ]^2 dt}$$
+where D is the apparent diffusion coefficient (ADC) (i.e., the measured value of the diffusion coefficient), G is the strength of the diffusion-weighting gradient, and T is the duration of the diffusion-weighting gradient.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusion.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusion.png) -->
+
+To determine the coefficients of diffusion along different directions (i.e., axes of a diffusion tensor), we need to apply controlled gradients in a pulse sequence. These gradients must be balanced in time to preserve the MR signal.
+
+* spin-echo sequences: presenting the gradients before and after the refocusing pulse.
+* gradient-echo sequences: successive positive and negative gradients.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusionw.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusionw.png) -->
+
+### Perfusion-weighted contrast
+
+The irrigation of tissues via blood delivery is known as perfusion, and the family of imaging procedures that measure this process is known as perfusion MRI. In the human brain, gray-matter perfusion is approximately 60 mL/100 g/min; white-matter perfusion is lower, about 20 mL/100 g/min. Perfusion MRI is used most frequently to generate images of blood flow in capillaries and other small vessels.
+
+<img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/perfusion.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/perfusion.png) -->
+
+
+
+
+
 ## Image Acquisition Techniques
+
+
+
+
+
+
+
+
+
+
+
 
 
 
