@@ -8,7 +8,7 @@ categories:
 tags:
   - fMRI
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: yes
@@ -32,14 +32,19 @@ output:
 <li><a href="#diffusion-weighted-contrast"><span class="toc-section-number">1.2.2</span> Diffusion-weighted contrast</a></li>
 <li><a href="#perfusion-weighted-contrast"><span class="toc-section-number">1.2.3</span> Perfusion-weighted contrast</a></li>
 </ul></li>
-<li><a href="#image-acquisition-techniques"><span class="toc-section-number">1.3</span> Image Acquisition Techniques</a></li>
+<li><a href="#image-acquisition-techniques"><span class="toc-section-number">1.3</span> Image Acquisition Techniques</a><ul>
+<li><a href="#echo-planar-imaging"><span class="toc-section-number">1.3.1</span> Echo-planar imaging</a></li>
+<li><a href="#spiral-imaging"><span class="toc-section-number">1.3.2</span> Spiral imaging</a></li>
+<li><a href="#signal-recovery-and-distortion-correction-for-epi-and-spiral-images"><span class="toc-section-number">1.3.3</span> Signal recovery and distortion correction for EPI and spiral images</a></li>
+<li><a href="#parallel-imaging"><span class="toc-section-number">1.3.4</span> Parallel imaging</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </div>
 
 <!-- **To PP: Happy Valentine's Day!** -->
-<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598296144226&di=d1fbdc95403519afa7deebde60ad19a2&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F23%2F129242b07cddc994fb3997bd4b0fb990.jpg" style="width: 80%; display: block; margin:0 auto"/>
-<!-- ![Valentine's Day](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598295915704&di=7f8b53ef030fc6fd911b8b4ba06bf342&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F22%2F6fe93b140b497a6b36ca5a1e81a8d756.jpg){width=80%} --></p>
+<!-- <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598296144226&di=d1fbdc95403519afa7deebde60ad19a2&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F23%2F129242b07cddc994fb3997bd4b0fb990.jpg" style="width: 80%; display: block; margin:0 auto"/> -->
+<!-- ![Valentine's Day](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598295915704&di=7f8b53ef030fc6fd911b8b4ba06bf342&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F16%2F12%2F22%2F6fe93b140b497a6b36ca5a1e81a8d756.jpg){width=80%} -->
 <div id="contrast-mechanisms-and-acquisition-techniques" class="section level1">
 <h1><span class="header-section-number">1</span> Contrast Mechanisms and Acquisition Techniques</h1>
 <p>Two primary types of contrast are used in MRI.</p>
@@ -158,15 +163,80 @@ where D is the apparent diffusion coefficient (ADC) (i.e., the measured value of
 </ul>
 <p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusionw.png" style="width: 100%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/diffusionw.png) --></p>
+<p>A particularly important form of diffusion-weighted imaging is diffusion tensor imaging (DTI), which quantifies the relative diffusivity of water in a voxel into directional components. Tractography is an advanced application of DTI.</p>
+<p>A scalar quantity known as fractional anisotropy (FA) can be computed for each voxel to express the preference of water to diffuse in an isotropic or anisotropic manner. FA values are bounded by 0 (water molecules are equally likely to diffuse in any direction) and 1 (nearly all the water molecules in the voxel are diffusing along the same preferred axis) and are calculated as
+<span class="math display">\[FA=\dfrac{\sqrt{(Dx-Dy)^2+(Dy-Dz)^2+(Dz-Dx)^2}}{\sqrt{2(Dx^2+Dy^2+Dz^2)}}\]</span>
+where Dx, Dy, and Dz represent the diffusivity along the three principal axes of the diffusion tensor.</p>
 </div>
 <div id="perfusion-weighted-contrast" class="section level3">
 <h3><span class="header-section-number">1.2.3</span> Perfusion-weighted contrast</h3>
 <p>The irrigation of tissues via blood delivery is known as perfusion, and the family of imaging procedures that measure this process is known as perfusion MRI. In the human brain, gray-matter perfusion is approximately 60 mL/100 g/min; white-matter perfusion is lower, about 20 mL/100 g/min. Perfusion MRI is used most frequently to generate images of blood flow in capillaries and other small vessels.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/CBFvsBOLD.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/CBFvsBOLD.png) --></p>
+<!-- space+space -> new line but not new paragraph -->
+<p>Arterial spin labeling (ASL) is a family of perfusion imaging techniques that measures blood flow by labeling spins with excitation pulses and then waiting for the labeled spins to enter the imaging plane before data acquisition.</p>
+<!-- tab -> block -->
+<ul>
+<li>continuous ASL:<br />
+A type of perfusion imaging that uses a second transmitter coil to label spins within an upstream artery while collecting images.</li>
+<li>pulsed ASL:<br />
+A type of perfusion imag-ing that uses a single coil both to label spins in one plane and to record the MR signal in another plane, separated by a brief delay period.
+<ul>
+<li>EPISTAR: directionally specific, in that it is only sensitive to spins flowing from the labeling plane to the imaging plane.</li>
+<li>FAIR: not directionally specific.</li>
+</ul></li>
+</ul>
 <p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/perfusion.png" style="width: 100%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/perfusion.png) --></p>
+<p>Regardless of the ASL method used, labeling blood only alters the longitudinal magnetization. Thus, we can describe the endogenous perfusion signal quantitatively by modifying the T1 term of the Bloch equation.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/ASL.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/ASL.png) --></p>
 </div>
 </div>
 <div id="image-acquisition-techniques" class="section level2">
 <h2><span class="header-section-number">1.3</span> Image Acquisition Techniques</h2>
+<p>In this section, we will unpack the image acquisition process—also known as “filling k-space”—to form a complete description of the imaging process.</p>
+<div id="echo-planar-imaging" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Echo-planar imaging</h3>
+<p>In 1976, Mansfield (Peter Mansfield, the University of Nottingham) proposed a new method, known as echo-planar imaging (EPI), in which the entire k-space is filled using rapid gradient switching following a single excitation. For this technique, Mansfield shared the Nobel Prize in Physiology or Medicine in 2003.</p>
+<p>To fill k-space, EPI uses an unconventional pattern in which alternating lines are scanned in opposite directions.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/EPI.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/EPI.png) --></p>
+<p>The most common EPI artifacts result from imperfections in the magnetic fields, either static or gradient, used to collect the images. Small- and large-scale static field inhomogeneities can result in signal losses and geometric distortions, respectively.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/EPIartifact.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/EPIartifact.png) --></p>
+</div>
+<div id="spiral-imaging" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> Spiral imaging</h3>
+<p>Compared with EPI sequences, spiral imaging sequences can be much less taxing on a gradient system and can reduce the time needed to collect an image.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/spiral.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/spiral.png) --></p>
+<p>The types of spatial distortion, however, are quite different from those found in EPI. Because of the non-Cartesian k-space sampling scheme, the regular distortion pattern seen in EPI images is usually not present in spiral images.</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/spiraldistortion.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/spiraldistortion.png) --></p>
+</div>
+<div id="signal-recovery-and-distortion-correction-for-epi-and-spiral-images" class="section level3">
+<h3><span class="header-section-number">1.3.3</span> Signal recovery and distortion correction for EPI and spiral images</h3>
+<p>There are three types of compensation methods, all involving the shimming of the magnetic field.</p>
+<ul>
+<li>Active local shims</li>
+<li>Pulse sequence incorporating a gradient along the z direction</li>
+<li>Magnetic field map</li>
+</ul>
+</div>
+<div id="parallel-imaging" class="section level3">
+<h3><span class="header-section-number">1.3.4</span> Parallel imaging</h3>
+<p>If the pursuit of higher magnetic fields has been the engine advancing MRI technology, the development of parallel imaging (also known as multi-channel imaging) using large coil arrays has provided the high-octane fuel. Multiple-channel acquisition provides two major advantages.</p>
+<ul>
+<li>Increases the spatial resolution without increasing acquisition time</li>
+<li>Reduces the duration of the readout window, thereby improving the imaging speed and minimizing the spatial distortion.</li>
+</ul>
+<p>Here we use a four-coil array as an example. During the imaging session, all channels acquire data with a lower sampling density in k-space than will be used for the final image, resulting in a smaller field-of-view and four severely wrapped images.</p>
+<p>Each voxel in these images contains signal from four overlapping images of the brain. The intensity of any given voxel in each of these four images, <span class="math inline">\(I_1\)</span> to <span class="math inline">\(I_4\)</span> , reflects a combination of the sensitivity <span class="math inline">\(S_{ij}\)</span> (can be identified from field maps) of each coil i at that location j and the actual intensity values for that voxel in each of the images (<span class="math inline">\(ρ_1\)</span> through <span class="math inline">\(ρ_4\)</span>).</p>
+<p><img src="/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/parallelimaging.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-08-25-fmri-contrast-mechanisms-and-acquisition-techniques_files/parallelimaging.png) --></p>
+<p>In addition to increasing spatial resolution, multiple-channel acquisition can also be used to increase the raw SNR. When multiple coils are targeted at the same brain region, images from individual channels can be combined to increase the magnitude of the signal.</p>
+<p>Parallel imaging can also improve temporal resolution without sacrificing spatial resolution or spatial coverage. Note that the addition of coils has different effects on spatial and temporal resolution. Because spatial resolution is measured in squared units within a slice (<span class="math inline">\(\mathrm{mm}^2\)</span>), it increases in proportion with the change in the square root of the number of coils. But temporal resolution is measured in linear units (seconds), and it improves linearly with the number of coils.</p>
+</div>
 </div>
 </div>
