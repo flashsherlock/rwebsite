@@ -8,6 +8,7 @@ tags:
   - data
   - fMRI
   - R
+draft: yes
 slug: Preliminary results of fMRI data
 weight: 1
 ---
