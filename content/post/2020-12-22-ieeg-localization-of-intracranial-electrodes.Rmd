@@ -1,0 +1,29 @@
+---
+title: 'iEEG: Localization of intracranial electrodes'
+author: Fei
+date: '2020-12-22'
+slug: ieeg-localization-of-intracranial-electrodes
+categories:
+  - reading
+tags:
+  - data
+weight: 1
+draft: yes
+output:
+  blogdown::html_page:
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+```
+
+# CT images
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/spm.png" style="width: 50%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/spm.png) -->
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/display_after.png" style="width: 90%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/display_after.png) -->
