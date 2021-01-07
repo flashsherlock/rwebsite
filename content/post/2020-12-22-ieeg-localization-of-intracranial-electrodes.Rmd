@@ -21,12 +21,24 @@ knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='c
 ```
 
 # Introduction
-This is a simple tutorial for electrodes localization. For more information, please refer to [Fieldtrip tutorials](https://www.fieldtriptoolbox.org/tutorial/human_ecog/).
+This is a simple tutorial for electrodes localization. For more information and examples, please refer to [Fieldtrip tutorials](https://www.fieldtriptoolbox.org/tutorial/human_ecog/). Matlab, [SPM](https://www.fil.ion.ucl.ac.uk/spm/software/download/), and [Fieldtrip](https://www.fieldtriptoolbox.org/download.php) are requied for this procedure.
 
-# CT images
+# Overview
+
+# Preprocessing of MRI image
+
+# Preprocessing of CT image
 
 <img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/spm.png" style="width: 50%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/spm.png) -->
 
 <img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/display_after.png" style="width: 90%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/display_after.png) -->
+
+# Fusion of the CT with the MRI
+
+# Electrodes placement
+
+# Volume-based registration
+
+# Anatomical labeling 
