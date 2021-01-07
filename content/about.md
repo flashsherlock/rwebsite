@@ -12,7 +12,8 @@ div#photo {
     background-repeat: no-repeat;
     background-position:center;
     width: 100%;
-    height: 560px;
+    height: 0px;
+    padding-top: 75%;
     text-align: center;
     display: block;
     float: none;
