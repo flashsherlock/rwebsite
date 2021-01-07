@@ -6,7 +6,7 @@ on:
       - master
 jobs:
   build:
-    runs-on: ubuntu-latest # 镜像市场
+    runs-on: ubuntu-20.04 # 镜像市场
     steps:
       - name: checkout # 步骤的名称
         uses: actions/checkout@v2 #软件市场的名称
@@ -25,4 +25,4 @@ jobs:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: flashsherlock/flashsherlock.github.io
           publish_branch: master
-          publish_dir: ./public
+          publish_dir: ./public # dir to be published

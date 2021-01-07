@@ -12,4 +12,4 @@ I'm a graduate student, studying human olfaction with these nice [people](http:/
 
 # The website
 
-This website was build with [**blogdown**](https://github.com/rstudio/blogdown) package and hosted on [**Netlify**](https://www.netlify.com). The theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://yihui.org/) and me (slightly).
+This website was build with [**blogdown**](https://github.com/rstudio/blogdown) package and hosted on [**Netlify**](https://gufei.netlify.app/) and [**Github**](https://flashsherlock.github.io/). The theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://yihui.org/) and me (slightly).
