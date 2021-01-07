@@ -21,7 +21,7 @@ jobs:
         run: hugo -b https://flashsherlock.github.io --minify
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        env:
+        with:
           ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           EXTERNAL_REPOSITORY: flashsherlock/flashsherlock.github.io
           PUBLISH_BRANCH: master
