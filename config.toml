@@ -31,10 +31,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     description = "A website built through Hugo and blogdown."
 
     # options for highlight.js (version, additional languages, and theme)
-    highlightjsVersion = "9.12.0"
+    highlightjsVersion = "10.5.0"
     highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
-    highlightjsLang = ["r", "yaml"]
-    highlightjsTheme = "github"
+    highlightjsLang = ["r", "yaml","matlab"]
+    highlightjsTheme = "atom-one-dark-reasonable"
 
     MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
     MathJaxVersion = "2.7.5"

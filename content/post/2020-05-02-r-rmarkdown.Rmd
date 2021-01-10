@@ -28,6 +28,15 @@ fit <- lm(dist ~ speed, data = cars)
 fit
 ```
 
+Codes are highlighted by [Highlight.js](https://highlightjs.org/). The theme and language of Highlight.js can be changed in `config.toml`. The exact name of theme and language can be found in the [GitHub repository](https://github.com/highlightjs/highlight.js/tree/master/src/languages).
+``` yaml
+# options for highlight.js (version, additional languages, and theme)
+highlightjsVersion = "10.5.0"
+highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
+highlightjsLang = ["r", "yaml","matlab"]
+highlightjsTheme = "atom-one-dark-reasonable"
+```
+
 # Including Plots
 
 You can also embed plots. See Figure \@ref(fig:pie) for example:
