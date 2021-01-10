@@ -21,7 +21,7 @@ knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='c
 ```
 
 # Introduction
-This is a simple tutorial for electrodes localization. For more information and examples, please refer to [Fieldtrip tutorials](https://www.fieldtriptoolbox.org/tutorial/human_ecog/). Matlab, [SPM](https://www.fil.ion.ucl.ac.uk/spm/software/download/), and [Fieldtrip](https://www.fieldtriptoolbox.org/download.php) are requied for this procedure.
+This is a simple tutorial for electrodes localization. For more information and examples, please refer to [Fieldtrip tutorials](https://www.fieldtriptoolbox.org/tutorial/human_ecog/). Matlab, [SPM](https://www.fil.ion.ucl.ac.uk/spm/software/download/), and [Fieldtrip](https://www.fieldtriptoolbox.org/download.php) are requied for this procedure. After adding the root directory to searching path, you need to initialize Filedtrip toolbox by running the command `ft_defaults` as well. It is convenient to add this command to startup.m, so that it will be executed automatically when starting Matlab.
 
 # Overview
 
@@ -40,5 +40,7 @@ This is a simple tutorial for electrodes localization. For more information and 
 # Electrodes placement
 
 # Volume-based registration
+[Pediatric atlases](http://nist.mni.mcgill.ca/?p=974)
 
-# Anatomical labeling 
+# Anatomical labeling
+BN_atlas seems more accurate than AAL atlas.

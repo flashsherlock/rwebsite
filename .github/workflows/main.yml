@@ -25,4 +25,11 @@ jobs:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: flashsherlock/flashsherlock.github.io
           publish_branch: master
-          publish_dir: ./public # dir to be published
+          publish_dir: ./public
+      - name: Sync to Gitee
+        uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        with:
+          source-repo: "git@github.com:flashsherlock/flashsherlock.github.io.git"
+          destination-repo: "git@gitee.com:flashsherlock/flashsherlock.git"
