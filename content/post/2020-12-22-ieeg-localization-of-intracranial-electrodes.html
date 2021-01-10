@@ -25,8 +25,7 @@ output:
 <li><a href="#preprocessing-of-ct-image"><span class="toc-section-number">4</span> Preprocessing of CT image</a></li>
 <li><a href="#fusion-of-the-ct-with-the-mri"><span class="toc-section-number">5</span> Fusion of the CT with the MRI</a></li>
 <li><a href="#electrodes-placement"><span class="toc-section-number">6</span> Electrodes placement</a></li>
-<li><a href="#volume-based-registration"><span class="toc-section-number">7</span> Volume-based registration</a></li>
-<li><a href="#anatomical-labeling"><span class="toc-section-number">8</span> Anatomical labeling</a></li>
+<li><a href="#anatomical-labeling"><span class="toc-section-number">7</span> Anatomical labeling</a></li>
 </ul>
 </div>
 
@@ -52,12 +51,29 @@ output:
 </div>
 <div id="electrodes-placement" class="section level1">
 <h1><span class="header-section-number">6</span> Electrodes placement</h1>
-</div>
-<div id="volume-based-registration" class="section level1">
-<h1><span class="header-section-number">7</span> Volume-based registration</h1>
-<p><a href="http://nist.mni.mcgill.ca/?p=974">Pediatric atlases</a></p>
+<p>Detect the weighted peak (<code>cfg.magtype = peakweighted</code>) around 3 (<code>cfg.magradius = 3</code>) pixels.
+# Volume-based registration
+<a href="http://nist.mni.mcgill.ca/?p=974">Pediatric atlases</a></p>
 </div>
 <div id="anatomical-labeling" class="section level1">
-<h1><span class="header-section-number">8</span> Anatomical labeling</h1>
-<p>BN_atlas seems more accurate than AAL atlas.</p>
+<h1><span class="header-section-number">7</span> Anatomical labeling</h1>
+<pre class="matlab"><code>% load coordinates
+load([filepath &#39;/&#39; subjID &#39;_elec_mni_fv.mat&#39;]);
+[ftver, ftpath] = ft_version;
+% use brainnetome atlas
+atlas = ft_read_atlas([ftpath filesep &#39;template/atlas/brainnetome/BNA_MPM_thr25_1.25mm.nii&#39;]);
+cfg            = [];
+cfg.roi        = elec_mni_fv.chanpos(:,:);
+cfg.atlas      = atlas;
+cfg.output     = &#39;multiple&#39;;
+labels = ft_volumelookup(cfg, atlas);
+
+% save labels to the cell &quot;position&quot;
+len=length(labels);
+position=cell(len,1);
+for i=1:len
+    [~, indx] = max(labels(i).count);
+    position{i}=labels(i).name(indx);
+end</code></pre>
+<p>Brainnetome atlas seems more accurate than AAL atlas.</p>
 </div>

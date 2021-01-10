@@ -12,13 +12,16 @@ jobs:
         uses: actions/checkout@v2 #软件市场的名称
         with: # 参数
           submodules: true
+      # setup hugo
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: '0.79.1'
           extended: true
+      # build website
       - name: Build
         run: hugo -b https://flashsherlock.github.io --minify
+      # deploy to github pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -26,6 +29,7 @@ jobs:
           external_repository: flashsherlock/flashsherlock.github.io
           publish_branch: master
           publish_dir: ./public
+      # sync to gitee pages
       - name: Sync to Gitee
         uses: wearerequired/git-mirror-action@master
         env:
@@ -33,3 +37,11 @@ jobs:
         with:
           source-repo: "git@github.com:flashsherlock/flashsherlock.github.io.git"
           destination-repo: "git@gitee.com:flashsherlock/flashsherlock.git"
+      # update gitee pagess
+      - name: Build Gitee Pages
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          gitee-username: flashsherlock
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          gitee-repo: flashsherlock/flashsherlock
+          branch: master
