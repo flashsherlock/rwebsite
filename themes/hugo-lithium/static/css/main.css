@@ -29,13 +29,32 @@ a {
   outline: none;
 }
 
+kbd {
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px;
+    border-style: outset;
+    border: 1px solid #aaa;
+    background: #fdfdfd;
+    padding: 0px 3px 1px 3px;
+    margin: 0px 0px 0px 0px;
+    vertical-align: baseline;
+    line-height: 1.7em;
+    white-space: nowrap;
+}
+
 code {
   background-color: rgba(0, 0, 0, 0.02);
   font-size: 14px;
   font-family: Menlo,Monaco,Consolas,"Andale Mono","lucida console","Courier New",monospace;
   border-radius: 8px;
 }
-
+/* for code in paragraph */
+p code{
+  font-size: inherit;
+}
 /* for block of numbers */
 .hljs-ln-numbers {
     -webkit-touch-callout: none;
