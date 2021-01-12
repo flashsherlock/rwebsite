@@ -1,12 +1,12 @@
 ---
 title: 'iEEG: Localization of intracranial electrodes'
 author: Fei
-date: '2020-12-22'
-slug: ieeg-localization-of-intracranial-electrodes
+date: '2021-01-12'
 categories:
   - reading
 tags:
   - data
+slug: ieeg-localization-of-intracranial-electrodes
 weight: 1
 draft: yes
 output:
@@ -25,31 +25,189 @@ This is a simple tutorial for electrodes localization. For more information and 
 
 # Overview
 
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/overview.jpg" style="width: 90%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/overview.jpg) -->
+
 # Preprocessing of MRI image
+Load MRI and determine its coordinate system first. As shown below, 
+
+* X should be the left/right dimension, 
+* Y should be the posterior/anterior dimension, 
+* Z should be the ventral/dorsal dimension.
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/tspace.gif" style="width: 50%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/tspace.gif) -->
+
+``` matlab
+% load MRI image
+subjID = 's01';
+filepath='data_folder';
+mri = ft_read_mri([filepath '/' subjID '_MRI.nii']);
+% determine left and right
+ft_determine_coordsys(mri);
+```
+
+Check if there is a mismatch between the image and the labels of axis. If it is correct, then enter "n" in the command window of Matlab.
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/mri.jpg" style="width: 70%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/mri.jpg) -->
+
+Launch the interactive programm to realign the image to ac-pc system.
+``` matlab
+cfg           = [];
+cfg.method    = 'interactive';
+cfg.coordsys  = 'acpc';
+mri_acpc = ft_volumerealign(cfg, mri);
+```
+Then you need to identify four landmarks and press corresponding keys to assign coordinates to them. For more details, you can watch this [video](https://static-content.springer.com/esm/art%3A10.1038%2Fs41596-018-0009-6/MediaObjects/41596_2018_9_MOESM7_ESM.mp4).
+
+* __key A:__ Anterior commissure (AC)
+* __key P:__ Posterior commissure (PC)
+* __key Z:__ Interhemispheric point along the positive midline
+* __key R:__ A point in the right hemisphere
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/acpc_location.png" style="width: 90%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/acpc_location.png) -->
+
+Note that sometimes the display of the image is flipped here, so pay attention to the coordinates displayed in the command window to determine the left and right side of the image.
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/right.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/right.png) -->
+
+Save the preprocessed anatomical MRI out to nii file.
+``` matlab
+cfg           = [];
+cfg.filename  = [filepath '/' subjID '_MRI_acpc'];
+cfg.filetype  = 'nifti';
+cfg.parameter = 'anatomy';
+ft_volumewrite(cfg, mri_acpc);
+```
 
 # Preprocessing of CT image
 
-<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/spm.png" style="width: 50%; display: block; margin:0 auto"/>
+Similarly, CT image should also be realigned to ac-pc, which can also be achieved by select several landmarks (see [Fieldtrip tutorials](https://www.fieldtriptoolbox.org/tutorial/human_ecog/)). However, selection may be inaccurate if the CT image is oblique, which will affect the fusion of CT and MRI images. Therefore, it is better to reorient the CT image in SPM.
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/ct.jpg" style="width: 70%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/ct.jpg) -->
+
+Open SPM and click <kbd>Display</kbd>, then choose the CT image and click <kbd>Done</kbd> to open it. Note that the original image will be overwrite when saving the reoriented image, so it is better to make a copy of the original image.
+``` matlab
+% open spm
+spm fmri
+```
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/spm.png" style="width: 60%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/spm.png) -->
 
-<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/display_after.png" style="width: 90%; display: block; margin:0 auto"/>
+Reorient the image to match the orientation of MRI image by entering values for pitch, row, and yaw, and then set the origin to AC (approximately).
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/headpose.png" style="width: 50%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/headpose.png) -->
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/display_after.png" style="width: 100%; display: block; margin:0 auto"/>
 <!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/display_after.png) -->
+To save the reoriented image, click <kbd>Reorient</kbd> and then click <kbd>Done</kbd>.
 
 # Fusion of the CT with the MRI
 
+Align the reoriented CT image `ct_acpc` with acpc-aligned MRI image `fsmri_acpc` by the function `ft_volumerealign`.
+``` matlab
+% load spm reoriented img
+ct_acpc = ft_read_mri([filepath '/' subjID '_CT_acpc.nii']);
+% load acpc-aligned MRI image
+fsmri_acpc = ft_read_mri([filepath '/' subjID '_MRI_acpc.nii']);
+fsmri_acpc.coordsys = 'acpc';
+% fusion
+cfg             = [];
+cfg.method      = 'spm';
+cfg.spmversion  = 'spm12';
+cfg.coordsys    = 'acpc';
+cfg.viewresult  = 'yes';
+ct_acpc_f = ft_volumerealign(cfg, ct_acpc, fsmri_acpc);
+```
+Check the results carefully to ensure that the CT image (shown in blue) matches with the MRI image (shown in red).
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/fusion.jpg" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/fusion.jpg) -->
+
 # Electrodes placement
-Detect the weighted peak (`cfg.magtype = peakweighted`) around 3 (`cfg.magradius = 3`) pixels.
+
+The electrode labels can be loaded from the header or generated by yourself, which will appear as a to-do list during the interactive electrode placement activity.
+``` matlab
+% load labels from header
+% hdr = ft_read_header([filepath filesep filename '.edf']);
+% generate labels
+ename=['F' 'G' 'Q' 'R'];
+enum=[14 12 12 14];
+names=cell(sum(enum),1);
+for i=1:length(ename)
+  name_tmp=reshape(sprintf([ename(i) '%02d'],1:enum(i)),3,[])';
+  names(sum(enum(1:i))-enum(i)+1:sum(enum(1:i)),1)=cellstr(name_tmp);
+end
+hdr.label=names;
+```
+
+Then, launch the programm by providing electrode labels `cfg.channel`, CT image `ct_acpc_f` and MRI image `fsmri_acpc` to `ft_electrodeplacement`.
+``` matlab
+% place electrodes
+cfg         = [];
+cfg.channel = hdr.label;
+elec_acpc_f = ft_electrodeplacement(cfg, ct_acpc_f, fsmri_acpc);
+```
+
+To assign a coordinate to an electrode, you need to select its label in the list first, and the click the corresponding electrode in the image, which appears to be light dots with fix interval in CT image. After assigning a coordinate, the label will change from gray to black, and a red cross will be shown on the image. To cancel a assignment, you should double click at the electrode label. There are some options that can help you identify the electrodes.
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/elec.png" style="width: 90%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/elec.png) -->
+
+* __Zoom:__  Zoom in the image to see the electodes.
+* __Intensity:__  Controls the contrast of the image.
+* __Magnet:__  Detect the weighted peak (`cfg.magtype = peakweighted`) around 3 (`cfg.magradius = 3`) pixels by default.
+* __Labels:__  Show labels on the image.
+* __Global:__  Display red crosses and labels wherever you are.
+* __CT/MRI:__  Switch to MRI image.
+* __Scatter:__  Plot the scatter image.
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/scatter.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/scatter.png) -->
+
+There is a skullstrip button in scatter mode, which can remove the skull so that electodes can be easily identified. Electrodes can be select by data cursor in scatter mode as well.
+
+<img src="/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/skullstrip.png" style="width: 80%; display: block; margin:0 auto"/>
+<!-- ![skullstrip](/post/2020-12-22-ieeg-localization-of-intracranial-electrodes_files/skullstrip.png){width=80%} -->
+
+
+You can visualize the electrodes and check if they are appropriate. If any error occurs, you can relaunch the placing programm by providing previous results `elec_acpc_f`.
+``` matlab
+% visualize electrodes
+ft_plot_ortho(fsmri_acpc.anatomy, 'transform', fsmri_acpc.transform, 'style', 'intersect');
+ft_plot_sens(elec_acpc_f, 'label', 'on', 'fontcolor', 'w');
+% place again if find any error
+cfg = [];
+cfg.elec = elec_acpc_f;
+elec_acpc_f = ft_electrodeplacement(cfg, ct_acpc_f, fsmri_acpc);
+```
+
 # Volume-based registration
-[Pediatric atlases](http://nist.mni.mcgill.ca/?p=974)
+
+To make the electrode coordinates comparable across subjects, the individual brain need to be registered to the standard MNI brain. The volume-based registration considers the overall geometry of the individual brain and the template, so you may encounter a mismatch when the template is not suitable. For example, the default template is derived from the brains of adults, which may not suitable for children. [Pediatric atlases](http://nist.mni.mcgill.ca/?p=974) provides a series of age-specific MRI brain templates for pediatric neuroimaging.
+
+``` matlab
+cfg            = [];
+cfg.nonlinear  = 'yes';
+cfg.spmversion = 'spm12';
+cfg.spmmethod  = 'new';
+% you can specify a template by cfg.template
+% cfg.template = 'path_to_the_template';
+fsmri_mni = ft_volumenormalise(cfg, fsmri_acpc);
+```
 
 # Anatomical labeling
+
+Fieldtrip provides a function `ft_volumelookup` which can look up coordinates in an atlas loaded by `ft_read_atlas`. AAl and other atlases can be found in the "atlas" directory located in the path of Fieldtip. Brainnetome atlas seems more accurate than AAL atlas. The result returned by `ft_volumelookup` is a stucture array, indicating the index of labels for each coordinates. Therefore, you need use these indexes to find the label names.
 
 ``` matlab
 % load coordinates
 load([filepath '/' subjID '_elec_mni_fv.mat']);
 [ftver, ftpath] = ft_version;
 % use brainnetome atlas
-atlas = ft_read_atlas([ftpath filesep 'template/atlas/brainnetome/BNA_MPM_thr25_1.25mm.nii']);
+tname = 'template/atlas/brainnetome/BNA_MPM_thr25_1.25mm.nii';
+atlas = ft_read_atlas([ftpath filesep tname]);
 cfg            = [];
 cfg.roi        = elec_mni_fv.chanpos(:,:);
 cfg.atlas      = atlas;
@@ -64,4 +222,3 @@ for i=1:len
     position{i}=labels(i).name(indx);
 end
 ```
-Brainnetome atlas seems more accurate than AAL atlas.
