@@ -3,10 +3,11 @@
 {{ $highCDN := (.Site.Params.highlightjsCDN | default "//cdnjs.cloudflare.com/ajax/libs") }}
 {{ if (not (eq $highVer "")) }}
 <script src="{{ $highCDN }}/highlight.js/{{ $highVer }}/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
 {{ $.Scratch.Set "highLangs" .Site.Params.highlightjsLang }}
 {{ range .Params.highlightjsLang }}{{ $.Scratch.Add "highLangs" . }}{{ end }}
 {{ range ($.Scratch.Get "highLangs") }}
 <script src="{{ $highCDN }}/highlight.js/{{ $highVer }}/languages/{{ . }}.min.js"></script>{{ end }}
-<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad(); hljs.initLineNumbersOnLoad();</script>
 {{ end }}
 {{ end }}
