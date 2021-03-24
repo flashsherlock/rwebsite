@@ -199,7 +199,7 @@ fsmri_mni = ft_volumenormalise(cfg, fsmri_acpc);
 
 # Anatomical labeling
 
-Fieldtrip provides a function `ft_volumelookup` which can look up coordinates in an atlas loaded by `ft_read_atlas`. AAl and other atlases can be found in the "atlas" directory located in the path of Fieldtip. Brainnetome atlas seems more accurate than AAL atlas. The result returned by `ft_volumelookup` is a stucture array, indicating the index of labels for each coordinates. Therefore, you need to use these indexes to find the label names.
+Fieldtrip provides a function `ft_volumelookup` which can look up coordinates in an atlas loaded by `ft_read_atlas`. AAl and other atlases can be found in the "atlas" directory located in the path of Fieldtip. Brainnetome atlas seems more accurate than AAL atlas. The result returned by `ft_volumelookup` is a structure array, indicating the index of atlas labels for each coordinate. Therefore, you need to use these indexes to find the label names.
 
 ``` matlab
 % load coordinates
