@@ -3,8 +3,8 @@ title: ''
 date: ''
 categories:
   - reading
-draft: true
-weight: 10
+draft: yes
+weight: 1
 ---
 
 # [Title]

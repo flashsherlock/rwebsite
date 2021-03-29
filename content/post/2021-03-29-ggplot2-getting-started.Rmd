@@ -1,0 +1,89 @@
+---
+title: 'ggplot2: Getting started'
+author: Fei
+date: '2021-03-29'
+slug: ggplot2-getting-started
+categories:
+  - R
+tags:
+  - plot
+  - R
+weight: 1
+draft: no
+output:
+  blogdown::html_page:
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+library(tidyverse)
+library(patchwork)
+```
+
+# Introduction
+The book *ggplot2: Elegant Graphics for Data Analysis* is a good starting point for learning [ggplot2](https://ggplot2.tidyverse.org/index.html), a useful R package for producing graphics. I summarized some main points and useful tips here. For more details, please refer to [the online version of the book](https://ggplot2-book.org/introduction.html). Packages required for this book are listed below.
+
+```{r eval=FALSE, include=TRUE}
+install.packages(c(
+  "directlabels", "dplyr", "gameofthrones", "ggforce", "gghighlight", 
+  "ggnewscale", "ggplot2", "ggraph", "ggrepel", "ggtext", "ggthemes", 
+  "hexbin", "mapproj", "maps", "munsell", "ozmaps", "paletteer", 
+  "patchwork", "rmapshaper", "scico", "seriation", "sf", "stars", 
+  "tidygraph", "tidyr", "wesanderson" 
+))
+```
+
+Wilkinson created the grammar of graphics, which is the underlying grammar of ggplot2 (and for which "gg" stands). All plots are composed of the **data**, the information to be visualized, and a **mapping**, the description of relationships between variables and aesthetic attributes, which includes five components:
+
+* **Layer**: collection of geometric elements (**geoms**: points, lines, polygons, etc.) and statistical transformations (**stats**).
+* **Scale**: mapping values in the data space to values in the aesthetic space including the use of color, shape or size, as well as drawing the legend and axes(an inverse mapping).
+* **Coord**: coordinate system (Cartesian coordinate, polar coordinates), providing axes and gridlines system.
+* **Facet**: specifying how to break up and display subsets of data (a.k.a. conditioning or latticing/trellising).
+* **Theme**: controling the finer points of display
+
+# Getting started
+## Aesthetic attributes
+There is one scale for each aesthetic mapping in a plot. In the first plot, the value “blue” is **scaled to a pinkish color**, and a legend is added, because aesthetic mapping of color is set **inside the aes()**. If you want to set an aesthetic to a fixed value, without scaling it, do so in the individual layer **outside of aes()**, which is shown in the second plot.
+
+```{r fig.height=3, fig.width=7}
+f1 <- ggplot(mpg, aes(displ, hwy)) + geom_point(aes(color = "blue"))
+f2 <- ggplot(mpg, aes(displ, hwy)) + geom_point(color = "blue")
+f1 | f2
+```
+
+## Faceting
+To facet a plot you simply add a faceting specification with `facet_wrap()`. For example, `facet_wrap(~group,ncol = 1,scales="free")` will show different groups in tables of graphics using different scales, arranged in one column.
+
+## Plot geoms
+There are many geom functions other than `geom_point()`, here are some examples:
+
+* `geom_smooth()` fits a smoother to the data and displays the smooth and its 
+  standard error (can be turned off with `geom_smooth(se = FALSE)`).
+  * `method = "loess"`, the default for small n, uses a smooth local 
+      regression.
+  * `method = "gam"` fits a generalized additive model.
+  * `method = "lm"` fits a linear model, giving the line of best fit.
+  * `method = "rlm"` works like `lm()`, but uses a robust fitting algorithm so 
+    that outliers don't affect the fit as much.
+* `geom_boxplot()`, `geom_jitter()`, and `geom_violin()` produce plot to summarize the distribution of a set of points.
+* `geom_histogram()` and `geom_freqpoly()` show the distribution of 
+  continuous variables.
+* `geom_bar()` shows the distribution of categorical variables.
+* `geom_path()` and `geom_line()` draw lines between the data points. However, `geom_path` connect points in the order of presentation. 
+
+More functions can be found in the [cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf)
+
+## Modifying the axes
+The x- and y-axis labels can be modified by `xlab()` and `ylab()`. The limits of axes are controled by `xlim()` and `ylim()`.
+
+## Output
+There are a few things you can do with a plot object:
+
+* Render it on screen with `print()`.
+* Save it to disk with `ggsave()`. For example, use `ggsave("plot.png", p, width = 5, height = 5)` to save plot as png.
+* Briefly describe its structure with `summary()`.
+* Save a cached copy of it to disk, with `saveRDS()`. This saves a complete
+    copy of the plot object, so you can easily re-create it with `readRDS()`.

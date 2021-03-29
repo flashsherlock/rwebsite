@@ -1,0 +1,106 @@
+---
+title: 'ggplot2: Getting started'
+author: Fei
+date: '2021-03-29'
+slug: ggplot2-getting-started
+categories:
+  - R
+tags:
+  - plot
+  - R
+weight: 1
+draft: no
+output:
+  blogdown::html_page:
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#getting-started"><span class="toc-section-number">2</span> Getting started</a>
+<ul>
+<li><a href="#aesthetic-attributes"><span class="toc-section-number">2.1</span> Aesthetic attributes</a></li>
+<li><a href="#faceting"><span class="toc-section-number">2.2</span> Faceting</a></li>
+<li><a href="#plot-geoms"><span class="toc-section-number">2.3</span> Plot geoms</a></li>
+<li><a href="#modifying-the-axes"><span class="toc-section-number">2.4</span> Modifying the axes</a></li>
+<li><a href="#output"><span class="toc-section-number">2.5</span> Output</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>The book <em>ggplot2: Elegant Graphics for Data Analysis</em> is a good starting point for learning <a href="https://ggplot2.tidyverse.org/index.html">ggplot2</a>, a useful R package for producing graphics. I summarized some main points and useful tips here. For more details, please refer to <a href="https://ggplot2-book.org/introduction.html">the online version of the book</a>. Packages required for this book are listed below.</p>
+<pre class="r"><code>install.packages(c(
+  &quot;directlabels&quot;, &quot;dplyr&quot;, &quot;gameofthrones&quot;, &quot;ggforce&quot;, &quot;gghighlight&quot;, 
+  &quot;ggnewscale&quot;, &quot;ggplot2&quot;, &quot;ggraph&quot;, &quot;ggrepel&quot;, &quot;ggtext&quot;, &quot;ggthemes&quot;, 
+  &quot;hexbin&quot;, &quot;mapproj&quot;, &quot;maps&quot;, &quot;munsell&quot;, &quot;ozmaps&quot;, &quot;paletteer&quot;, 
+  &quot;patchwork&quot;, &quot;rmapshaper&quot;, &quot;scico&quot;, &quot;seriation&quot;, &quot;sf&quot;, &quot;stars&quot;, 
+  &quot;tidygraph&quot;, &quot;tidyr&quot;, &quot;wesanderson&quot; 
+))</code></pre>
+<p>Wilkinson created the grammar of graphics, which is the underlying grammar of ggplot2 (and for which “gg” stands). All plots are composed of the <strong>data</strong>, the information to be visualized, and a <strong>mapping</strong>, the description of relationships between variables and aesthetic attributes, which includes five components:</p>
+<ul>
+<li><strong>Layer</strong>: collection of geometric elements (<strong>geoms</strong>: points, lines, polygons, etc.) and statistical transformations (<strong>stats</strong>).</li>
+<li><strong>Scale</strong>: mapping values in the data space to values in the aesthetic space including the use of color, shape or size, as well as drawing the legend and axes(an inverse mapping).</li>
+<li><strong>Coord</strong>: coordinate system (Cartesian coordinate, polar coordinates), providing axes and gridlines system.</li>
+<li><strong>Facet</strong>: specifying how to break up and display subsets of data (a.k.a. conditioning or latticing/trellising).</li>
+<li><strong>Theme</strong>: controling the finer points of display</li>
+</ul>
+</div>
+<div id="getting-started" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Getting started</h1>
+<div id="aesthetic-attributes" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Aesthetic attributes</h2>
+<p>There is one scale for each aesthetic mapping in a plot. In the first plot, the value “blue” is <strong>scaled to a pinkish color</strong>, and a legend is added, because aesthetic mapping of color is set <strong>inside the aes()</strong>. If you want to set an aesthetic to a fixed value, without scaling it, do so in the individual layer <strong>outside of aes()</strong>, which is shown in the second plot.</p>
+<pre class="r"><code>f1 &lt;- ggplot(mpg, aes(displ, hwy)) + geom_point(aes(color = &quot;blue&quot;))
+f2 &lt;- ggplot(mpg, aes(displ, hwy)) + geom_point(color = &quot;blue&quot;)
+f1 | f2</code></pre>
+<p><img src="/post/2021-03-29-ggplot2-getting-started_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="faceting" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Faceting</h2>
+<p>To facet a plot you simply add a faceting specification with <code>facet_wrap()</code>. For example, <code>facet_wrap(~group,ncol = 1,scales="free")</code> will show different groups in tables of graphics using different scales, arranged in one column.</p>
+</div>
+<div id="plot-geoms" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Plot geoms</h2>
+<p>There are many geom functions other than <code>geom_point()</code>, here are some examples:</p>
+<ul>
+<li><code>geom_smooth()</code> fits a smoother to the data and displays the smooth and its
+standard error (can be turned off with <code>geom_smooth(se = FALSE)</code>).
+<ul>
+<li><code>method = "loess"</code>, the default for small n, uses a smooth local
+regression.</li>
+<li><code>method = "gam"</code> fits a generalized additive model.</li>
+<li><code>method = "lm"</code> fits a linear model, giving the line of best fit.</li>
+<li><code>method = "rlm"</code> works like <code>lm()</code>, but uses a robust fitting algorithm so
+that outliers don’t affect the fit as much.</li>
+</ul></li>
+<li><code>geom_boxplot()</code>, <code>geom_jitter()</code>, and <code>geom_violin()</code> produce plot to summarize the distribution of a set of points.</li>
+<li><code>geom_histogram()</code> and <code>geom_freqpoly()</code> show the distribution of
+continuous variables.</li>
+<li><code>geom_bar()</code> shows the distribution of categorical variables.</li>
+<li><code>geom_path()</code> and <code>geom_line()</code> draw lines between the data points. However, <code>geom_path</code> connect points in the order of presentation.</li>
+</ul>
+<p>More functions can be found in the <a href="https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf">cheatsheet</a></p>
+</div>
+<div id="modifying-the-axes" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Modifying the axes</h2>
+<p>The x- and y-axis labels can be modified by <code>xlab()</code> and <code>ylab()</code>. The limits of axes are controled by <code>xlim()</code> and <code>ylim()</code>.</p>
+</div>
+<div id="output" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Output</h2>
+<p>There are a few things you can do with a plot object:</p>
+<ul>
+<li>Render it on screen with <code>print()</code>.</li>
+<li>Save it to disk with <code>ggsave()</code>. For example, use <code>ggsave("plot.png", p, width = 5, height = 5)</code> to save plot as png.</li>
+<li>Briefly describe its structure with <code>summary()</code>.</li>
+<li>Save a cached copy of it to disk, with <code>saveRDS()</code>. This saves a complete
+copy of the plot object, so you can easily re-create it with <code>readRDS()</code>.</li>
+</ul>
+</div>
+</div>
