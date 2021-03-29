@@ -49,7 +49,7 @@ output:
 <li><strong>Scale</strong>: mapping values in the data space to values in the aesthetic space including the use of color, shape or size, as well as drawing the legend and axes(an inverse mapping).</li>
 <li><strong>Coord</strong>: coordinate system (Cartesian coordinate, polar coordinates), providing axes and gridlines system.</li>
 <li><strong>Facet</strong>: specifying how to break up and display subsets of data (a.k.a. conditioning or latticing/trellising).</li>
-<li><strong>Theme</strong>: controling the finer points of display</li>
+<li><strong>Theme</strong>: controling the finer points of display.</li>
 </ul>
 </div>
 <div id="getting-started" class="section level1" number="2">
@@ -61,6 +61,7 @@ output:
 f2 &lt;- ggplot(mpg, aes(displ, hwy)) + geom_point(color = &quot;blue&quot;)
 f1 | f2</code></pre>
 <p><img src="/post/2021-03-29-ggplot2-getting-started_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Two graphics are arranged horizontally by <code>|</code> (<code>+</code> will do the same thing), an operator provided by the package <strong>patchwork</strong></p>
 </div>
 <div id="faceting" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Faceting</h2>
@@ -86,11 +87,11 @@ continuous variables.</li>
 <li><code>geom_bar()</code> shows the distribution of categorical variables.</li>
 <li><code>geom_path()</code> and <code>geom_line()</code> draw lines between the data points. However, <code>geom_path</code> connect points in the order of presentation.</li>
 </ul>
-<p>More functions can be found in the <a href="https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf">cheatsheet</a></p>
+<p>More functions can be found in the <a href="https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf">cheatsheet</a>.</p>
 </div>
 <div id="modifying-the-axes" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Modifying the axes</h2>
-<p>The x- and y-axis labels can be modified by <code>xlab()</code> and <code>ylab()</code>. The limits of axes are controled by <code>xlim()</code> and <code>ylim()</code>.</p>
+<p>The x- and y-axis labels can be modified by <code>xlab()</code> and <code>ylab()</code>. The limits of axes are controlled by <code>xlim()</code> and <code>ylim()</code>.</p>
 </div>
 <div id="output" class="section level2" number="2.5">
 <h2><span class="header-section-number">2.5</span> Output</h2>

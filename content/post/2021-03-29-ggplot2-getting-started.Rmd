@@ -42,7 +42,7 @@ Wilkinson created the grammar of graphics, which is the underlying grammar of gg
 * **Scale**: mapping values in the data space to values in the aesthetic space including the use of color, shape or size, as well as drawing the legend and axes(an inverse mapping).
 * **Coord**: coordinate system (Cartesian coordinate, polar coordinates), providing axes and gridlines system.
 * **Facet**: specifying how to break up and display subsets of data (a.k.a. conditioning or latticing/trellising).
-* **Theme**: controling the finer points of display
+* **Theme**: controling the finer points of display.
 
 # Getting started
 ## Aesthetic attributes
@@ -53,6 +53,8 @@ f1 <- ggplot(mpg, aes(displ, hwy)) + geom_point(aes(color = "blue"))
 f2 <- ggplot(mpg, aes(displ, hwy)) + geom_point(color = "blue")
 f1 | f2
 ```
+
+Two graphics are arranged horizontally by `|` (`+` will do the same thing), an operator provided by the package **patchwork**.
 
 ## Faceting
 To facet a plot you simply add a faceting specification with `facet_wrap()`. For example, `facet_wrap(~group,ncol = 1,scales="free")` will show different groups in tables of graphics using different scales, arranged in one column.
@@ -74,10 +76,10 @@ There are many geom functions other than `geom_point()`, here are some examples:
 * `geom_bar()` shows the distribution of categorical variables.
 * `geom_path()` and `geom_line()` draw lines between the data points. However, `geom_path` connect points in the order of presentation. 
 
-More functions can be found in the [cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf)
+More functions can be found in the [cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf).
 
 ## Modifying the axes
-The x- and y-axis labels can be modified by `xlab()` and `ylab()`. The limits of axes are controled by `xlim()` and `ylim()`.
+The x- and y-axis labels can be modified by `xlab()` and `ylab()`. The limits of axes are controlled by `xlim()` and `ylim()`.
 
 ## Output
 There are a few things you can do with a plot object:
