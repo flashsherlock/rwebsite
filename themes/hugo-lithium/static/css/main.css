@@ -78,6 +78,15 @@ p code{
     padding-left: 10px!important;
 }
 
+ul {
+  padding-inline-start: 15px;
+}
+
+/* table of content*/
+div#TOC ul {
+  padding-inline-start: 25px;
+}
+
 div.figure img,
 p img {
   width: 100%
@@ -152,7 +161,7 @@ span.mjx-chtml.MJXc-display {
 
 .content {
   max-width: 700px;
-  margin: 40px auto 10px;
+  margin: 20px auto 10px;
   padding: 0 15px;
   font-size: 16px;
   line-height: 1.8;
