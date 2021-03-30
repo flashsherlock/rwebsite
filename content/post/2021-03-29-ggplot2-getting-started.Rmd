@@ -20,7 +20,6 @@ output:
 ```{r include=FALSE}
 knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
 library(tidyverse)
-library(patchwork)
 ```
 
 # Introduction
@@ -49,12 +48,13 @@ Wilkinson created the grammar of graphics, which is the underlying grammar of gg
 There is one scale for each aesthetic mapping in a plot. In the first plot, the value “blue” is **scaled to a pinkish color**, and a legend is added, because aesthetic mapping of color is set **inside the aes()**. If you want to set an aesthetic to a fixed value, without scaling it, do so in the individual layer **outside of aes()**, which is shown in the second plot.
 
 ```{r fig.height=3, fig.width=7}
+library(patchwork)
 f1 <- ggplot(mpg, aes(displ, hwy)) + geom_point(aes(color = "blue"))
 f2 <- ggplot(mpg, aes(displ, hwy)) + geom_point(color = "blue")
 f1 | f2
 ```
 
-Two graphics are arranged horizontally by `|` (`+` will do the same thing), an operator provided by the package **patchwork**.
+Two graphics are arranged horizontally by `|` (`+` will do the same thing), an operator provided by the package **patchwork** .
 
 ## Faceting
 To facet a plot you simply add a faceting specification with `facet_wrap()`. For example, `facet_wrap(~group,ncol = 1,scales="free")` will show different groups in tables of graphics using different scales, arranged in one column.
@@ -79,7 +79,26 @@ There are many geom functions other than `geom_point()`, here are some examples:
 More functions can be found in the [cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf).
 
 ## Modifying the axes
-The x- and y-axis labels can be modified by `xlab()` and `ylab()`. The limits of axes are controlled by `xlim()` and `ylim()`.
+The x- and y-axis labels can be modified by `xlab()` and `ylab()`. The limits of axes are controlled by `xlim()` and `ylim()`. Changing the axes limits **sets values outside the range to NA**. For continuous scales, use NA to set only one limit. Setting `ylim` inside `coord_cartesian()` will leave data unchanged.
+```{r fig.height=2, fig.width=8}
+# There are two ways of zooming the plot display: 
+# with scales or with coordinate systems. 
+
+p <- ggplot(mtcars, aes(disp, wt)) +
+  geom_point() +
+  geom_smooth()
+p |
+
+# Setting the limits on a scale converts 
+# all values outside the range to NA.
+p + scale_x_continuous(limits = c(325, 500)) |
+
+# Setting the limits on the coordinate system
+# The data is unchanged, and show a portion of it
+# Note how smooth continues past the points visible.
+p + coord_cartesian(xlim = c(325, 500))
+```
+
 
 ## Output
 There are a few things you can do with a plot object:

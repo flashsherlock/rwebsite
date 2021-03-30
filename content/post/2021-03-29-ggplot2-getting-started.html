@@ -57,11 +57,12 @@ output:
 <div id="aesthetic-attributes" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Aesthetic attributes</h2>
 <p>There is one scale for each aesthetic mapping in a plot. In the first plot, the value “blue” is <strong>scaled to a pinkish color</strong>, and a legend is added, because aesthetic mapping of color is set <strong>inside the aes()</strong>. If you want to set an aesthetic to a fixed value, without scaling it, do so in the individual layer <strong>outside of aes()</strong>, which is shown in the second plot.</p>
-<pre class="r"><code>f1 &lt;- ggplot(mpg, aes(displ, hwy)) + geom_point(aes(color = &quot;blue&quot;))
+<pre class="r"><code>library(patchwork)
+f1 &lt;- ggplot(mpg, aes(displ, hwy)) + geom_point(aes(color = &quot;blue&quot;))
 f2 &lt;- ggplot(mpg, aes(displ, hwy)) + geom_point(color = &quot;blue&quot;)
 f1 | f2</code></pre>
 <p><img src="/post/2021-03-29-ggplot2-getting-started_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Two graphics are arranged horizontally by <code>|</code> (<code>+</code> will do the same thing), an operator provided by the package <strong>patchwork</strong></p>
+<p>Two graphics are arranged horizontally by <code>|</code> (<code>+</code> will do the same thing), an operator provided by the package <strong>patchwork</strong> .</p>
 </div>
 <div id="faceting" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Faceting</h2>
@@ -91,7 +92,24 @@ continuous variables.</li>
 </div>
 <div id="modifying-the-axes" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Modifying the axes</h2>
-<p>The x- and y-axis labels can be modified by <code>xlab()</code> and <code>ylab()</code>. The limits of axes are controlled by <code>xlim()</code> and <code>ylim()</code>.</p>
+<p>The x- and y-axis labels can be modified by <code>xlab()</code> and <code>ylab()</code>. The limits of axes are controlled by <code>xlim()</code> and <code>ylim()</code>. Changing the axes limits <strong>sets values outside the range to NA</strong>. For continuous scales, use NA to set only one limit. Setting <code>ylim</code> inside <code>coord_cartesian()</code> will leave data unchanged.</p>
+<pre class="r"><code># There are two ways of zooming the plot display: 
+# with scales or with coordinate systems. 
+
+p &lt;- ggplot(mtcars, aes(disp, wt)) +
+  geom_point() +
+  geom_smooth()
+p |
+
+# Setting the limits on a scale converts 
+# all values outside the range to NA.
+p + scale_x_continuous(limits = c(325, 500)) |
+
+# Setting the limits on the coordinate system
+# The data is unchanged, and show a portion of it
+# Note how smooth continues past the points visible.
+p + coord_cartesian(xlim = c(325, 500))</code></pre>
+<p><img src="/post/2021-03-29-ggplot2-getting-started_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 <div id="output" class="section level2" number="2.5">
 <h2><span class="header-section-number">2.5</span> Output</h2>
