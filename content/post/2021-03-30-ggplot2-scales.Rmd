@@ -19,7 +19,110 @@ output:
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+library(tidyverse)
+library(patchwork)
 ```
 
 # Introduction
+The scales toolbox divide scales into three main groups:
+
+* Position scales and axes.
+* Color scales and legends.
+* Scales for other aesthetics.
+
+# Position scales and axes
+Sometimes an aesthetic is mapped to a **computed variable** that does not need to be explicitly specified, as happens with `geom_histogram()`, which use the computed variable `count`.
+
+```{r eval=FALSE, include=FALSE}
+ggplot(mpg, aes(x = displ)) + geom_histogram()
+ggplot(mpg, aes(x = displ, y = after_stat(count))) + geom_histogram()
+```
+
+## Numeric
+The most common continuous position scales are the default `scale_x_continuous()` and `scale_y_continuous()`. Other functions like `scale_x_log10()`, `scale_x_reverse()` transform the data, which can also be achieved by setting the `trans` option.
+
+| Name      | Function $f(x)$         | Name      | Function $f(x)$         
+|-----------|-------------------------|-----------|------------------------
+| asn       | $\tanh^{-1}(x)$         | logit     | $\log(\frac{x}{1 - x})$ 
+| exp       | $e ^ x$                 | pow10     | $10^x$                  
+| identity  | $x$                     | probit    | $\Phi(x)$               
+| log       | $\log(x)$               | reciprocal| $x^{-1}$                
+| log10     | $\log_{10}(x)$          | reverse   | $-x$                    
+| log2      | $\log_2(x)$             | sqrt      | $x^{1/2}$               
+
+Specifically, if you use a transformed scale, the axes will be labeled in the original data space; if you transform the data, the axes will be labelled in the transformed space.
+
+```{r fig.height=2, fig.width=6}
+# manual transformation
+ggplot(mpg, aes(log10(displ), hwy)) + 
+  geom_point() |
+
+# transform using scales
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  scale_x_log10()
+```
+
+By default, ggplot2 converts data outside the scale limits to `NA`, because the default value of `oob` (out of boundary) argument is `scales::censor()`. Setting it to `scales::squish()` will squishes all values into the range.
+
+The space around the plot can be eliminated with `expand = c(0, 0)`. To make sure some values are shown on the plots, use `expand_limits()`.
+
+```{r fig.height=2, fig.width=5}
+ggplot(faithfuld, aes(waiting, eruptions)) + 
+  geom_raster(aes(fill = density)) + 
+  theme(legend.position = "none") +
+  expand_limits(x=1,y=1)|
+
+ggplot(faithfuld, aes(waiting, eruptions)) + 
+  geom_raster(aes(fill = density)) + 
+  scale_x_continuous(expand = c(0,0),trans = "reverse") + 
+  scale_y_continuous(expand = c(0,0)) +
+  theme(legend.position = "none")|
+  
+ggplot(faithfuld, aes(waiting, eruptions)) + 
+  geom_raster(aes(fill = density)) +
+  # multiply 5
+  scale_x_continuous(expand = c(5,0)) + 
+  # add 5 at each side
+  scale_y_continuous(expand = c(0,5)) +
+  theme(legend.position = "none")
+```
+
+Breaks can be added manually, but ggplot2 also allows you to pass a function to `breaks`:
+
+* `scales::breaks_extended()`	creates automatic breaks for numeric axes (the standard method).
+* `scales::breaks_log()`	creates breaks appropriate for log axes.
+* `scales::breaks_pretty()`	creates "pretty" breaks for date/times.
+* `scales::breaks_width()`	creates equally spaced 
+
+Every break is associated with a label and these can be changed by setting the `labels` argument to the scale function:
+
+* `scales::label_bytes()` formats numbers as kilobytes, megabytes etc.
+* `scales::label_comma()` formats numbers as decimals with commas added.
+* `scales::label_dollar()` formats numbers as currency.
+* `scales::label_ordinal()` formats numbers in rank order: 1st, 2nd, 3rd etc.
+* `scales::label_percent()` formats numbers as percentages.
+* `scales::label_pvalue()` formats numbers as p-values: <.05, <.01, .34, etc.
+
+As with breaks, you can also supply a function to minor_breaks, such as `scales::minor_breaks_n()` or `scales::minor_breaks_width()` functions that can be helpful in controlling the minor breaks. However, these minor breaks do not add ticks on the axis.
+
+```{r fig.height=2, fig.width=9}
+toy <- data.frame(
+  const = 1,   up = 1:4,  txt = letters[1:4], 
+  big = (1:4)*1000,  log = c(2, 5, 10, 2000))
+# add breaks without labels
+brks = seq(500, 4000, 250)
+lbs <- ifelse(brks%%1000 == 0, brks, "")
+# plot
+axs <- ggplot(toy, aes(big, const)) + geom_point() + labs(x = NULL, y = NULL)
+# minor breaks
+axs + scale_x_continuous(breaks = scales::breaks_extended(n = 4),
+                         minor_breaks = seq(1500,4000,250))|
+# use offset to control breaks
+axs + scale_x_continuous(breaks = scales::breaks_width(800, offset = 200))|
+# control labels
+axs + scale_y_continuous(labels = scales::label_dollar(prefix = "￥", suffix = "€"))|
+# breaks without labels
+axs + scale_x_continuous(breaks = brks, labels = lbs)
+```
 
