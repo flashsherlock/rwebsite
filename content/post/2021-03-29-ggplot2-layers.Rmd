@@ -41,19 +41,18 @@ Geoms can be roughly divided into individual and collective geoms.
   * `geom_tile()` also draw rectangles (parameterised by the center of the rect and its size).
   * `geom_raster()` is a fast special case of `geom_tile()` used when all the tiles are the same size.
 * __Collective geoms__ display multiple observations with one geometric object.
-  * The assignment of observations to graphical elements can be controlled by `group` aesthetic.
-  
+  * The assignment of observations to graphical elements can be controlled by `group` aesthetic (shown below).
+  * If a group is defined by a **combination of multiple variables**, use `interaction()` to combine them, e.g. `aes(group = interaction(school_id, student_id))`.
+  * Setting the grouping aesthetic in `ggplot()` will affect all geoms below.
+  * Lines and paths operate on a **“first value” principle**: each segment is defined by two observations, and ggplot2 applies the aesthetic value (e.g., color) associated with the first observation when drawing the segment.
+  * Mapping aesthetics to discrete variables works well for bar and area plots, resulting in **stacking** individual pieces.
+
 ```{r fig.height=2, fig.width=4}
 library(babynames)
 hadley <- dplyr::filter(babynames, name == "Hadley")
 ggplot(hadley, aes(year, n, group = sex, color = sex)) + 
   geom_line()
 ```
-  
-  * If a group is defined by a **combination of multiple variables**, use `interaction()` to combine them, e.g. `aes(group = interaction(school_id, student_id))`.
-  * Setting the grouping aesthetic in `ggplot()` will affect all geoms below.
-  * Lines and paths operate on a **“first value” principle**: each segment is defined by two observations, and ggplot2 applies the aesthetic value (e.g., color) associated with the first observation when drawing the segment.
-  * Mapping aesthetics to discrete variables works well for bar and area plots, resulting in **stacking** individual pieces.
 
 # Statistical summaries
 ## Revealing uncertainty
@@ -176,7 +175,7 @@ ggplot(diamonds, aes(color, price)) +
 ```
 
 ## Surfaces
-The ggplot2 package does not support true 3d surfaces, but it does support many common tools for summarizing 3d surfaces in 2d.
+The ggplot2 package does not support true 3d surfaces, but it does support many common tools for summarizing 3d surfaces in 2d. 
 ```{r fig.height=2, fig.width=8}
 small <- faithfuld[seq(1, nrow(faithfuld), by = 10), ]
 # contour
@@ -193,6 +192,37 @@ ggplot(small, aes(eruptions, waiting)) +
   scale_size_area()
 ```
 
+There is another good example for `geom_tile()` in this website: [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html).
+```{r fig.height=3, fig.width=4}
+var <- mpg$class  # the categorical data 
+## Prep data (nothing to change here)
+nrows <- 10
+df <- expand.grid(y = 1:nrows, x = 1:nrows)
+categ_table <- round(table(var) * ((nrows*nrows)/(length(var))))
+
+df$category <- factor(rep(names(categ_table), categ_table))  
+# NOTE: if sum(categ_table) is not 100 (i.e. nrows^2), 
+# it will need adjustment to make the sum to 100.
+
+## Plot
+ggplot(df, aes(x = x, y = y, fill = category)) + 
+        # set border color and size
+        geom_tile(color = "black", size = 0.5) +
+        scale_x_continuous(expand = c(0, 0)) +
+        scale_y_continuous(expand = c(0, 0), trans = 'reverse') +
+        scale_fill_brewer(palette = "Set3") +
+        labs(title="Waffle Chart", subtitle="'Class' of vehicles",
+             caption="Source: mpg") + 
+        theme(panel.border = element_rect(size = 1, fill = NA),
+              plot.title = element_text(size = rel(1.2)),
+              axis.text = element_blank(),
+              axis.title = element_blank(),
+              axis.ticks = element_blank(),
+              axis.line=element_blank(),
+              legend.title = element_blank(),
+              legend.position = "right")
+```
+
 # Annotations
 Conceptually, an annotation supplies metadata for the plot: that is, it provides additional information about the data being displayed.
 
@@ -202,9 +232,9 @@ The `labs()` helper function lets you to set the various titles using name-value
 ```{r fig.height=2, fig.width=4}
 base <- ggplot() + xlim(-2*pi, 2*pi)
 base + 
-  geom_function(fun = sin)+
+  geom_function(fun = rlang::as_function(~ sin(.x^3)))+
   labs(x = "Axis title with *italics* and **boldface**",
-       y = quote(f(x) == sin(x)^3))+
+       y = quote( f(x) == sin(x^3) ))+
   theme(axis.title.x = ggtext::element_markdown())
 ```
 

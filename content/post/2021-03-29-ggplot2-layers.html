@@ -65,7 +65,11 @@ output:
 </ul></li>
 <li><strong>Collective geoms</strong> display multiple observations with one geometric object.
 <ul>
-<li>The assignment of observations to graphical elements can be controlled by <code>group</code> aesthetic.</li>
+<li>The assignment of observations to graphical elements can be controlled by <code>group</code> aesthetic (shown below).</li>
+<li>If a group is defined by a <strong>combination of multiple variables</strong>, use <code>interaction()</code> to combine them, e.g. <code>aes(group = interaction(school_id, student_id))</code>.</li>
+<li>Setting the grouping aesthetic in <code>ggplot()</code> will affect all geoms below.</li>
+<li>Lines and paths operate on a <strong>“first value” principle</strong>: each segment is defined by two observations, and ggplot2 applies the aesthetic value (e.g., color) associated with the first observation when drawing the segment.</li>
+<li>Mapping aesthetics to discrete variables works well for bar and area plots, resulting in <strong>stacking</strong> individual pieces.</li>
 </ul></li>
 </ul>
 <pre class="r"><code>library(babynames)
@@ -73,12 +77,6 @@ hadley &lt;- dplyr::filter(babynames, name == &quot;Hadley&quot;)
 ggplot(hadley, aes(year, n, group = sex, color = sex)) + 
   geom_line()</code></pre>
 <p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-2-1.png" width="384" style="display: block; margin: auto;" /></p>
-<ul>
-<li>If a group is defined by a <strong>combination of multiple variables</strong>, use <code>interaction()</code> to combine them, e.g. <code>aes(group = interaction(school_id, student_id))</code>.</li>
-<li>Setting the grouping aesthetic in <code>ggplot()</code> will affect all geoms below.</li>
-<li>Lines and paths operate on a <strong>“first value” principle</strong>: each segment is defined by two observations, and ggplot2 applies the aesthetic value (e.g., color) associated with the first observation when drawing the segment.</li>
-<li>Mapping aesthetics to discrete variables works well for bar and area plots, resulting in <strong>stacking</strong> individual pieces.</li>
-</ul>
 </div>
 <div id="statistical-summaries" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Statistical summaries</h1>
@@ -216,6 +214,35 @@ ggplot(small, aes(eruptions, waiting)) +
   geom_point(aes(size = density), alpha = 1/3) + 
   scale_size_area()</code></pre>
 <p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>There is another good example for <code>geom_tile()</code> in this website: <a href="http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html">Top 50 ggplot2 Visualizations</a>.</p>
+<pre class="r"><code>var &lt;- mpg$class  # the categorical data 
+## Prep data (nothing to change here)
+nrows &lt;- 10
+df &lt;- expand.grid(y = 1:nrows, x = 1:nrows)
+categ_table &lt;- round(table(var) * ((nrows*nrows)/(length(var))))
+
+df$category &lt;- factor(rep(names(categ_table), categ_table))  
+# NOTE: if sum(categ_table) is not 100 (i.e. nrows^2), 
+# it will need adjustment to make the sum to 100.
+
+## Plot
+ggplot(df, aes(x = x, y = y, fill = category)) + 
+        # set border color and size
+        geom_tile(color = &quot;black&quot;, size = 0.5) +
+        scale_x_continuous(expand = c(0, 0)) +
+        scale_y_continuous(expand = c(0, 0), trans = &#39;reverse&#39;) +
+        scale_fill_brewer(palette = &quot;Set3&quot;) +
+        labs(title=&quot;Waffle Chart&quot;, subtitle=&quot;&#39;Class&#39; of vehicles&quot;,
+             caption=&quot;Source: mpg&quot;) + 
+        theme(panel.border = element_rect(size = 1, fill = NA),
+              plot.title = element_text(size = rel(1.2)),
+              axis.text = element_blank(),
+              axis.title = element_blank(),
+              axis.ticks = element_blank(),
+              axis.line=element_blank(),
+              legend.title = element_blank(),
+              legend.position = &quot;right&quot;)</code></pre>
+<p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-10-1.png" width="384" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="annotations" class="section level1" number="4">
@@ -226,11 +253,11 @@ ggplot(small, aes(eruptions, waiting)) +
 <p>The <code>labs()</code> helper function lets you to set the various titles using name-value pairs like <code>title = "My plot title"</code>. Mathematical expressions wrapped in <code>quote()</code>. The rules by which these expressions are interpreted can be found by typing <code>?plotmath</code>. To enable markdown you need to set the relevant theme element to <code>ggtext::element_markdown()</code>.</p>
 <pre class="r"><code>base &lt;- ggplot() + xlim(-2*pi, 2*pi)
 base + 
-  geom_function(fun = sin)+
+  geom_function(fun = rlang::as_function(~ sin(.x^3)))+
   labs(x = &quot;Axis title with *italics* and **boldface**&quot;,
-       y = quote(f(x) == sin(x)^3))+
+       y = quote( f(x) == sin(x^3) ))+
   theme(axis.title.x = ggtext::element_markdown())</code></pre>
-<p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-10-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-11-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>There are two ways to remove the axis label. Setting <code>labs(x = "")</code> omits the label but still allocates space; setting <code>labs(x = NULL)</code> removes the label and its space.</p>
 </div>
 <div id="text-labels" class="section level2" number="4.2">
@@ -293,7 +320,7 @@ ggplot(economics) +
   theme(legend.position = &quot;bottom&quot;)+
   xlab(&quot;date&quot;) + 
   ylab(&quot;unemployment&quot;)</code></pre>
-<p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Highlight a subset of points can be achieved by drawing larger points in a different color underneath the main data set. <code>geom_curve()</code> and <code>geom_segment()</code> can be used to draw curves and lines connecting points with labels.</p>
 <pre class="r"><code>p &lt;- ggplot(mpg, aes(displ, hwy)) +
   geom_point(
@@ -307,7 +334,7 @@ p + annotate(
     curvature = .3, arrow = arrow(length = unit(2, &quot;mm&quot;))) +
   annotate(geom = &quot;text&quot;, x = 4.1, y = 35, label = &quot;subaru&quot;, 
            hjust = &quot;left&quot;)</code></pre>
-<p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-12-1.png" width="288" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-13-1.png" width="288" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="arranging-plots" class="section level1" number="5">
