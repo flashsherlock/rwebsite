@@ -55,8 +55,10 @@ ggplot(hadley, aes(year, n, group = sex, color = sex)) +
 ```
 
 # Statistical summaries
+
 ## Revealing uncertainty
 There are four basic families of geoms using the aesthetics `ymin` and `ymax` to show uncertainty:
+
 * Discrete x, range: `geom_errorbar()`, `geom_linerange()`
 * Discrete x, range & center: `geom_crossbar()`, `geom_pointrange()`
 * Continuous x, range:` geom_ribbon()`
@@ -348,4 +350,3 @@ p1 +
     align_to = "full"
   )
 ```
-

@@ -82,11 +82,13 @@ ggplot(hadley, aes(year, n, group = sex, color = sex)) +
 <h1><span class="header-section-number">3</span> Statistical summaries</h1>
 <div id="revealing-uncertainty" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Revealing uncertainty</h2>
-<p>There are four basic families of geoms using the aesthetics <code>ymin</code> and <code>ymax</code> to show uncertainty:
-* Discrete x, range: <code>geom_errorbar()</code>, <code>geom_linerange()</code>
-* Discrete x, range &amp; center: <code>geom_crossbar()</code>, <code>geom_pointrange()</code>
-* Continuous x, range:<code>geom_ribbon()</code>
-* Continuous x, range &amp; center: <code>geom_smooth(stat = "identity")</code></p>
+<p>There are four basic families of geoms using the aesthetics <code>ymin</code> and <code>ymax</code> to show uncertainty:</p>
+<ul>
+<li>Discrete x, range: <code>geom_errorbar()</code>, <code>geom_linerange()</code></li>
+<li>Discrete x, range &amp; center: <code>geom_crossbar()</code>, <code>geom_pointrange()</code></li>
+<li>Continuous x, range:<code>geom_ribbon()</code></li>
+<li>Continuous x, range &amp; center: <code>geom_smooth(stat = "identity")</code></li>
+</ul>
 <pre class="r"><code>y &lt;- c(18, 11, 16)
 df &lt;- data.frame(x = 1:3, y = y, se = c(1.2, 0.5, 1.0))
 base &lt;- ggplot(df, aes(x, y, ymin = y - se, ymax = y + se))
