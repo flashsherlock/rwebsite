@@ -25,6 +25,15 @@ output:
 <li><a href="#position-scales-and-axes"><span class="toc-section-number">2</span> Position scales and axes</a>
 <ul>
 <li><a href="#numeric"><span class="toc-section-number">2.1</span> Numeric</a></li>
+<li><a href="#date-time"><span class="toc-section-number">2.2</span> Date-time</a></li>
+<li><a href="#discrete"><span class="toc-section-number">2.3</span> Discrete</a></li>
+<li><a href="#binned"><span class="toc-section-number">2.4</span> Binned</a></li>
+<li><a href="#limits"><span class="toc-section-number">2.5</span> Limits</a></li>
+</ul></li>
+<li><a href="#color-scales-and-legends"><span class="toc-section-number">3</span> Color scales and legends</a>
+<ul>
+<li><a href="#continuous-color-scales"><span class="toc-section-number">3.1</span> Continuous color scales</a></li>
+<li><a href="#discrete-colour-scales"><span class="toc-section-number">3.2</span> Discrete colour scales</a></li>
 </ul></li>
 </ul>
 </div>
@@ -92,7 +101,7 @@ output:
 </tr>
 </tbody>
 </table>
-<p>Specifically, if you use a transformed scale, the axes will be labeled in the original data space; if you transform the data, the axes will be labelled in the transformed space.</p>
+<p>Specifically, if you use a transformed scale, the axes will be labeled in the original data space; if you transform the data, the axes will be labeled in the transformed space. To transform after statistical computation use <code>coord_trans()</code>.</p>
 <pre class="r"><code># manual transformation
 ggplot(mpg, aes(log10(displ), hwy)) + 
   geom_point() |
@@ -158,5 +167,114 @@ axs + scale_y_continuous(labels = scales::label_dollar(prefix = &quot;￥&quot;,
 # breaks without labels
 axs + scale_x_continuous(breaks = brks, labels = lbs)</code></pre>
 <p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-5-1.png" width="864" style="display: block; margin: auto;" /></p>
+</div>
+<div id="date-time" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Date-time</h2>
+<p>Different formats of date/time can be converted by a few functions (<code>as.Date()</code>, <code>as.POSIXct()</code> or <code>hms::as_hms()</code>) or the <strong>lubridate</strong> package. Default scale for dates is <code>scale_x_date()</code> and <code>scale_x_datetime()</code> is default for data-time data.</p>
+<p>Breaks and minor breaks can be specified by <code>date_breaks</code> and <code>data_minor_breaks</code> respectively. Date label formatting is useful when there’s no sufficient room.</p>
+<pre class="r"><code>date_base &lt;- ggplot(economics, aes(date, psavert)) + 
+  geom_line(na.rm = TRUE) +
+  labs(x = NULL, y = NULL)
+
+date_base + scale_x_date(date_breaks = &quot;25 years&quot;,
+                         date_minor_breaks = &quot;5 years&quot;,
+                         date_labels = &quot;%y&quot;) |
+# formatting with function label_date, or label_date_short
+date_base + scale_x_date(labels = scales::label_date(&quot;%Y&quot;))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="discrete" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Discrete</h2>
+<p>The default scales mapping discrete variables to position scales are <code>scale_x_discrete()</code> and <code>scale_y_discrete()</code>. Internally, ggplot2 handles discrete scales by mapping each category to an integer value and then drawing the geom at the corresponding coordinate location. Labels of the discrete variable can be set by <code>labels</code> and <code>guide_axis()</code> controls their layout.</p>
+<pre class="r"><code>base &lt;- ggplot(mpg, aes(manufacturer, hwy)) + geom_boxplot()
+
+base + guides(x = guide_axis(n.dodge = 3)) |
+# as.character() is not needed for numbers
+base + scale_x_discrete(labels = 1:length(unique(mpg$manufacturer)))+
+       guides(x = guide_axis(angle = 90))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="binned" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Binned</h2>
+<p>Continuous variables can be sliced into multiple bins (e.g. <code>geom_count</code>).</p>
+<pre class="r"><code>base &lt;- ggplot(mpg, aes(hwy, class)) + geom_count()
+
+base |
+base + scale_x_binned(n.breaks = 10)</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="limits" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Limits</h2>
+<p>To make sure different plots share the same axes and legend, just like faceted plots, multiple limits (x, y, color, etc.) should be set.</p>
+<pre class="r"><code>mpg_99 &lt;- mpg %&gt;% filter(year == 1999)
+mpg_08 &lt;- mpg %&gt;% filter(year == 2008)
+
+base_99 &lt;- ggplot(mpg_99, aes(displ, hwy, colour = fl)) + geom_point() 
+base_08 &lt;- ggplot(mpg_08, aes(displ, hwy, colour = fl)) + geom_point()
+
+base_99 +
+  scale_x_continuous(limits = c(1, 7)) +
+  scale_y_continuous(limits = c(10, 45)) +
+  scale_color_discrete(limits = c(&quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;p&quot;, &quot;r&quot;))|
+base_08 + 
+  # lims() is another option
+  lims(x = c(1, 7), y = c(10, 45), color = c(&quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;p&quot;, &quot;r&quot;))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="color-scales-and-legends" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Color scales and legends</h1>
+<div id="continuous-color-scales" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Continuous color scales</h2>
+<p>There are multiple ways to specify continuous color scales. There are many palettes available, but the common interface is <strong>paletteer</strong> package.</p>
+<pre class="r"><code>erupt &lt;- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+  geom_raster() +
+  scale_x_continuous(NULL, expand = c(0, 0)) + 
+  scale_y_continuous(NULL, expand = c(0, 0)) + 
+  theme(legend.position = &quot;none&quot;,
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line=element_blank(),)
+
+plots &lt;- list(erupt,
+              erupt + scale_fill_viridis_c(option = &quot;magma&quot;),
+              erupt + scale_fill_distiller(palette = &quot;RdPu&quot;),
+              erupt + scico::scale_fill_scico(palette = &quot;lajolla&quot;),
+              erupt + scale_fill_fermenter(),
+              erupt + paletteer::scale_fill_paletteer_c(&quot;viridis::plasma&quot;))
+wrap_plots(plots,ncol = 3)</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-10-1.png" width="441.6" style="display: block; margin: auto;" /></p>
+<p>The default scale for continuous fill scales is <code>scale_fill_continuous()</code> which in turn defaults to <code>scale_fill_gradient()</code>. Gradient scales provide a robust method for creating any color scheme you like:</p>
+<ul>
+<li><code>scale_fill_gradient()</code> produces a two-colour gradient</li>
+<li><code>scale_fill_gradient2()</code> produces a three-colour gradient with specified midpoint</li>
+<li><code>scale_fill_gradientn()</code> produces an n-colour gradient</li>
+</ul>
+<p>Other packages, such as <a href="https://github.com/cwickham/munsell/"><strong>munsell</strong></a> and <a href="https://colorspace.r-forge.r-project.org/"><strong>colorspace</strong></a> also provide color palettes.</p>
+<pre class="r"><code># munsell example
+erupt + scale_fill_gradient(
+  low = munsell::mnsl(&quot;5P 2/12&quot;), 
+  high = munsell::mnsl(&quot;5P 7/12&quot;)
+) |
+# colorspace examples
+erupt + scale_fill_gradientn(colours = colorspace::heat_hcl(7))|
+erupt + scale_fill_gradientn(colours = colorspace::diverge_hcl(7))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-11-1.png" width="441.6" style="display: block; margin: auto;" /></p>
+<p>Missing values are set to grey by default, which can be changed by set <code>na.value</code> option. Breaks can be entirely suppressed by setting them to <code>NULL</code>.</p>
+<pre class="r"><code>df &lt;- data.frame(x = 1, y = 1:5, z = c(1, 3, 2, NA, 5))
+base &lt;- ggplot(df, aes(x, y)) + 
+  geom_tile(aes(fill = z), size = 5) + 
+  labs(x = NULL, y = NULL)
+
+base |
+base + scale_fill_gradient(na.value = NA)|
+base + scale_fill_gradient(na.value = &quot;yellow&quot;,
+                           breaks = NULL)+
+        scale_x_continuous(breaks = NULL)</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-12-1.png" width="441.6" style="display: block; margin: auto;" /></p>
+</div>
+<div id="discrete-colour-scales" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Discrete colour scales</h2>
+<p>The default scale for discrete colors is <code>scale_fill_discrete()</code> which in turn defaults to <code>scale_fill_hue()</code>, and <code>scale_colour_brewer()</code> is a discrete color scale that—along with the continuous analog <code>scale_colour_distiller()</code> and binned analog <code>scale_colour_fermenter()</code> using handpicked <a href="http://colorbrewer2.org/">“ColorBrewer”</a> colors.</p>
 </div>
 </div>

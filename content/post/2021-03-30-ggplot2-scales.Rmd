@@ -50,7 +50,7 @@ The most common continuous position scales are the default `scale_x_continuous()
 | log10     | $\log_{10}(x)$          | reverse   | $-x$                    
 | log2      | $\log_2(x)$             | sqrt      | $x^{1/2}$               
 
-Specifically, if you use a transformed scale, the axes will be labeled in the original data space; if you transform the data, the axes will be labelled in the transformed space.
+Specifically, if you use a transformed scale, the axes will be labeled in the original data space; if you transform the data, the axes will be labeled in the transformed space. To transform after statistical computation use `coord_trans()`.
 
 ```{r fig.height=2, fig.width=6}
 # manual transformation
@@ -126,3 +126,119 @@ axs + scale_y_continuous(labels = scales::label_dollar(prefix = "￥", suffix = 
 axs + scale_x_continuous(breaks = brks, labels = lbs)
 ```
 
+## Date-time
+Different formats of date/time can be converted by a few functions (`as.Date()`, `as.POSIXct()` or `hms::as_hms()`) or the **lubridate** package. Default scale for dates is `scale_x_date()` and `scale_x_datetime()` is default for data-time data.
+
+Breaks and minor breaks can be specified by `date_breaks` and `data_minor_breaks` respectively.  Date label formatting is useful when there's no sufficient room.
+
+```{r fig.height=2, fig.width=6}
+date_base <- ggplot(economics, aes(date, psavert)) + 
+  geom_line(na.rm = TRUE) +
+  labs(x = NULL, y = NULL)
+
+date_base + scale_x_date(date_breaks = "25 years",
+                         date_minor_breaks = "5 years",
+                         date_labels = "%y") |
+# formatting with function label_date, or label_date_short
+date_base + scale_x_date(labels = scales::label_date("%Y"))
+```
+
+## Discrete
+The default scales mapping discrete variables to position scales are `scale_x_discrete()` and `scale_y_discrete()`. Internally, ggplot2 handles discrete scales by mapping each category to an integer value and then drawing the geom at the corresponding coordinate location. Labels of the discrete variable can be set by `labels` and `guide_axis()` controls their layout.
+
+```{r fig.height=2, fig.width=6}
+base <- ggplot(mpg, aes(manufacturer, hwy)) + geom_boxplot()
+
+base + guides(x = guide_axis(n.dodge = 3)) |
+# as.character() is not needed for numbers
+base + scale_x_discrete(labels = 1:length(unique(mpg$manufacturer)))+
+       guides(x = guide_axis(angle = 90))
+```
+
+## Binned
+Continuous variables can be sliced into multiple bins (e.g. `geom_count`).
+
+```{r fig.height=2, fig.width=6}
+base <- ggplot(mpg, aes(hwy, class)) + geom_count()
+
+base |
+base + scale_x_binned(n.breaks = 10)
+```
+
+## Limits
+To make sure different plots share the same axes and legend, just like faceted plots, multiple limits (x, y, color, etc.) should be set.
+
+```{r fig.height=2, fig.width=6}
+mpg_99 <- mpg %>% filter(year == 1999)
+mpg_08 <- mpg %>% filter(year == 2008)
+
+base_99 <- ggplot(mpg_99, aes(displ, hwy, colour = fl)) + geom_point() 
+base_08 <- ggplot(mpg_08, aes(displ, hwy, colour = fl)) + geom_point()
+
+base_99 +
+  scale_x_continuous(limits = c(1, 7)) +
+  scale_y_continuous(limits = c(10, 45)) +
+  scale_color_discrete(limits = c("c", "d", "e", "p", "r"))|
+base_08 + 
+  # lims() is another option
+  lims(x = c(1, 7), y = c(10, 45), color = c("c", "d", "e", "p", "r"))
+```
+
+# Color scales and legends
+## Continuous color scales
+There are multiple ways to specify continuous color scales. There are many palettes available, but the common interface is **paletteer** package.
+
+```{r fig.height=3, fig.width=4.6}
+erupt <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+  geom_raster() +
+  scale_x_continuous(NULL, expand = c(0, 0)) + 
+  scale_y_continuous(NULL, expand = c(0, 0)) + 
+  theme(legend.position = "none",
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line=element_blank(),)
+
+plots <- list(erupt,
+              erupt + scale_fill_viridis_c(option = "magma"),
+              erupt + scale_fill_distiller(palette = "RdPu"),
+              erupt + scico::scale_fill_scico(palette = "lajolla"),
+              erupt + scale_fill_fermenter(),
+              erupt + paletteer::scale_fill_paletteer_c("viridis::plasma"))
+wrap_plots(plots,ncol = 3)
+```
+
+The default scale for continuous fill scales is `scale_fill_continuous()` which in turn defaults to `scale_fill_gradient()`. Gradient scales provide a robust method for creating any color scheme you like:
+
+* `scale_fill_gradient()` produces a two-colour gradient
+* `scale_fill_gradient2()` produces a three-colour gradient with specified midpoint
+* `scale_fill_gradientn()` produces an n-colour gradient
+
+Other packages, such as [**munsell**](https://github.com/cwickham/munsell/) and [**colorspace**](https://colorspace.r-forge.r-project.org/) also provide color palettes.
+
+```{r fig.height=1.5, fig.width=4.6}
+# munsell example
+erupt + scale_fill_gradient(
+  low = munsell::mnsl("5P 2/12"), 
+  high = munsell::mnsl("5P 7/12")
+) |
+# colorspace examples
+erupt + scale_fill_gradientn(colours = colorspace::heat_hcl(7))|
+erupt + scale_fill_gradientn(colours = colorspace::diverge_hcl(7))
+```
+
+Missing values are set to grey by default, which can be changed by set `na.value` option. Breaks can be entirely suppressed by setting them to `NULL`.
+```{r fig.height=1.5, fig.width=4.6}
+df <- data.frame(x = 1, y = 1:5, z = c(1, 3, 2, NA, 5))
+base <- ggplot(df, aes(x, y)) + 
+  geom_tile(aes(fill = z), size = 5) + 
+  labs(x = NULL, y = NULL)
+
+base |
+base + scale_fill_gradient(na.value = NA)|
+base + scale_fill_gradient(na.value = "yellow",
+                           breaks = NULL)+
+        scale_x_continuous(breaks = NULL)
+```
+
+## Discrete colour scales
+The default scale for discrete colors is `scale_fill_discrete()` which in turn defaults to `scale_fill_hue()`, and `scale_colour_brewer()` is a discrete color scale that—along with the continuous analog `scale_colour_distiller()` and binned analog `scale_colour_fermenter()` using handpicked [“ColorBrewer”](http://colorbrewer2.org/) colors.
