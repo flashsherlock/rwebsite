@@ -91,7 +91,8 @@ ggplot(hadley, aes(year, n, group = sex, color = sex)) +
 </ul>
 <pre class="r"><code>y &lt;- c(18, 11, 16)
 df &lt;- data.frame(x = 1:3, y = y, se = c(1.2, 0.5, 1.0))
-base &lt;- ggplot(df, aes(x, y, ymin = y - se, ymax = y + se))
+base &lt;- ggplot(df, aes(x, y, 
+                       ymin = y - se, ymax = y + se))
 base + geom_crossbar()|
 base + geom_pointrange()|
 base + geom_smooth(stat = &quot;identity&quot;)</code></pre>
@@ -114,7 +115,8 @@ ggplot(midwest, aes(percwhite, percbelowpoverty)) +
 # Weighted by population
 ggplot(midwest, aes(percwhite, percbelowpoverty)) + 
   geom_point(aes(size = poptotal / 1e6)) + 
-  geom_smooth(aes(weight = poptotal), method = lm, size = 1) +
+  geom_smooth(aes(weight = poptotal), 
+              method = lm, size = 1) +
   scale_size_area(guide = &quot;none&quot;)</code></pre>
 <p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
@@ -135,12 +137,14 @@ EF
 &quot;
 # Use color and a frequency polygon
 ggplot(diamonds, aes(depth)) + 
-  geom_freqpoly(aes(colour = cut), binwidth = 0.1, na.rm = TRUE) +
+  geom_freqpoly(aes(color = cut), 
+                binwidth = 0.1, na.rm = TRUE) +
   theme(legend.position = &quot;none&quot;) +
 # Use a &quot;conditional density plot&quot;
 ggplot(diamonds, aes(depth)) + 
-  geom_histogram(aes(fill = cut), binwidth = 0.1, position = &quot;fill&quot;,
-    na.rm = TRUE) +
+  geom_histogram(aes(fill = cut), 
+                 binwidth = 0.1, position = &quot;fill&quot;,
+                 na.rm = TRUE) +
   theme(legend.position = &quot;none&quot;) +
 # density plot
 ggplot(diamonds, aes(depth)) +
@@ -148,8 +152,9 @@ ggplot(diamonds, aes(depth)) +
   theme(legend.position = &quot;none&quot;) +
 # adjust binwidth
 ggplot(diamonds, aes(depth)) + 
-  geom_histogram(aes(fill = cut), binwidth = 0.2, position = &quot;fill&quot;,
-    na.rm = TRUE) +
+  geom_histogram(aes(fill = cut), 
+                 binwidth = 0.2, position = &quot;fill&quot;,
+                 na.rm = TRUE) +
   theme(legend.position = &quot;none&quot;) +
 # adjust = 1/2 means use half of the default bandwidth (more rough)
 ggplot(diamonds, aes(depth)) +
@@ -160,7 +165,8 @@ ggplot(diamonds, aes(depth, fill = cut)) +
   geom_density(alpha = 0.2, na.rm = TRUE) + 
   theme(legend.position = &quot;none&quot;) +
 # apply layout and set common x axis
-plot_layout(design = layout) &amp; scale_x_continuous(limits = c(58, 68))</code></pre>
+plot_layout(design = layout) &amp; 
+  scale_x_continuous(limits = c(58, 68))</code></pre>
 <p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
 <div id="dealing-with-overplotting" class="section level2" number="3.4">
@@ -172,8 +178,10 @@ plot_layout(design = layout) &amp; scale_x_continuous(limits = c(58, 68))</code>
 <li>Alleviate some overlaps with <code>geom_jitter()</code>, and adjust points by <code>width</code> and <code>height</code> arguments.</li>
 <li>Breaking the plot into many small squares or hexagons.</li>
 </ul>
-<pre class="r"><code>df &lt;- data.frame(x = rnorm(2000), y = rnorm(2000))
-norm &lt;- ggplot(df, aes(x, y)) + xlab(NULL) + ylab(NULL)
+<pre class="r"><code>df &lt;- data.frame(x = rnorm(2000), 
+                 y = rnorm(2000))
+norm &lt;- ggplot(df, aes(x, y)) + 
+  xlab(NULL) + ylab(NULL)
 norm + geom_bin2d() |
 # adjust bins
 norm + geom_hex(bins = 10)</code></pre>
@@ -195,7 +203,8 @@ ggplot(diamonds, aes(color, price)) +
 # show average price with se
 ggplot(diamonds, aes(color, price)) + 
   stat_summary(fun = mean, geom = &quot;bar&quot;) +
-  stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;,width = 0.1) +
+  stat_summary(fun.data = mean_se, 
+               geom = &quot;errorbar&quot;,width = 0.1) +
   coord_cartesian(ylim=c(2000,6000)) </code></pre>
 <p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
@@ -207,7 +216,7 @@ ggplot(diamonds, aes(color, price)) +
 # the .. notation (..level..)
 # refers to a variable computed internally 
 ggplot(faithfuld, aes(eruptions, waiting)) + 
-  geom_contour(aes(z = density, colour = ..level..)) |
+  geom_contour(aes(z = density, color = ..level..)) |
 # raster
 ggplot(faithfuld, aes(eruptions, waiting)) + 
   geom_raster(aes(fill = density)) |
@@ -229,21 +238,21 @@ df$category &lt;- factor(rep(names(categ_table), categ_table))
 
 ## Plot
 ggplot(df, aes(x = x, y = y, fill = category)) + 
-        # set border color and size
-        geom_tile(color = &quot;black&quot;, size = 0.5) +
-        scale_x_continuous(expand = c(0, 0)) +
-        scale_y_continuous(expand = c(0, 0), trans = &#39;reverse&#39;) +
-        scale_fill_brewer(palette = &quot;Set3&quot;) +
-        labs(title=&quot;Waffle Chart&quot;, subtitle=&quot;&#39;Class&#39; of vehicles&quot;,
-             caption=&quot;Source: mpg&quot;) + 
-        theme(panel.border = element_rect(size = 1, fill = NA),
-              plot.title = element_text(size = rel(1.2)),
-              axis.text = element_blank(),
-              axis.title = element_blank(),
-              axis.ticks = element_blank(),
-              axis.line=element_blank(),
-              legend.title = element_blank(),
-              legend.position = &quot;right&quot;)</code></pre>
+  # set border color and size
+  geom_tile(color = &quot;black&quot;, size = 0.5) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0), trans = &#39;reverse&#39;) +
+  scale_fill_brewer(palette = &quot;Set3&quot;) +
+  labs(title=&quot;Waffle Chart&quot;, subtitle=&quot;&#39;Class&#39; of vehicles&quot;,
+       caption=&quot;Source: mpg&quot;) + 
+  theme(panel.border = element_rect(size = 1, fill = NA),
+        plot.title = element_text(size = rel(1.2)),
+        axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line=element_blank(),
+        legend.title = element_blank(),
+        legend.position = &quot;right&quot;)</code></pre>
 <p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-10-1.png" width="384" style="display: block; margin: auto;" /></p>
 </div>
 </div>
@@ -302,7 +311,7 @@ ggplot(economics) +
   geom_vline(
     aes(xintercept = as.numeric(start)), 
     data = presidential,
-    colour = &quot;grey50&quot;, alpha = 0.5
+    color = &quot;grey50&quot;, alpha = 0.5
   ) + 
   # use geom_text to add labels
   geom_text(
@@ -327,13 +336,13 @@ ggplot(economics) +
 <pre class="r"><code>p &lt;- ggplot(mpg, aes(displ, hwy)) +
   geom_point(
     data = filter(mpg, manufacturer == &quot;subaru&quot;), 
-    colour = &quot;orange&quot;,
+    color = &quot;orange&quot;,
     size = 3) +
   geom_point() 
 
 p + annotate(
-    geom = &quot;curve&quot;, x = 4, y = 35, xend = 2.65, yend = 27, 
-    curvature = .3, arrow = arrow(length = unit(2, &quot;mm&quot;))) +
+  geom = &quot;curve&quot;, x = 4, y = 35, xend = 2.65, yend = 27, 
+  curvature = .3, arrow = arrow(length = unit(2, &quot;mm&quot;))) +
   annotate(geom = &quot;text&quot;, x = 4.1, y = 35, label = &quot;subaru&quot;, 
            hjust = &quot;left&quot;)</code></pre>
 <p><img src="/post/2021-03-29-ggplot2-layers_files/figure-html/unnamed-chunk-13-1.png" width="288" style="display: block; margin: auto;" /></p>

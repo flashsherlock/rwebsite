@@ -34,8 +34,11 @@ The scales toolbox divide scales into three main groups:
 Sometimes an aesthetic is mapped to a **computed variable** that does not need to be explicitly specified, as happens with `geom_histogram()`, which use the computed variable `count`.
 
 ```{r eval=FALSE, include=FALSE}
-ggplot(mpg, aes(x = displ)) + geom_histogram()
-ggplot(mpg, aes(x = displ, y = after_stat(count))) + geom_histogram()
+ggplot(mpg, aes(x = displ)) + 
+  geom_histogram()
+ggplot(mpg, aes(x = displ, 
+                y = after_stat(count))) + 
+  geom_histogram()
 ```
 
 ## Numeric
@@ -75,7 +78,8 @@ ggplot(faithfuld, aes(waiting, eruptions)) +
 
 ggplot(faithfuld, aes(waiting, eruptions)) + 
   geom_raster(aes(fill = density)) + 
-  scale_x_continuous(expand = c(0,0),trans = "reverse") + 
+  scale_x_continuous(expand = c(0,0),
+                     trans = "reverse") + 
   scale_y_continuous(expand = c(0,0)) +
   theme(legend.position = "none")|
   
@@ -114,16 +118,23 @@ toy <- data.frame(
 brks = seq(500, 4000, 250)
 lbs <- ifelse(brks%%1000 == 0, brks, "")
 # plot
-axs <- ggplot(toy, aes(big, const)) + geom_point() + labs(x = NULL, y = NULL)
+axs <- ggplot(toy, aes(big, const)) + 
+  geom_point() + 
+  labs(x = NULL, y = NULL)
 # minor breaks
-axs + scale_x_continuous(breaks = scales::breaks_extended(n = 4),
+axs + 
+  scale_x_continuous(breaks = scales::breaks_extended(n = 4),
                          minor_breaks = seq(1500,4000,250))|
 # use offset to control breaks
-axs + scale_x_continuous(breaks = scales::breaks_width(800, offset = 200))|
+axs + 
+  scale_x_continuous(breaks = scales::breaks_width(800, offset = 200))|
 # control labels
-axs + scale_y_continuous(labels = scales::label_dollar(prefix = "￥", suffix = "€"))|
+axs + 
+  scale_y_continuous(labels = scales::label_dollar(prefix = "￥", 
+                                                   suffix = "€"))|
 # breaks without labels
-axs + scale_x_continuous(breaks = brks, labels = lbs)
+axs + 
+  scale_x_continuous(breaks = brks, labels = lbs)
 ```
 
 ## Date-time
@@ -159,7 +170,8 @@ base + scale_x_discrete(labels = 1:length(unique(mpg$manufacturer)))+
 Continuous variables can be sliced into multiple bins (e.g. `geom_count`).
 
 ```{r fig.height=2, fig.width=6}
-base <- ggplot(mpg, aes(hwy, class)) + geom_count()
+base <- ggplot(mpg, aes(hwy, class)) + 
+  geom_count()
 
 base |
 base + scale_x_binned(n.breaks = 10)
@@ -172,8 +184,10 @@ To make sure different plots share the same axes and legend, just like faceted p
 mpg_99 <- mpg %>% filter(year == 1999)
 mpg_08 <- mpg %>% filter(year == 2008)
 
-base_99 <- ggplot(mpg_99, aes(displ, hwy, colour = fl)) + geom_point() 
-base_08 <- ggplot(mpg_08, aes(displ, hwy, colour = fl)) + geom_point()
+base_99 <- ggplot(mpg_99, aes(displ, hwy, color = fl)) + 
+  geom_point() 
+base_08 <- ggplot(mpg_08, aes(displ, hwy, color = fl)) + 
+  geom_point()
 
 base_99 +
   scale_x_continuous(limits = c(1, 7)) +
@@ -181,7 +195,8 @@ base_99 +
   scale_color_discrete(limits = c("c", "d", "e", "p", "r"))|
 base_08 + 
   # lims() is another option
-  lims(x = c(1, 7), y = c(10, 45), color = c("c", "d", "e", "p", "r"))
+  lims(x = c(1, 7), y = c(10, 45), 
+       color = c("c", "d", "e", "p", "r"))
 ```
 
 # Color scales and legends
@@ -209,9 +224,9 @@ wrap_plots(plots,ncol = 3)
 
 The default scale for continuous fill scales is `scale_fill_continuous()` which in turn defaults to `scale_fill_gradient()`. Gradient scales provide a robust method for creating any color scheme you like:
 
-* `scale_fill_gradient()` produces a two-colour gradient
-* `scale_fill_gradient2()` produces a three-colour gradient with specified midpoint
-* `scale_fill_gradientn()` produces an n-colour gradient
+* `scale_fill_gradient()` produces a two-color gradient
+* `scale_fill_gradient2()` produces a three-color gradient with specified midpoint
+* `scale_fill_gradientn()` produces an n-color gradient
 
 Other packages, such as [**munsell**](https://github.com/cwickham/munsell/) and [**colorspace**](https://colorspace.r-forge.r-project.org/) also provide color palettes.
 
@@ -222,8 +237,10 @@ erupt + scale_fill_gradient(
   high = munsell::mnsl("5P 7/12")
 ) |
 # colorspace examples
-erupt + scale_fill_gradientn(colours = colorspace::heat_hcl(7))|
-erupt + scale_fill_gradientn(colours = colorspace::diverge_hcl(7))
+erupt + 
+  scale_fill_gradientn(colors = colorspace::heat_hcl(7))|
+erupt + 
+  scale_fill_gradientn(colors = colorspace::diverge_hcl(7))
 ```
 
 Missing values are set to grey by default, which can be changed by set `na.value` option. Breaks can be entirely suppressed by setting them to `NULL`.
@@ -240,12 +257,13 @@ base + scale_fill_gradient(na.value = "yellow",
         scale_x_continuous(breaks = NULL)
 ```
 
-## Discrete colour scales
-The default scale for discrete colors is `scale_fill_discrete()` which in turn defaults to `scale_fill_hue()`, and `scale_colour_brewer()` is a discrete color scale that—along with the continuous analog `scale_colour_distiller()` and binned analog `scale_colour_fermenter()` using handpicked [“ColorBrewer”](http://colorbrewer2.org/) colors.
+## Discrete color scales
+The default scale for discrete colors is `scale_fill_discrete()` which in turn defaults to `scale_fill_hue()`, and `scale_color_brewer()` is a discrete color scale that—along with the continuous analog `scale_color_distiller()` and binned analog `scale_color_fermenter()` using handpicked [“ColorBrewer”](http://colorbrewer2.org/) colors.
 
 The default color scheme picks evenly spaced hues around the HCL color wheel. However, it becomes hard to tell the different colors apart when the number of colors exceed eight. Chroma, luminance, and the range of hues, can be controlled with the h, c and l arguments in `scale_fill_hue`.
 ```{r fig.height=1.5, fig.width=4.6}
-df <- data.frame(x = c("a", "b", "c", "d"), y = c(3, 4, 1, 2))
+df <- data.frame(x = c("a", "b", "c", "d"), 
+                 y = c(3, 4, 1, 2))
 bars <- ggplot(df, aes(x, y, fill = x)) + 
   geom_bar(stat = "identity") + 
   labs(x = NULL, y = NULL) +
@@ -270,7 +288,7 @@ erupt + scale_fill_steps(low = "grey", high = "brown")|
 erupt + scale_fill_steps2(low = "grey", mid = "white", 
                           high = "brown", midpoint = .02)|
 erupt + scale_fill_stepsn(n.breaks = 12, 
-                          colours = terrain.colors(12))
+                          colors = terrain.colors(12))
 ```
 
 A brewer analog for binned scales is called `scale_fill_fermenter()`, which does not interpolate between the brewer colors if you set `n.breaks` larger than the number of colors in the palette.
@@ -289,7 +307,7 @@ A number of settings that affect the overall display of the legends are controll
 
 ```{r fig.height=2, fig.width=6}
 base <- ggplot(toy, aes(up, up)) + 
-  geom_point(aes(colour = txt), size = 3)
+  geom_point(aes(color = txt), size = 3)
 
 base + theme(legend.position = c(0, 1), 
              legend.justification = c(0, 1))|
@@ -302,7 +320,8 @@ base + theme(legend.position = c(1, 0),
 The `key_glyph` argument can be used to associate a particular layer with a different kind of glyph. More precisely, each geom is associated with a function such as `draw_key_path()`, `draw_key_boxplot()`, which can be used to pass desired keys to `key_glyph`.
 
 ```{r fig.height=2, fig.width=6}
-base <- ggplot(economics, aes(date, psavert, color = "savings"))+
+base <- ggplot(economics, aes(date, psavert, 
+                              color = "savings"))+
   theme(legend.position = "bottom")
 
 base + geom_line()|
@@ -318,20 +337,20 @@ The legend guide displays individual keys in a table. The most useful options ar
 * `keywidth` and `keyheight` (along with `default.unit`) allow you to specify the size of the keys. These are grid units, e.g. `unit(1, "cm")`.
 
 ```{r fig.height=2, fig.width=6}
-base <- ggplot(mpg, aes(displ, hwy, colour = drv)) +
+base <- ggplot(mpg, aes(displ, hwy, color = drv)) +
   geom_point(size = 4, alpha = .2, stroke = 0)
 
 base + guides(color = guide_legend()) |
 base + guides(color = guide_legend(override.aes = list(alpha = 1)))
 ```
 
-`guide_bins()` is suited to the situation when a continuous variable is binned and then mapped to an aesthetic that produces a legend, such as size, colour and fill. 
+`guide_bins()` is suited to the situation when a continuous variable is binned and then mapped to an aesthetic that produces a legend, such as size, color and fill. 
 
 *   `axis` indicates whether the axis should be drawn (default is `TRUE`).
 *   `direction` is a character string specifying the direction of the guide.
 *   `show.limits` specifies whether tick marks are shown at the ends of the 
     guide axis.
-*   `axis.colour`, `axis.linewidth` and `axis.arrow` are used to
+*   `axis.color`, `axis.linewidth` and `axis.arrow` are used to
     control the guide axis that is displayed alongside the legend keys.
 *   `keywidth`, `keyheight`, `reverse` and `override.aes` have the same
   behavior as `guide_legend()`.
@@ -343,10 +362,10 @@ base <- ggplot(mpg, aes(displ, manufacturer, size = hwy)) +
 
 base + guides(size = guide_bins(show.limits = TRUE,
                                 axis = FALSE))|
-base + guides(size = guide_bins(axis.colour = "red",
-    axis.arrow = arrow(length = unit(.1, "inches"), 
-                       ends = "first", 
-                       type = "closed")))
+base + guides(size = guide_bins(axis.colour = "red",# must be colour
+              axis.arrow = arrow(length = unit(.1, "inches"), 
+                                 ends = "first", 
+                                 type = "closed")))
 ```
 
 The color bar guide `guide_colorbar()` is designed for **continuous ranges of colors**, which outputs a rectangle where the color gradient varies.  The most important arguments are:
@@ -355,25 +374,28 @@ The color bar guide `guide_colorbar()` is designed for **continuous ranges of co
 * `nbin` controls the number of slices (default value is 20).
 * `reverse` flips the color bar.
 
-The `guide_colorsteps()` guide is a version of `guide_colourbar()` appropriate for **binned color and fill scales**. Arguments mostly mirror those for `guide_colourbar()`. The additional arguments are as follows:
+The `guide_colorsteps()` guide is a version of `guide_colorbar()` appropriate for **binned color and fill scales**. Arguments mostly mirror those for `guide_colorbar()`. The additional arguments are as follows:
 
 * `show.limits` indicates whether values should be shown at the ends of the stepped color bar.
 * `ticks` is a logical variable indicating whether tick marks should be displayed (default is `NULL`: inherit from the scale).
 * `even.steps` is a logical variable indicating whether bins should be evenly spaced (default is `TRUE`) or proportional in size to their frequency in the data.
 
 ```{r fig.height=2, fig.width=6}
-base <- ggplot(mpg, aes(displ, hwy, colour = cyl)) + 
+base <- ggplot(mpg, aes(displ, hwy, color = cyl)) + 
       geom_point() + 
       scale_color_binned()
-base2 <- ggplot(mpg, aes(cyl, displ, colour = hwy)) +
+base2 <- ggplot(mpg, aes(cyl, displ, color = hwy)) +
   geom_point(size = 2)
 
-base + guides(colour = guide_coloursteps(show.limits = TRUE,
-                                         ticks = TRUE)) |
-base2 + guides(colour = guide_colourbar(barheight = unit(2, "cm"),
-                                        ticks = FALSE))|
-base2 + guides(colour = guide_colourbar(barwidth = unit(0.5, "cm"),
-                                        nbin = 5))
+base + 
+  guides(color = guide_colorsteps(show.limits = TRUE,
+                                  ticks = TRUE)) |
+base2 + 
+  guides(color = guide_colorbar(barheight = unit(2, "cm"),
+                                ticks = FALSE))|
+base2 + 
+  guides(color = guide_colorbar(barwidth = unit(0.5, "cm"),
+                                nbin = 5))
 ```
 
 # Other aesthetics
@@ -382,12 +404,13 @@ The default scale for size aesthetics is `scale_size()` in which a linear increa
 
 ```{r fig.height=3, fig.width=5}
 planets <- data.frame(
-  name = c("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"),
+  name = c("Mercury", "Venus", "Earth", "Mars", 
+           "Jupiter", "Saturn", "Uranus", "Neptune"),
   type = c(rep("Inner", 4), rep("Outer", 4)),
   position = 1:8,
   radius = c(2440, 6052, 6378, 3390, 71400, 60330, 25559, 24764),
-  orbit = c(57900000, 108200000, 149600000, 227900000, 778300000, 1427000000, 2871000000, 4497100000)
-)
+  orbit = c(57900000, 108200000, 149600000, 227900000, 
+            778300000, 1427000000, 2871000000, 4497100000))
 planets$name <- with(planets, factor(name, name))
 # plot
 base <- ggplot(planets, aes(1, name, size = radius)) + 
@@ -427,22 +450,22 @@ base + geom_line(aes(group = variable)) |
 base + geom_line(aes(linetype = variable))|
 # See scale_manual for more flexibility
 ggplot(df_lines) +
-  geom_hline(aes(linetype = linetype, yintercept = 0), size = 2) +
+  geom_hline(aes(linetype = linetype, yintercept = 0), 
+             size = 2) +
   scale_linetype_identity() +
   facet_grid(linetype ~ .) +
   theme_void(20)
 ```
 
 ## Manual scales
-You can create new scale with the “manual” version of each: `scale_linetype_manual()`, `scale_shape_manual()`, `scale_colour_manual()`, etc. Valid aesthetic values are described in `vignette("ggplot2-specs")`.
+You can create new scale with the “manual” version of each: `scale_linetype_manual()`, `scale_shape_manual()`, `scale_color_manual()`, etc. Valid aesthetic values are described in `vignette("ggplot2-specs")`.
 
 ## Identity scales
-Identity scales, such as `scale_colour_identity()` and `scale_shape_identity()`, are used when your data is already scaled such that the data and aesthetic spaces are the same. 
+Identity scales, such as `scale_color_identity()` and `scale_shape_identity()`, are used when your data is already scaled such that the data and aesthetic spaces are the same. 
 
 ```{r fig.height=3, fig.width=5}
 ggplot(luv_colours, aes(u, v)) + 
-geom_point(aes(colour = col), size = 3) + 
+geom_point(aes(color = col), size = 3) + 
 scale_color_identity() + 
 coord_equal()
 ```
-
