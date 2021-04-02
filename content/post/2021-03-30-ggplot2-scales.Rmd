@@ -9,7 +9,7 @@ tags:
   - plot
   - R
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: yes
@@ -242,3 +242,207 @@ base + scale_fill_gradient(na.value = "yellow",
 
 ## Discrete colour scales
 The default scale for discrete colors is `scale_fill_discrete()` which in turn defaults to `scale_fill_hue()`, and `scale_colour_brewer()` is a discrete color scale that—along with the continuous analog `scale_colour_distiller()` and binned analog `scale_colour_fermenter()` using handpicked [“ColorBrewer”](http://colorbrewer2.org/) colors.
+
+The default color scheme picks evenly spaced hues around the HCL color wheel. However, it becomes hard to tell the different colors apart when the number of colors exceed eight. Chroma, luminance, and the range of hues, can be controlled with the h, c and l arguments in `scale_fill_hue`.
+```{r fig.height=1.5, fig.width=4.6}
+df <- data.frame(x = c("a", "b", "c", "d"), y = c(3, 4, 1, 2))
+bars <- ggplot(df, aes(x, y, fill = x)) + 
+  geom_bar(stat = "identity") + 
+  labs(x = NULL, y = NULL) +
+  theme(legend.position = "none")
+
+# Chroma ranging from 0 (grey) to a maximum
+# that varies depending on combination of hue and luminance.
+bars + scale_fill_hue(c = 40)|
+# Hue ranges from 0 to 360 (an angle)
+bars + scale_fill_hue(h = c(180, 300))|
+# luminance ranging from 0 (black) to 100 (white)
+bars + scale_fill_hue(l = 90)
+```
+
+It is better to use `scale_fill_grey()`, which maps discrete data to grays, from light to dark, to print graphics in black and white.
+
+You can also use `scale_fill_manual()` to set the colors manually. 
+
+Color scales also come in binned versions. The default scale is `scale_fill_binned()` which in turn defaults to `scale_fill_steps()`. `scale_fill_steps()` is analogous to `scale_fill_gradient()`, and allows you to construct your own two-color gradients.
+```{r fig.height=1.5, fig.width=4.6}
+erupt + scale_fill_steps(low = "grey", high = "brown")|
+erupt + scale_fill_steps2(low = "grey", mid = "white", 
+                          high = "brown", midpoint = .02)|
+erupt + scale_fill_stepsn(n.breaks = 12, 
+                          colours = terrain.colors(12))
+```
+
+A brewer analog for binned scales is called `scale_fill_fermenter()`, which does not interpolate between the brewer colors if you set `n.breaks` larger than the number of colors in the palette.
+
+## Alpha scales
+Alpha scales map the transparency of a shade to a value in the data. They are not often useful, but can be a convenient way to visually down-weight less important observations. `scale_alpha()` is an alias for `scale_alpha_continuous()`.
+
+## Legends
+A number of settings that affect the overall display of the legends are controlled through the `theme` system. 
+
+* `legend.position`: The position and justification of legends ( “right”, “left”, “top”, “bottom”, “none”, or a numeric vector of length two).
+* `legend.direction`: layout of items in legends ("horizontal" or "vertical").
+* `legend.box`: arrangement of multiple legends ("horizontal" or "vertical").
+* `legend.box.just`: justification of each legend within the overall bounding box, when there are multiple legends ("top", "bottom", "left", or "right").
+* `legend.margin = unit(0, "mm")`: suppressing margin around the legends.
+
+```{r fig.height=2, fig.width=6}
+base <- ggplot(toy, aes(up, up)) + 
+  geom_point(aes(colour = txt), size = 3)
+
+base + theme(legend.position = c(0, 1), 
+             legend.justification = c(0, 1))|
+base + theme(legend.position = c(0.5, 0.2), 
+             legend.justification = c(1, 0))|
+base + theme(legend.position = c(1, 0), 
+             legend.justification = c(1, 0))
+```
+
+The `key_glyph` argument can be used to associate a particular layer with a different kind of glyph. More precisely, each geom is associated with a function such as `draw_key_path()`, `draw_key_boxplot()`, which can be used to pass desired keys to `key_glyph`.
+
+```{r fig.height=2, fig.width=6}
+base <- ggplot(economics, aes(date, psavert, color = "savings"))+
+  theme(legend.position = "bottom")
+
+base + geom_line()|
+base + geom_line(key_glyph = "timeseries")|
+base + geom_line(key_glyph = draw_key_boxplot) 
+```
+
+The legend guide displays individual keys in a table. The most useful options are:
+
+*   `nrow` or `ncol` which specify the dimensions of the table. `byrow` controls how the table is filled: `FALSE` fills it by column (the default), `TRUE` fills it by row.
+* `reverse` reverses the order of the keys.
+* `override.aes` is useful when you want the elements in the legend display differently to the geoms in the plot.
+* `keywidth` and `keyheight` (along with `default.unit`) allow you to specify the size of the keys. These are grid units, e.g. `unit(1, "cm")`.
+
+```{r fig.height=2, fig.width=6}
+base <- ggplot(mpg, aes(displ, hwy, colour = drv)) +
+  geom_point(size = 4, alpha = .2, stroke = 0)
+
+base + guides(color = guide_legend()) |
+base + guides(color = guide_legend(override.aes = list(alpha = 1)))
+```
+
+`guide_bins()` is suited to the situation when a continuous variable is binned and then mapped to an aesthetic that produces a legend, such as size, colour and fill. 
+
+*   `axis` indicates whether the axis should be drawn (default is `TRUE`).
+*   `direction` is a character string specifying the direction of the guide.
+*   `show.limits` specifies whether tick marks are shown at the ends of the 
+    guide axis.
+*   `axis.colour`, `axis.linewidth` and `axis.arrow` are used to
+    control the guide axis that is displayed alongside the legend keys.
+*   `keywidth`, `keyheight`, `reverse` and `override.aes` have the same
+  behavior as `guide_legend()`.
+
+```{r fig.height=3, fig.width=8}
+base <- ggplot(mpg, aes(displ, manufacturer, size = hwy)) +
+  geom_point(alpha = .2) +
+  scale_size_binned()
+
+base + guides(size = guide_bins(show.limits = TRUE,
+                                axis = FALSE))|
+base + guides(size = guide_bins(axis.colour = "red",
+    axis.arrow = arrow(length = unit(.1, "inches"), 
+                       ends = "first", 
+                       type = "closed")))
+```
+
+The color bar guide `guide_colorbar()` is designed for **continuous ranges of colors**, which outputs a rectangle where the color gradient varies.  The most important arguments are:
+
+* `barwidth` and `barheight` control the size of the bar, e.g. `unit(1, "cm")`.
+* `nbin` controls the number of slices (default value is 20).
+* `reverse` flips the color bar.
+
+The `guide_colorsteps()` guide is a version of `guide_colourbar()` appropriate for **binned color and fill scales**. Arguments mostly mirror those for `guide_colourbar()`. The additional arguments are as follows:
+
+* `show.limits` indicates whether values should be shown at the ends of the stepped color bar.
+* `ticks` is a logical variable indicating whether tick marks should be displayed (default is `NULL`: inherit from the scale).
+* `even.steps` is a logical variable indicating whether bins should be evenly spaced (default is `TRUE`) or proportional in size to their frequency in the data.
+
+```{r fig.height=2, fig.width=6}
+base <- ggplot(mpg, aes(displ, hwy, colour = cyl)) + 
+      geom_point() + 
+      scale_color_binned()
+base2 <- ggplot(mpg, aes(cyl, displ, colour = hwy)) +
+  geom_point(size = 2)
+
+base + guides(colour = guide_coloursteps(show.limits = TRUE,
+                                         ticks = TRUE)) |
+base2 + guides(colour = guide_colourbar(barheight = unit(2, "cm"),
+                                        ticks = FALSE))|
+base2 + guides(colour = guide_colourbar(barwidth = unit(0.5, "cm"),
+                                        nbin = 5))
+```
+
+# Other aesthetics
+## Size
+The default scale for size aesthetics is `scale_size()` in which a linear increase in the variable is mapped onto a linear increase in the **area**. By default the values in the data (more precisely in the scale limits) is mapped to sizes of 1 to 6, which can be changed by `range` option. To map values to **radius**, `scale_radius()` should be used.
+
+```{r fig.height=3, fig.width=5}
+planets <- data.frame(
+  name = c("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"),
+  type = c(rep("Inner", 4), rep("Outer", 4)),
+  position = 1:8,
+  radius = c(2440, 6052, 6378, 3390, 71400, 60330, 25559, 24764),
+  orbit = c(57900000, 108200000, 149600000, 227900000, 778300000, 1427000000, 2871000000, 4497100000)
+)
+planets$name <- with(planets, factor(name, name))
+# plot
+base <- ggplot(planets, aes(1, name, size = radius)) + 
+  geom_point() + 
+  scale_x_continuous(breaks = NULL) + 
+  labs(x = NULL, y = NULL, size = NULL)
+  
+base + 
+  # default
+  scale_size(range = c(1, 6))+
+  ggtitle("not to scale")|
+base + 
+  scale_radius(limits = c(0, NA), range = c(0, 10)) + 
+  ggtitle("to scale")
+```
+
+## Shape
+To merge different aesthetics to one legend, just set the same name.
+```{r fig.height=1.5, fig.width=4}
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(color = drv, shape = drv)) + 
+  scale_color_discrete("Drive train")+
+  scale_shape_discrete("Drive train")
+```
+
+## Line type
+
+```{r fig.height=2, fig.width=9}
+# define line types
+df_lines <- data.frame(
+  linetype = factor(
+    1:4,
+    labels = c("solid", "longdash", "dashed", "dotted")))
+# map variable to linetype
+base <- ggplot(economics_long, aes(date, value01))
+base + geom_line(aes(group = variable)) |
+base + geom_line(aes(linetype = variable))|
+# See scale_manual for more flexibility
+ggplot(df_lines) +
+  geom_hline(aes(linetype = linetype, yintercept = 0), size = 2) +
+  scale_linetype_identity() +
+  facet_grid(linetype ~ .) +
+  theme_void(20)
+```
+
+## Manual scales
+You can create new scale with the “manual” version of each: `scale_linetype_manual()`, `scale_shape_manual()`, `scale_colour_manual()`, etc. Valid aesthetic values are described in `vignette("ggplot2-specs")`.
+
+## Identity scales
+Identity scales, such as `scale_colour_identity()` and `scale_shape_identity()`, are used when your data is already scaled such that the data and aesthetic spaces are the same. 
+
+```{r fig.height=3, fig.width=5}
+ggplot(luv_colours, aes(u, v)) + 
+geom_point(aes(colour = col), size = 3) + 
+scale_color_identity() + 
+coord_equal()
+```
+

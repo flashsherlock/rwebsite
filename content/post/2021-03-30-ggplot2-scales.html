@@ -9,7 +9,7 @@ tags:
   - plot
   - R
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: yes
@@ -34,6 +34,16 @@ output:
 <ul>
 <li><a href="#continuous-color-scales"><span class="toc-section-number">3.1</span> Continuous color scales</a></li>
 <li><a href="#discrete-colour-scales"><span class="toc-section-number">3.2</span> Discrete colour scales</a></li>
+<li><a href="#alpha-scales"><span class="toc-section-number">3.3</span> Alpha scales</a></li>
+<li><a href="#legends"><span class="toc-section-number">3.4</span> Legends</a></li>
+</ul></li>
+<li><a href="#other-aesthetics"><span class="toc-section-number">4</span> Other aesthetics</a>
+<ul>
+<li><a href="#size"><span class="toc-section-number">4.1</span> Size</a></li>
+<li><a href="#shape"><span class="toc-section-number">4.2</span> Shape</a></li>
+<li><a href="#line-type"><span class="toc-section-number">4.3</span> Line type</a></li>
+<li><a href="#manual-scales"><span class="toc-section-number">4.4</span> Manual scales</a></li>
+<li><a href="#identity-scales"><span class="toc-section-number">4.5</span> Identity scales</a></li>
 </ul></li>
 </ul>
 </div>
@@ -276,5 +286,193 @@ base + scale_fill_gradient(na.value = &quot;yellow&quot;,
 <div id="discrete-colour-scales" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Discrete colour scales</h2>
 <p>The default scale for discrete colors is <code>scale_fill_discrete()</code> which in turn defaults to <code>scale_fill_hue()</code>, and <code>scale_colour_brewer()</code> is a discrete color scale that—along with the continuous analog <code>scale_colour_distiller()</code> and binned analog <code>scale_colour_fermenter()</code> using handpicked <a href="http://colorbrewer2.org/">“ColorBrewer”</a> colors.</p>
+<p>The default color scheme picks evenly spaced hues around the HCL color wheel. However, it becomes hard to tell the different colors apart when the number of colors exceed eight. Chroma, luminance, and the range of hues, can be controlled with the h, c and l arguments in <code>scale_fill_hue</code>.</p>
+<pre class="r"><code>df &lt;- data.frame(x = c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;), y = c(3, 4, 1, 2))
+bars &lt;- ggplot(df, aes(x, y, fill = x)) + 
+  geom_bar(stat = &quot;identity&quot;) + 
+  labs(x = NULL, y = NULL) +
+  theme(legend.position = &quot;none&quot;)
+
+# Chroma ranging from 0 (grey) to a maximum
+# that varies depending on combination of hue and luminance.
+bars + scale_fill_hue(c = 40)|
+# Hue ranges from 0 to 360 (an angle)
+bars + scale_fill_hue(h = c(180, 300))|
+# luminance ranging from 0 (black) to 100 (white)
+bars + scale_fill_hue(l = 90)</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-13-1.png" width="441.6" style="display: block; margin: auto;" /></p>
+<p>It is better to use <code>scale_fill_grey()</code>, which maps discrete data to grays, from light to dark, to print graphics in black and white.</p>
+<p>You can also use <code>scale_fill_manual()</code> to set the colors manually.</p>
+<p>Color scales also come in binned versions. The default scale is <code>scale_fill_binned()</code> which in turn defaults to <code>scale_fill_steps()</code>. <code>scale_fill_steps()</code> is analogous to <code>scale_fill_gradient()</code>, and allows you to construct your own two-color gradients.</p>
+<pre class="r"><code>erupt + scale_fill_steps(low = &quot;grey&quot;, high = &quot;brown&quot;)|
+erupt + scale_fill_steps2(low = &quot;grey&quot;, mid = &quot;white&quot;, 
+                          high = &quot;brown&quot;, midpoint = .02)|
+erupt + scale_fill_stepsn(n.breaks = 12, 
+                          colours = terrain.colors(12))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-14-1.png" width="441.6" style="display: block; margin: auto;" /></p>
+<p>A brewer analog for binned scales is called <code>scale_fill_fermenter()</code>, which does not interpolate between the brewer colors if you set <code>n.breaks</code> larger than the number of colors in the palette.</p>
+</div>
+<div id="alpha-scales" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Alpha scales</h2>
+<p>Alpha scales map the transparency of a shade to a value in the data. They are not often useful, but can be a convenient way to visually down-weight less important observations. <code>scale_alpha()</code> is an alias for <code>scale_alpha_continuous()</code>.</p>
+</div>
+<div id="legends" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Legends</h2>
+<p>A number of settings that affect the overall display of the legends are controlled through the <code>theme</code> system.</p>
+<ul>
+<li><code>legend.position</code>: The position and justification of legends ( “right”, “left”, “top”, “bottom”, “none”, or a numeric vector of length two).</li>
+<li><code>legend.direction</code>: layout of items in legends (“horizontal” or “vertical”).</li>
+<li><code>legend.box</code>: arrangement of multiple legends (“horizontal” or “vertical”).</li>
+<li><code>legend.box.just</code>: justification of each legend within the overall bounding box, when there are multiple legends (“top”, “bottom”, “left”, or “right”).</li>
+<li><code>legend.margin = unit(0, "mm")</code>: suppressing margin around the legends.</li>
+</ul>
+<pre class="r"><code>base &lt;- ggplot(toy, aes(up, up)) + 
+  geom_point(aes(colour = txt), size = 3)
+
+base + theme(legend.position = c(0, 1), 
+             legend.justification = c(0, 1))|
+base + theme(legend.position = c(0.5, 0.2), 
+             legend.justification = c(1, 0))|
+base + theme(legend.position = c(1, 0), 
+             legend.justification = c(1, 0))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The <code>key_glyph</code> argument can be used to associate a particular layer with a different kind of glyph. More precisely, each geom is associated with a function such as <code>draw_key_path()</code>, <code>draw_key_boxplot()</code>, which can be used to pass desired keys to <code>key_glyph</code>.</p>
+<pre class="r"><code>base &lt;- ggplot(economics, aes(date, psavert, color = &quot;savings&quot;))+
+  theme(legend.position = &quot;bottom&quot;)
+
+base + geom_line()|
+base + geom_line(key_glyph = &quot;timeseries&quot;)|
+base + geom_line(key_glyph = draw_key_boxplot) </code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The legend guide displays individual keys in a table. The most useful options are:</p>
+<ul>
+<li><code>nrow</code> or <code>ncol</code> which specify the dimensions of the table. <code>byrow</code> controls how the table is filled: <code>FALSE</code> fills it by column (the default), <code>TRUE</code> fills it by row.</li>
+<li><code>reverse</code> reverses the order of the keys.</li>
+<li><code>override.aes</code> is useful when you want the elements in the legend display differently to the geoms in the plot.</li>
+<li><code>keywidth</code> and <code>keyheight</code> (along with <code>default.unit</code>) allow you to specify the size of the keys. These are grid units, e.g. <code>unit(1, "cm")</code>.</li>
+</ul>
+<pre class="r"><code>base &lt;- ggplot(mpg, aes(displ, hwy, colour = drv)) +
+  geom_point(size = 4, alpha = .2, stroke = 0)
+
+base + guides(color = guide_legend()) |
+base + guides(color = guide_legend(override.aes = list(alpha = 1)))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-17-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><code>guide_bins()</code> is suited to the situation when a continuous variable is binned and then mapped to an aesthetic that produces a legend, such as size, colour and fill.</p>
+<ul>
+<li><code>axis</code> indicates whether the axis should be drawn (default is <code>TRUE</code>).</li>
+<li><code>direction</code> is a character string specifying the direction of the guide.</li>
+<li><code>show.limits</code> specifies whether tick marks are shown at the ends of the
+guide axis.</li>
+<li><code>axis.colour</code>, <code>axis.linewidth</code> and <code>axis.arrow</code> are used to
+control the guide axis that is displayed alongside the legend keys.</li>
+<li><code>keywidth</code>, <code>keyheight</code>, <code>reverse</code> and <code>override.aes</code> have the same
+behavior as <code>guide_legend()</code>.</li>
+</ul>
+<pre class="r"><code>base &lt;- ggplot(mpg, aes(displ, manufacturer, size = hwy)) +
+  geom_point(alpha = .2) +
+  scale_size_binned()
+
+base + guides(size = guide_bins(show.limits = TRUE,
+                                axis = FALSE))|
+base + guides(size = guide_bins(axis.colour = &quot;red&quot;,
+    axis.arrow = arrow(length = unit(.1, &quot;inches&quot;), 
+                       ends = &quot;first&quot;, 
+                       type = &quot;closed&quot;)))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-18-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>The color bar guide <code>guide_colorbar()</code> is designed for <strong>continuous ranges of colors</strong>, which outputs a rectangle where the color gradient varies. The most important arguments are:</p>
+<ul>
+<li><code>barwidth</code> and <code>barheight</code> control the size of the bar, e.g. <code>unit(1, "cm")</code>.</li>
+<li><code>nbin</code> controls the number of slices (default value is 20).</li>
+<li><code>reverse</code> flips the color bar.</li>
+</ul>
+<p>The <code>guide_colorsteps()</code> guide is a version of <code>guide_colourbar()</code> appropriate for <strong>binned color and fill scales</strong>. Arguments mostly mirror those for <code>guide_colourbar()</code>. The additional arguments are as follows:</p>
+<ul>
+<li><code>show.limits</code> indicates whether values should be shown at the ends of the stepped color bar.</li>
+<li><code>ticks</code> is a logical variable indicating whether tick marks should be displayed (default is <code>NULL</code>: inherit from the scale).</li>
+<li><code>even.steps</code> is a logical variable indicating whether bins should be evenly spaced (default is <code>TRUE</code>) or proportional in size to their frequency in the data.</li>
+</ul>
+<pre class="r"><code>base &lt;- ggplot(mpg, aes(displ, hwy, colour = cyl)) + 
+      geom_point() + 
+      scale_color_binned()
+base2 &lt;- ggplot(mpg, aes(cyl, displ, colour = hwy)) +
+  geom_point(size = 2)
+
+base + guides(colour = guide_coloursteps(show.limits = TRUE,
+                                         ticks = TRUE)) |
+base2 + guides(colour = guide_colourbar(barheight = unit(2, &quot;cm&quot;),
+                                        ticks = FALSE))|
+base2 + guides(colour = guide_colourbar(barwidth = unit(0.5, &quot;cm&quot;),
+                                        nbin = 5))</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-19-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="other-aesthetics" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Other aesthetics</h1>
+<div id="size" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Size</h2>
+<p>The default scale for size aesthetics is <code>scale_size()</code> in which a linear increase in the variable is mapped onto a linear increase in the <strong>area</strong>. By default the values in the data (more precisely in the scale limits) is mapped to sizes of 1 to 6, which can be changed by <code>range</code> option. To map values to <strong>radius</strong>, <code>scale_radius()</code> should be used.</p>
+<pre class="r"><code>planets &lt;- data.frame(
+  name = c(&quot;Mercury&quot;, &quot;Venus&quot;, &quot;Earth&quot;, &quot;Mars&quot;, &quot;Jupiter&quot;, &quot;Saturn&quot;, &quot;Uranus&quot;, &quot;Neptune&quot;),
+  type = c(rep(&quot;Inner&quot;, 4), rep(&quot;Outer&quot;, 4)),
+  position = 1:8,
+  radius = c(2440, 6052, 6378, 3390, 71400, 60330, 25559, 24764),
+  orbit = c(57900000, 108200000, 149600000, 227900000, 778300000, 1427000000, 2871000000, 4497100000)
+)
+planets$name &lt;- with(planets, factor(name, name))
+# plot
+base &lt;- ggplot(planets, aes(1, name, size = radius)) + 
+  geom_point() + 
+  scale_x_continuous(breaks = NULL) + 
+  labs(x = NULL, y = NULL, size = NULL)
+  
+base + 
+  # default
+  scale_size(range = c(1, 6))+
+  ggtitle(&quot;not to scale&quot;)|
+base + 
+  scale_radius(limits = c(0, NA), range = c(0, 10)) + 
+  ggtitle(&quot;to scale&quot;)</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+<div id="shape" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Shape</h2>
+<p>To merge different aesthetics to one legend, just set the same name.</p>
+<pre class="r"><code>ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(color = drv, shape = drv)) + 
+  scale_color_discrete(&quot;Drive train&quot;)+
+  scale_shape_discrete(&quot;Drive train&quot;)</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-21-1.png" width="384" style="display: block; margin: auto;" /></p>
+</div>
+<div id="line-type" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Line type</h2>
+<pre class="r"><code># define line types
+df_lines &lt;- data.frame(
+  linetype = factor(
+    1:4,
+    labels = c(&quot;solid&quot;, &quot;longdash&quot;, &quot;dashed&quot;, &quot;dotted&quot;)))
+# map variable to linetype
+base &lt;- ggplot(economics_long, aes(date, value01))
+base + geom_line(aes(group = variable)) |
+base + geom_line(aes(linetype = variable))|
+# See scale_manual for more flexibility
+ggplot(df_lines) +
+  geom_hline(aes(linetype = linetype, yintercept = 0), size = 2) +
+  scale_linetype_identity() +
+  facet_grid(linetype ~ .) +
+  theme_void(20)</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-22-1.png" width="864" style="display: block; margin: auto;" /></p>
+</div>
+<div id="manual-scales" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Manual scales</h2>
+<p>You can create new scale with the “manual” version of each: <code>scale_linetype_manual()</code>, <code>scale_shape_manual()</code>, <code>scale_colour_manual()</code>, etc. Valid aesthetic values are described in <code>vignette("ggplot2-specs")</code>.</p>
+</div>
+<div id="identity-scales" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> Identity scales</h2>
+<p>Identity scales, such as <code>scale_colour_identity()</code> and <code>scale_shape_identity()</code>, are used when your data is already scaled such that the data and aesthetic spaces are the same.</p>
+<pre class="r"><code>ggplot(luv_colours, aes(u, v)) + 
+geom_point(aes(colour = col), size = 3) + 
+scale_color_identity() + 
+coord_equal()</code></pre>
+<p><img src="/post/2021-03-30-ggplot2-scales_files/figure-html/unnamed-chunk-23-1.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 </div>
