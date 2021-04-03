@@ -22,7 +22,21 @@ output:
 <div id="TOC">
 <ul>
 <li><a href="#inroduction"><span class="toc-section-number">1</span> Inroduction</a></li>
-<li><a href="#build-a-plot-layer-by-layer"><span class="toc-section-number">2</span> Build a plot layer by layer</a></li>
+<li><a href="#build-a-plot-layer-by-layer"><span class="toc-section-number">2</span> Build a plot layer by layer</a>
+<ul>
+<li><a href="#data"><span class="toc-section-number">2.1</span> Data</a></li>
+<li><a href="#aesthetic-mappings"><span class="toc-section-number">2.2</span> Aesthetic mappings</a></li>
+<li><a href="#geoms"><span class="toc-section-number">2.3</span> Geoms</a></li>
+<li><a href="#stats"><span class="toc-section-number">2.4</span> Stats</a></li>
+<li><a href="#position-adjustments"><span class="toc-section-number">2.5</span> Position adjustments</a></li>
+</ul></li>
+<li><a href="#scales-and-guides"><span class="toc-section-number">3</span> Scales and guides</a>
+<ul>
+<li><a href="#scale-transformation"><span class="toc-section-number">3.1</span> Scale transformation</a></li>
+<li><a href="#scale-guides"><span class="toc-section-number">3.2</span> Scale guides</a></li>
+<li><a href="#scale-breaks"><span class="toc-section-number">3.3</span> Scale breaks</a></li>
+<li><a href="#legend-merging-and-splitting"><span class="toc-section-number">3.4</span> Legend merging and splitting</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -39,4 +53,307 @@ output:
 </div>
 <div id="build-a-plot-layer-by-layer" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Build a plot layer by layer</h1>
+<p>It’s important to realize that there’s nothing to see until we add a layer, which is created by the <code>layer()</code> function. <code>geom_point</code> is a shortcut of this function.</p>
+<pre class="r"><code>p &lt;- ggplot(mpg, aes(displ, hwy))
+p |
+# the same as geom_point
+p + layer(mapping = NULL, 
+          data = NULL,
+          geom = &quot;point&quot;, 
+          stat = &quot;identity&quot;,
+          position = &quot;identity&quot;)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-2-1.png" width="864" style="display: block; margin: auto;" /></p>
+<div id="data" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Data</h2>
+<p>Never refer to a variable with <code>$</code> in <code>aes()</code> (e.g., <code>diamonds$carat</code>). This breaks containment, so that the plot no longer contains everything it needs, and causes problems if ggplot2 changes the order of the rows, as it does when faceting.</p>
+<pre class="r"><code>library(dplyr)
+class &lt;- mpg %&gt;% 
+  group_by(class) %&gt;% 
+  summarise(n = n(), hwy = mean(hwy))
+# my answer
+ggplot(mpg,aes(class,hwy))+
+  geom_jitter(color=&quot;black&quot;)+
+  geom_point(aes(class,hwy),class,color=&quot;red&quot;,size=4)+
+  annotate(&quot;text&quot;,x=1:length(unique(mpg$class)),y=10,
+           label=paste0(&quot;n = &quot;,class$n))|
+# the answer provided by the author
+ggplot(mpg, aes(class, hwy)) + 
+  geom_jitter(width = 0.25) + 
+  geom_point(data = class, colour = &quot;red&quot;, size = 4) + 
+  geom_text(aes(y = 10, label = paste0(&quot;n = &quot;, n)), 
+            class, size = 3)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-3-1.png" width="864" style="display: block; margin: auto;" /></p>
+</div>
+<div id="aesthetic-mappings" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Aesthetic mappings</h2>
+<p>Aesthetic mappings can be supplied in the initial <code>ggplot()</code> call, in individual layers, or in some combination of both. The way you specify aesthetics doesn’t make any difference if there’s only one layer, but the distinction is important when you start adding additional layers.</p>
+<pre class="r"><code>ggplot(mpg, aes(displ, hwy, colour = class)) + 
+  geom_point() + 
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) +
+  theme(legend.position = &quot;none&quot;)|
+
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(colour = class)) + 
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) + 
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>If you want appearance to be governed by a variable, put the specification <strong>inside <code>aes()</code></strong>; if you want override the default size or color, put the value <strong>outside of <code>aes()</code></strong>. Another way to override the default scale is using <code>scale_colour_identity()</code>. It’s sometimes useful to map aesthetics to constants.</p>
+<pre class="r"><code>ggplot(mpg, aes(cty, hwy)) + 
+  geom_point(aes(color = &quot;blue&quot;)) + 
+  scale_color_identity()|
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() +
+  geom_smooth(aes(color = &quot;loess&quot;), method = &quot;loess&quot;, se = FALSE) + 
+  geom_smooth(aes(color = &quot;lm&quot;), method = &quot;lm&quot;, se = FALSE) +
+  labs(color = &quot;Method&quot;)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="geoms" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Geoms</h2>
+<p>Geometric objects, or <strong>geoms</strong> for short, perform the actual rendering of the layer. Here are some <a href="https://ggplot2-book.org/layers.html#geom">geoms</a> I’m not familiar with:</p>
+<ul>
+<li>Graphical primitives:
+<ul>
+<li><code>geom_blank()</code>: display nothing. Most useful for adjusting axes limits using data.</li>
+<li><code>geom_ribbon()</code>: ribbons, a path with vertical thickness.</li>
+<li><code>geom_segment()</code>: a line segment, specified by start and end position.</li>
+<li><code>geom_polygon()</code>: filled polygons.</li>
+<li><code>geom_text()</code>: text.</li>
+</ul></li>
+<li>One variable:
+<ul>
+<li>Discrete:
+<ul>
+<li><code>geom_histogram()</code>: bin and count continuous variable, display with bars.</li>
+<li><code>geom_density()</code>: smoothed density estimate.</li>
+<li><code>geom_dotplot()</code>: stack individual points into a dot plot.</li>
+<li><code>geom_freqpoly()</code>: bin and count continuous variable, display with lines.</li>
+</ul></li>
+</ul></li>
+<li>Two variables:
+<ul>
+<li>Both continuous:
+<ul>
+<li><code>geom_quantile()</code>: smoothed quantile regression.</li>
+<li><code>geom_rug()</code>: marginal rug plots.</li>
+<li><code>geom_text()</code>: text labels.</li>
+</ul></li>
+<li>Show distribution:
+<ul>
+<li><code>geom_bin2d()</code>: bin into rectangles and count.</li>
+<li><code>geom_density2d()</code>: smoothed 2d density estimate.</li>
+<li><code>geom_hex()</code>: bin into hexagons and count.</li>
+</ul></li>
+<li>At least one discrete:
+<ul>
+<li><code>geom_count()</code>: count number of point at distinct locations</li>
+</ul></li>
+<li>One continuous, one discrete:
+<ul>
+<li><code>geom_bar(stat = "identity")</code>: a bar chart of precomputed summaries.</li>
+</ul></li>
+<li>One time, one continuous
+<ul>
+<li><code>geom_step()</code>: step plot.</li>
+</ul></li>
+<li>Display uncertainty:
+<ul>
+<li><code>geom_crossbar()</code>: vertical bar with center.</li>
+<li><code>geom_map()</code>: fast version of <code>geom_polygon()</code> for map data.</li>
+</ul></li>
+</ul></li>
+<li>Three variables:
+<ul>
+<li><code>geom_contour()</code>: contours.</li>
+<li><code>geom_raster()</code>: fast version of <code>geom_tile()</code> for equal sized tiles.</li>
+</ul></li>
+</ul>
+<p>Each geom has a set of aesthetics that it understands, some of which <em>must</em> be provided. For example, a bar requires height (<code>ymax</code>), and understands width, border color and fill color.</p>
+<p>Some geoms differ primarily in the way that they are parameterised. For example, you can draw a square in three ways:</p>
+<ul>
+<li><code>geom_tile()</code>: the location (<code>x</code> and <code>y</code>) and dimensions
+(<code>width</code> and <code>height</code>).</li>
+<li><code>geom_rect()</code>: top (<code>ymax</code>), bottom (<code>ymin</code>), left (<code>xmin</code>) and right (<code>xmax</code>) positions.</li>
+<li><code>geom_polygon()</code>: a four row data frame with the <code>x</code> and <code>y</code> positions of each corner.</li>
+</ul>
+</div>
+<div id="stats" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Stats</h2>
+<p>A statistical transformation, or <a href="https://ggplot2-book.org/layers.html#stat"><strong>stat</strong></a>, transforms the data, typically by summarising it. You’ve already used many of ggplot2’s stats because they’re used behind the scenes to generate many important geoms:</p>
+<ul>
+<li><code>stat_bin()</code>: <code>geom_bar()</code>, <code>geom_freqpoly()</code>, <code>geom_histogram()</code></li>
+<li><code>stat_bin2d()</code>: <code>geom_bin2d()</code></li>
+<li><code>stat_bindot()</code>: <code>geom_dotplot()</code></li>
+<li><code>stat_binhex()</code>: <code>geom_hex()</code></li>
+<li><code>stat_boxplot()</code>: <code>geom_boxplot()</code></li>
+<li><code>stat_contour()</code>: <code>geom_contour()</code></li>
+<li><code>stat_quantile()</code>: <code>geom_quantile()</code></li>
+<li><code>stat_smooth()</code>: <code>geom_smooth()</code></li>
+<li><code>stat_sum()</code>: <code>geom_count()</code></li>
+</ul>
+<p>You’ll rarely call these functions directly, but they are useful to know about because their documentation often provides more detail about the corresponding statistical transformation.</p>
+<p>Other stats can’t be created with a <code>geom_</code> function:</p>
+<ul>
+<li><code>stat_ecdf()</code>: compute a empirical cumulative distribution plot.</li>
+<li><code>stat_function()</code>: compute y values from a function of x values.</li>
+<li><code>stat_summary()</code>: summarise y values at distinct x values.</li>
+<li><code>stat_summary2d()</code>, <code>stat_summary_hex()</code>: summarise binned values.</li>
+<li><code>stat_qq()</code>: perform calculations for a quantile-quantile plot.</li>
+<li><code>stat_spoke()</code>: convert angle and radius to position.</li>
+<li><code>stat_unique()</code>: remove duplicated rows.</li>
+</ul>
+<p>There are two ways to use these functions. You can either add a <code>stat_()</code> function and override the default geom, or add a <code>geom_()</code> function and override the default stat:</p>
+<pre class="r"><code>ggplot(mpg, aes(trans, cty)) + 
+  geom_point() + 
+  stat_summary(geom = &quot;point&quot;, fun = &quot;mean&quot;, 
+               colour = &quot;red&quot;, size = 4)|
+ggplot(mpg, aes(trans, cty)) + 
+  geom_point() + 
+  geom_point(stat = &quot;summary&quot;, fun = &quot;mean&quot;, 
+             colour = &quot;red&quot;, size = 4)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Internally, a stat takes a data frame as input and returns a data frame as output, and so a stat can add new variables to the original dataset. To refer to a generated variable like density, <code>after_stat()</code> must wrap the name.</p>
+<pre class="r"><code>ggplot(diamonds, aes(price, colour = cut)) + 
+  geom_freqpoly(binwidth = 500) +
+  theme(legend.position = &quot;none&quot;) |
+
+ggplot(diamonds, aes(price, colour = cut)) + 
+  geom_freqpoly(aes(y = after_stat(density)), binwidth = 500) + 
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="position-adjustments" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Position adjustments</h2>
+<p>Position adjustments apply minor tweaks to the position of elements within a layer. Three adjustments apply primarily to bars:</p>
+<ul>
+<li><code>position_stack()</code>: stack overlapping bars (or areas) on top of each other.</li>
+<li><code>position_fill()</code>: stack overlapping bars, scaling so the top is always at 1.</li>
+<li><code>position_dodge()</code>: place overlapping bars (or boxplots) side-by-side.</li>
+<li><code>position_identity()</code>: do nothing.</li>
+</ul>
+<pre class="r"><code>dplot &lt;- ggplot(diamonds, aes(color, fill = cut)) + 
+  xlab(NULL) + ylab(NULL) + theme(legend.position = &quot;none&quot;)
+# position stack is the default for bars, so `geom_bar()` 
+# is equivalent to `geom_bar(position = &quot;stack&quot;)`.
+dplot + geom_bar()|
+dplot + geom_bar(position = &quot;fill&quot;)|
+dplot + geom_bar(position = &quot;dodge&quot;)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>There are three position adjustments that are primarily useful for points:</p>
+<ul>
+<li><code>position_nudge()</code>: move points by a fixed offset.</li>
+<li><code>position_jitter()</code>: add a little random noise to every position.</li>
+<li><code>position_jitterdodge()</code>: dodge points within groups, then add a little random noise.</li>
+</ul>
+<pre class="r"><code>ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(position = &quot;jitter&quot;)|
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(position = position_jitter(width = 0.05, height = 0.5))|
+# geom_jitter() is a shortcut
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_jitter(width = 0.2, height = 0.8)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-9-1.png" width="864" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="scales-and-guides" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Scales and guides</h1>
+<p>The use of <code>+</code> to “add” scales to a plot is a little misleading because if you supply two scales for the same aesthetic, the last scale takes precedence.</p>
+<p>All scale functions in ggplot2 belong to one of three fundamental types:</p>
+<ul>
+<li>continuous scales</li>
+<li>discrete scales</li>
+<li>binned scales
+Each fundamental type is handled by one of three scale constructor functions; <code>continuous_scale()</code>, <code>discrete_scale()</code> and <code>binned_scale()</code>.</li>
+</ul>
+<div id="scale-transformation" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Scale transformation</h2>
+<p>The linearly mapped scale on the left makes it easy to see the peaks of the distribution, whereas the transformed representation on the right makes it easier to see the regions of non-negligible density around those peaks:</p>
+<pre class="r"><code>base &lt;- ggplot(faithfuld, aes(waiting, eruptions)) + 
+  geom_raster(aes(fill = density)) + 
+  scale_x_continuous(NULL, NULL, expand = c(0, 0)) +
+  scale_y_continuous(NULL, NULL, expand = c(0, 0))
+  
+base|
+base + scale_fill_continuous(trans = &quot;sqrt&quot;)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-10-1.png" width="441.6" style="display: block; margin: auto;" /></p>
+</div>
+<div id="scale-guides" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Scale guides</h2>
+<p>In ggplot2, legend and axes are known collectively as guides, which
+allow you to read observations from the plot or map them back to their original values.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Argument name</th>
+<th align="left">Axis</th>
+<th align="left">Legend</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>name</code></td>
+<td align="left">Label</td>
+<td align="left">Title</td>
+</tr>
+<tr class="even">
+<td align="left"><code>breaks</code></td>
+<td align="left">Ticks &amp; grid line</td>
+<td align="left">Key</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>labels</code></td>
+<td align="left">Tick label</td>
+<td align="left">Key label</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="scale-breaks" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Scale breaks</h2>
+<p>Where labs() provides a shorthand way to specify the name argument to one or more scales, the guides() function allows you to specify guide arguments to one or more scales. In the same way that labs(colour = “a colour scale name”) specifies the name associated with the colour scale, a command such as guides(colour = guide_coloursteps()) can be used to specify its associated guide:</p>
+<pre class="r"><code>base &lt;- ggplot(mpg, aes(displ, hwy, colour = cyl)) + geom_point()
+
+base |
+base + scale_colour_continuous(guide = guide_coloursteps())|
+base + guides(colour = guide_coloursteps())</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-11-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Scale guides are more complex than scale names: where the <code>name</code> argument (and <code>labs()</code> ) takes text as input, the <code>guide</code> argument (and <code>guides()</code>) require a guide object created by a <strong>guide function</strong>:
+| Scale type | Default guide type |<br />
+|:—————————————————–|:——————–|
+| continuous scales for colour/fill aesthetics | colourbar |
+| binned scales for colour/fill aesthetics | coloursteps |
+| position scales (continuous, binned and discrete) | axis |
+| discrete scales (except position scales) | legend |
+| binned scales (except position/colour/fill scales) | bins |</p>
+</div>
+<div id="legend-merging-and-splitting" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Legend merging and splitting</h2>
+<p>By default, a layer will only appear if the corresponding aesthetic is mapped to a variable with <code>aes()</code>. You can override whether or not a layer appears in the legend with <code>show.legend</code>.</p>
+<pre class="r"><code>toy &lt;- data.frame(
+  const = 1, 
+  up = 1:4,
+  txt = letters[1:4], 
+  big = (1:4)*1000,
+  log = c(2, 5, 10, 2000)
+)
+ggplot(toy, aes(up, up)) + 
+  geom_point(size = 4, colour = &quot;grey20&quot;) +
+  geom_point(aes(colour = txt), size = 2) |
+# show grey points in legend
+ggplot(toy, aes(up, up)) + 
+  geom_point(size = 4, colour = &quot;grey20&quot;, show.legend = TRUE) +
+  geom_point(aes(colour = txt), size = 2) </code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The <code>ggnewscale::new_scale_colour()</code> command acts as an instruction to ggplot2 to initialise a new colour scale: scale and guide commands that appear above the <code>new_scale_colour()</code> command will be applied to the first color scale, and commands that appear below are applied to the second color scale.</p>
+<pre class="r"><code>base &lt;- ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(colour = factor(year)), size = 5) + 
+  scale_colour_brewer(&quot;year&quot;, type = &quot;qual&quot;, palette = 5) 
+
+base|
+base + 
+  ggnewscale::new_scale_colour() + 
+  geom_point(aes(colour = cyl == 4), size = 1, fill = NA) + 
+  scale_colour_manual(&quot;4 cylinder&quot;, values = c(&quot;grey60&quot;, &quot;black&quot;))</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
 </div>

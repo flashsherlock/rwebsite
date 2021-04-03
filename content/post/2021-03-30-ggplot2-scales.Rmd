@@ -44,8 +44,8 @@ ggplot(mpg, aes(x = displ,
 ## Numeric
 The most common continuous position scales are the default `scale_x_continuous()` and `scale_y_continuous()`. Other functions like `scale_x_log10()`, `scale_x_reverse()` transform the data, which can also be achieved by setting the `trans` option.
 
-| Name      | Function $f(x)$         | Name      | Function $f(x)$         
-|-----------|-------------------------|-----------|------------------------
+| Name      | Function                | Name      | Function     
+|:----------|:------------------------|:----------|:-----------------------
 | asn       | $\tanh^{-1}(x)$         | logit     | $\log(\frac{x}{1 - x})$ 
 | exp       | $e ^ x$                 | pow10     | $10^x$                  
 | identity  | $x$                     | probit    | $\Phi(x)$               

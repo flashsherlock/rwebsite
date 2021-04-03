@@ -33,3 +33,282 @@ One of the key ideas behind ggplot2 is that it allows you to easily iterate, bui
 5. A position adjustment.
 
 # Build a plot layer by layer
+
+It's important to realize that there's nothing to see until we add a layer, which is created by the `layer()` function. `geom_point` is a shortcut of this function.
+```{r fig.height=2, fig.width=9}
+p <- ggplot(mpg, aes(displ, hwy))
+p |
+# the same as geom_point
+p + layer(mapping = NULL, 
+          data = NULL,
+          geom = "point", 
+          stat = "identity",
+          position = "identity")
+```
+
+## Data
+Never refer to a variable with `$` in `aes()` (e.g., `diamonds$carat`). This breaks containment, so that the plot no longer contains everything it needs, and causes problems if ggplot2 changes the order of the rows, as it does when faceting.
+
+```{r fig.height=2, fig.width=9}
+library(dplyr)
+class <- mpg %>% 
+  group_by(class) %>% 
+  summarise(n = n(), hwy = mean(hwy))
+# my answer
+ggplot(mpg,aes(class,hwy))+
+  geom_jitter(color="black")+
+  geom_point(aes(class,hwy),class,color="red",size=4)+
+  annotate("text",x=1:length(unique(mpg$class)),y=10,
+           label=paste0("n = ",class$n))|
+# the answer provided by the author
+ggplot(mpg, aes(class, hwy)) + 
+  geom_jitter(width = 0.25) + 
+  geom_point(data = class, colour = "red", size = 4) + 
+  geom_text(aes(y = 10, label = paste0("n = ", n)), 
+            class, size = 3)
+```
+
+## Aesthetic mappings
+Aesthetic mappings can be supplied in the initial `ggplot()` call, in individual layers, or in some combination of both. The way you specify aesthetics doesn’t make any difference if there's only one layer, but the distinction is important when you start adding additional layers.
+```{r fig.height=2, fig.width=6}
+ggplot(mpg, aes(displ, hwy, colour = class)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) +
+  theme(legend.position = "none")|
+
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(colour = class)) + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  theme(legend.position = "none")
+```
+
+If you want appearance to be governed by a variable, put the specification **inside `aes()`**; if you want override the default size or color, put the value **outside of `aes()`**. Another way to override the default scale is using `scale_colour_identity()`. It’s sometimes useful to map aesthetics to constants.
+
+```{r fig.height=2, fig.width=6}
+ggplot(mpg, aes(cty, hwy)) + 
+  geom_point(aes(color = "blue")) + 
+  scale_color_identity()|
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() +
+  geom_smooth(aes(color = "loess"), method = "loess", se = FALSE) + 
+  geom_smooth(aes(color = "lm"), method = "lm", se = FALSE) +
+  labs(color = "Method")
+```
+
+## Geoms
+Geometric objects, or **geoms** for short, perform the actual rendering of the layer. Here are some [geoms](https://ggplot2-book.org/layers.html#geom) I'm not familiar with: 
+
+* Graphical primitives:
+    * `geom_blank()`: display nothing. Most useful for adjusting axes limits using data.
+    * `geom_ribbon()`: ribbons, a path with vertical thickness.
+    * `geom_segment()`: a line segment, specified by start and end position.
+    * `geom_polygon()`: filled polygons.
+    * `geom_text()`: text.
+  
+* One variable:
+    * Discrete: 
+        * `geom_histogram()`: bin and count continuous variable, display with bars.
+        * `geom_density()`: smoothed density estimate.
+        * `geom_dotplot()`: stack individual points into a dot plot.
+        * `geom_freqpoly()`: bin and count continuous variable, display with lines.
+
+* Two variables:
+    * Both continuous:
+        * `geom_quantile()`: smoothed quantile regression.
+        * `geom_rug()`: marginal rug plots.
+        * `geom_text()`: text labels.
+    * Show distribution:
+        * `geom_bin2d()`: bin into rectangles and count.
+        * `geom_density2d()`: smoothed 2d density estimate.
+        * `geom_hex()`: bin into hexagons and count.
+    * At least one discrete:
+        * `geom_count()`: count number of point at distinct locations
+    * One continuous, one discrete:
+        * `geom_bar(stat = "identity")`: a bar chart of precomputed summaries.
+    * One time, one continuous
+        * `geom_step()`: step plot.
+    * Display uncertainty:
+        * `geom_crossbar()`: vertical bar with center.
+        * `geom_map()`: fast version of `geom_polygon()` for map data.
+
+* Three variables:
+    * `geom_contour()`: contours.
+    * `geom_raster()`: fast version of `geom_tile()` for equal sized tiles.
+  
+Each geom has a set of aesthetics that it understands, some of which _must_ be provided. For example, a bar requires height (`ymax`), and understands width, border color and fill color.
+
+Some geoms differ primarily in the way that they are parameterised. For example, you can draw a square in three ways:
+
+* `geom_tile()`: the location (`x` and `y`) and dimensions 
+  (`width` and `height`).
+* `geom_rect()`: top (`ymax`), bottom (`ymin`), left (`xmin`) and right (`xmax`) positions.
+* `geom_polygon()`: a four row data frame with the `x` and `y` positions of each corner.
+
+## Stats
+A statistical transformation, or [**stat**](https://ggplot2-book.org/layers.html#stat), transforms the data, typically by summarising it. You've already used many of ggplot2's stats because they're used behind the scenes to generate many important geoms:
+
+* `stat_bin()`: `geom_bar()`, `geom_freqpoly()`, `geom_histogram()`
+* `stat_bin2d()`: `geom_bin2d()`
+* `stat_bindot()`: `geom_dotplot()`
+* `stat_binhex()`: `geom_hex()`
+* `stat_boxplot()`: `geom_boxplot()`
+* `stat_contour()`: `geom_contour()`
+* `stat_quantile()`: `geom_quantile()`
+* `stat_smooth()`: `geom_smooth()`
+* `stat_sum()`: `geom_count()`
+
+You'll rarely call these functions directly, but they are useful to know about because their documentation often provides more detail about the corresponding statistical transformation.
+
+Other stats can't be created with a `geom_` function:
+
+* `stat_ecdf()`: compute a empirical cumulative distribution plot.
+* `stat_function()`: compute y values from a function of x values.
+* `stat_summary()`: summarise y values at distinct x values.
+* `stat_summary2d()`, `stat_summary_hex()`: summarise binned values.
+* `stat_qq()`: perform calculations for a quantile-quantile plot.
+* `stat_spoke()`: convert angle and radius to position.
+* `stat_unique()`: remove duplicated rows.
+
+There are two ways to use these functions. You can either add a `stat_()` function and override the default geom, or add a `geom_()` function and override the default stat:
+
+```{r, fig.height=2, fig.width=6}
+ggplot(mpg, aes(trans, cty)) + 
+  geom_point() + 
+  stat_summary(geom = "point", fun = "mean", 
+               colour = "red", size = 4)|
+ggplot(mpg, aes(trans, cty)) + 
+  geom_point() + 
+  geom_point(stat = "summary", fun = "mean", 
+             colour = "red", size = 4)
+```
+
+Internally, a stat takes a data frame as input and returns a data frame as output, and so a stat can add new variables to the original dataset. To refer to a generated variable like density, `after_stat()` must wrap the name. 
+```{r fig.height=2, fig.width=6}
+ggplot(diamonds, aes(price, colour = cut)) + 
+  geom_freqpoly(binwidth = 500) +
+  theme(legend.position = "none") |
+
+ggplot(diamonds, aes(price, colour = cut)) + 
+  geom_freqpoly(aes(y = after_stat(density)), binwidth = 500) + 
+  theme(legend.position = "none")
+```
+
+## Position adjustments
+Position adjustments apply minor tweaks to the position of elements within a layer. Three adjustments apply primarily to bars:
+
+* `position_stack()`: stack overlapping bars (or areas) on top of each other.
+* `position_fill()`: stack overlapping bars, scaling so the top is always at 1.
+* `position_dodge()`: place overlapping bars (or boxplots) side-by-side.
+* `position_identity()`: do nothing.
+
+```{r fig.height=2, fig.width=8}
+dplot <- ggplot(diamonds, aes(color, fill = cut)) + 
+  xlab(NULL) + ylab(NULL) + theme(legend.position = "none")
+# position stack is the default for bars, so `geom_bar()` 
+# is equivalent to `geom_bar(position = "stack")`.
+dplot + geom_bar()|
+dplot + geom_bar(position = "fill")|
+dplot + geom_bar(position = "dodge")
+```
+
+There are three position adjustments that are primarily useful for points:
+
+* `position_nudge()`: move points by a fixed offset.
+* `position_jitter()`: add a little random noise to every position.
+* `position_jitterdodge()`: dodge points within groups, then add a little random noise.
+
+```{r fig.height=2, fig.width=9}
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(position = "jitter")|
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(position = position_jitter(width = 0.05, height = 0.5))|
+# geom_jitter() is a shortcut
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_jitter(width = 0.2, height = 0.8)
+```
+
+# Scales and guides
+The use of `+` to “add” scales to a plot is a little misleading because if you supply two scales for the same aesthetic, the last scale takes precedence.
+
+All scale functions in ggplot2 belong to one of three fundamental types:
+
+* continuous scales
+* discrete scales
+* binned scales
+Each fundamental type is handled by one of three scale constructor functions; `continuous_scale()`, `discrete_scale()` and `binned_scale()`.
+
+## Scale transformation
+The linearly mapped scale on the left makes it easy to see the peaks of the distribution, whereas the transformed representation on the right makes it easier to see the regions of non-negligible density around those peaks:
+```{r fig.height=1.5, fig.width=4.6}
+base <- ggplot(faithfuld, aes(waiting, eruptions)) + 
+  geom_raster(aes(fill = density)) + 
+  scale_x_continuous(NULL, NULL, expand = c(0, 0)) +
+  scale_y_continuous(NULL, NULL, expand = c(0, 0))
+  
+base|
+base + scale_fill_continuous(trans = "sqrt")
+```
+
+## Scale guides
+In ggplot2, legend and axes are known collectively as guides, which 
+allow you to read observations from the plot or map them back to their original values.
+
+| Argument name   | Axis              | Legend        
+|:----------------|:------------------|:--------------
+| `name`          | Label             | Title         
+| `breaks`        | Ticks & grid line | Key           
+| `labels`        | Tick label        | Key label   
+
+## Scale breaks
+Where labs() provides a shorthand way to specify the name argument to one or more scales, the guides() function allows you to specify guide arguments to one or more scales. In the same way that labs(colour = "a colour scale name") specifies the name associated with the colour scale, a command such as guides(colour = guide_coloursteps()) can be used to specify its associated guide:
+
+```{r fig.height=2, fig.width=9}
+base <- ggplot(mpg, aes(displ, hwy, colour = cyl)) + geom_point()
+
+base |
+base + scale_colour_continuous(guide = guide_coloursteps())|
+base + guides(colour = guide_coloursteps())
+```
+
+Scale guides are more complex than scale names: where the `name` argument (and `labs()` ) takes text as input, the `guide` argument (and `guides()`) require a guide object created by a **guide function**:
+| Scale type                                           | Default guide type  |       
+|:-----------------------------------------------------|:--------------------|
+| continuous scales for colour/fill aesthetics         | colourbar           |
+| binned scales for colour/fill aesthetics             | coloursteps         |
+| position scales (continuous, binned and discrete)    | axis                |
+| discrete scales (except position scales)             | legend              |
+| binned scales (except position/colour/fill scales)   | bins                |
+
+## Legend merging and splitting
+By default, a layer will only appear if the corresponding aesthetic is mapped to a variable with `aes()`. You can override whether or not a layer appears in the legend with `show.legend`.
+```{r fig.height=2, fig.width=6}
+toy <- data.frame(
+  const = 1, 
+  up = 1:4,
+  txt = letters[1:4], 
+  big = (1:4)*1000,
+  log = c(2, 5, 10, 2000)
+)
+ggplot(toy, aes(up, up)) + 
+  geom_point(size = 4, colour = "grey20") +
+  geom_point(aes(colour = txt), size = 2) |
+# show grey points in legend
+ggplot(toy, aes(up, up)) + 
+  geom_point(size = 4, colour = "grey20", show.legend = TRUE) +
+  geom_point(aes(colour = txt), size = 2) 
+```
+
+The `ggnewscale::new_scale_colour()` command acts as an instruction to ggplot2 to initialise a new colour scale: scale and guide commands that appear above the `new_scale_colour()` command will be applied to the first color scale, and commands that appear below are applied to the second color scale.
+
+```{r fig.height=2, fig.width=6}
+base <- ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(colour = factor(year)), size = 5) + 
+  scale_colour_brewer("year", type = "qual", palette = 5) 
+
+base|
+base + 
+  ggnewscale::new_scale_colour() + 
+  geom_point(aes(colour = cyl == 4), size = 1, fill = NA) + 
+  scale_colour_manual("4 cylinder", values = c("grey60", "black"))
+```
+
