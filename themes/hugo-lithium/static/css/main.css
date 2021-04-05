@@ -39,12 +39,12 @@ div:not(.dataTables_wrapper) > table{
   margin: auto;
   display: block;
   overflow-x: auto;
+    /* do not break lines */
+  white-space: nowrap;
 }
 
 div:not(.dataTables_wrapper) > table td {
   padding: 5px;
-  /* do not break lines */
-  white-space:nowrap;
 }
 
 div:not(.dataTables_wrapper) > table tbody {

@@ -33,5 +33,26 @@ output:
 <p>To make your code more flexible, you need to reduce duplicated code by writing <a href="http://adv-r.had.co.nz/Functions.html">functions</a>.</p>
 <div id="single-components" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Single components</h2>
+<p>Each component of a ggplot plot is an object. you can save any component to a variable or wrap them in a function and then add it to plots.</p>
+<pre class="r"><code>bestfit &lt;- geom_smooth(
+  method = &quot;lm&quot;, 
+  se = FALSE, 
+  colour = alpha(&quot;steelblue&quot;, 0.5), 
+  size = 2
+)
+
+geom_lm &lt;- function(formula = y ~ x, colour = alpha(&quot;steelblue&quot;, 0.5),
+                    size = 2, ...)  {
+  geom_smooth(formula = formula, se = FALSE, 
+              method = &quot;lm&quot;, colour = colour, size = size, ...)}
+# variable
+ggplot(mpg, aes(cty, hwy)) + 
+  geom_point() + 
+  bestfit |
+# function
+ggplot(mpg, aes(displ, 1 / hwy)) + 
+  geom_point() + 
+  geom_lm(y ~ poly(x, 2), size = 1, colour = &quot;red&quot;)</code></pre>
+<p><img src="/post/2021-04-05-ggplot2-extending-ggplot2_files/figure-html/unnamed-chunk-2-1.png" width="384" style="display: block; margin: auto;" /></p>
 </div>
 </div>

@@ -27,3 +27,28 @@ library(patchwork)
 To make your code more flexible, you need to reduce duplicated code by writing [functions](http://adv-r.had.co.nz/Functions.html). 
 
 ## Single components
+Each component of a ggplot plot is an object. you can save any component to a variable or wrap them in a function and then add it to plots.
+
+```{r fig.height=1.5, fig.width=4}
+bestfit <- geom_smooth(
+  method = "lm", 
+  se = FALSE, 
+  colour = alpha("steelblue", 0.5), 
+  size = 2
+)
+
+geom_lm <- function(formula = y ~ x, colour = alpha("steelblue", 0.5),
+                    size = 2, ...)  {
+  geom_smooth(formula = formula, se = FALSE, 
+              method = "lm", colour = colour, size = size, ...)}
+# variable
+ggplot(mpg, aes(cty, hwy)) + 
+  geom_point() + 
+  bestfit |
+# function
+ggplot(mpg, aes(displ, 1 / hwy)) + 
+  geom_point() + 
+  geom_lm(y ~ poly(x, 2), size = 1, colour = "red")
+
+```
+
