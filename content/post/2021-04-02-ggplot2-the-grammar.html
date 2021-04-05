@@ -9,11 +9,11 @@ tags:
   - plot
   - R
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: yes
-    toc_depth: 3
+    toc_depth: 2
     number_sections: yes
 ---
 
@@ -36,6 +36,25 @@ output:
 <li><a href="#scale-guides"><span class="toc-section-number">3.2</span> Scale guides</a></li>
 <li><a href="#scale-breaks"><span class="toc-section-number">3.3</span> Scale breaks</a></li>
 <li><a href="#legend-merging-and-splitting"><span class="toc-section-number">3.4</span> Legend merging and splitting</a></li>
+</ul></li>
+<li><a href="#coordinate-systems"><span class="toc-section-number">4</span> Coordinate systems</a>
+<ul>
+<li><a href="#linear-coordinate-systems"><span class="toc-section-number">4.1</span> Linear coordinate systems</a></li>
+<li><a href="#non-linear-coordinate-systems"><span class="toc-section-number">4.2</span> Non-linear coordinate systems</a></li>
+</ul></li>
+<li><a href="#faceting"><span class="toc-section-number">5</span> Faceting</a>
+<ul>
+<li><a href="#facet-wrap"><span class="toc-section-number">5.1</span> Facet wrap</a></li>
+<li><a href="#facet-grid"><span class="toc-section-number">5.2</span> Facet grid</a></li>
+<li><a href="#controlling-scales"><span class="toc-section-number">5.3</span> Controlling scales</a></li>
+<li><a href="#missing-faceting-variables"><span class="toc-section-number">5.4</span> Missing faceting variables</a></li>
+</ul></li>
+<li><a href="#themes"><span class="toc-section-number">6</span> Themes</a>
+<ul>
+<li><a href="#complete-themes"><span class="toc-section-number">6.1</span> Complete themes</a></li>
+<li><a href="#modifying-theme-components"><span class="toc-section-number">6.2</span> Modifying theme components</a></li>
+<li><a href="#theme-elements"><span class="toc-section-number">6.3</span> Theme elements</a></li>
+<li><a href="#saving-your-output"><span class="toc-section-number">6.4</span> Saving your output</a></li>
 </ul></li>
 </ul>
 </div>
@@ -344,7 +363,7 @@ ggplot(toy, aes(up, up)) +
   geom_point(size = 4, colour = &quot;grey20&quot;, show.legend = TRUE) +
   geom_point(aes(colour = txt), size = 2) </code></pre>
 <p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>The <code>ggnewscale::new_scale_colour()</code> command acts as an instruction to ggplot2 to initialise a new colour scale: scale and guide commands that appear above the <code>new_scale_colour()</code> command will be applied to the first color scale, and commands that appear below are applied to the second color scale.</p>
+<p>The <code>ggnewscale::new_scale_colour()</code> command acts as an instruction to ggplot2 to initialise a new color scale: scale and guide commands that appear above the <code>new_scale_colour()</code> command will be applied to the first color scale, and commands that appear below are applied to the second color scale.</p>
 <pre class="r"><code>base &lt;- ggplot(mpg, aes(displ, hwy)) + 
   geom_point(aes(colour = factor(year)), size = 5) + 
   scale_colour_brewer(&quot;year&quot;, type = &quot;qual&quot;, palette = 5) 
@@ -355,5 +374,499 @@ base +
   geom_point(aes(colour = cyl == 4), size = 1, fill = NA) + 
   scale_colour_manual(&quot;4 cylinder&quot;, values = c(&quot;grey60&quot;, &quot;black&quot;))</code></pre>
 <p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="coordinate-systems" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Coordinate systems</h1>
+<div id="linear-coordinate-systems" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Linear coordinate systems</h2>
+<ul>
+<li><code>coord_cartesian()</code>: the default Cartesian coordinate system,
+where the 2d position of an element is given by the combination of the x and y positions.<br />
+</li>
+<li><code>coord_flip()</code>: Cartesian coordinate system with x and y axes flipped.</li>
+<li><code>coord_fixed()</code>: Cartesian coordinate system with a fixed aspect ratio.</li>
+</ul>
+<pre class="r"><code>ggplot(mpg, aes(displ, cty)) + 
+  geom_point() + 
+  geom_smooth()|
+# exchange x and y
+ggplot(mpg, aes(cty, displ)) + 
+  geom_point() + 
+  geom_smooth()|
+# flip coord
+ggplot(mpg, aes(displ, cty)) + 
+  geom_point() + 
+  geom_smooth() + 
+  coord_flip()|
+# set ratio and ylim
+ggplot(mpg, aes(displ, cty)) + 
+  geom_point() + 
+  geom_smooth() + 
+  coord_fixed(ratio=1/2,ylim = c(10,30))</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-14-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="non-linear-coordinate-systems" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Non-linear coordinate systems</h2>
+<ul>
+<li><code>coord_map()</code>/<code>coord_quickmap()</code>/<code>coord_sf()</code>: Map projections.</li>
+<li><code>coord_polar()</code>: Polar coordinates.</li>
+<li><code>coord_trans()</code>: Apply arbitrary transformations to x and y positions, after the data has been processed by the stat.</li>
+</ul>
+<pre class="r"><code>rect &lt;- data.frame(x = 50, y = 50)
+line &lt;- data.frame(x = c(1, 200), y = c(100, 1))
+base &lt;- ggplot(mapping = aes(x, y)) + 
+  geom_tile(data = rect, aes(width = 50, height = 50)) + 
+  geom_line(data = line) + 
+  xlab(NULL) + ylab(NULL)
+base|
+base + coord_trans(y = &quot;log10&quot;)|
+# theta argument determines which position variable 
+# is mapped to angle (by default, x)
+base + coord_polar()|
+base + coord_polar(&quot;y&quot;)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-15-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Maps are intrinsically displays of spherical data. Simply plotting raw longitudes and latitudes is misleading, so we must <em>project</em> the data. There are two ways to do this with ggplot2:</p>
+<ul>
+<li><code>coord_quickmap()</code>: quick and dirty approximation that sets the aspect ratio to ensure that 1m of latitude and 1m of longitude are the same distance in the middle of the plot.</li>
+<li><code>coord_map()</code>: uses the <a href="https://cran.r-project.org/package=mapproj"><strong>mapproj</strong></a> package, to do a formal map projection. It takes the same arguments as <code>mapproj::mapproject()</code> for controlling the projection. It is much slower than <code>coord_quickmap()</code> because it must munch (cut into pieces) the data and transform each piece.</li>
+</ul>
+<pre class="r"><code># Polygons are very similar to paths (as drawn by geom_path()) 
+# except that the start and end points are connected 
+# and the inside is colored by fill. 
+world &lt;- map_data(&quot;world&quot;)
+worldmap &lt;- ggplot(world, aes(long, lat, group = group)) +
+  geom_path() +
+  scale_y_continuous(NULL, breaks = (-2:3) * 30, labels = NULL)+
+  scale_x_continuous(NULL, breaks = (-4:4) * 45, labels = NULL)+
+  theme(axis.ticks = element_blank())
+# maximum longitude in world exceed 180,
+# causing strange lines on the map. 
+# Setting xlim can fix it.
+worldmap + coord_map(xlim=c(-180,180))|
+# Some crazier projections
+worldmap + coord_map(&quot;ortho&quot;,xlim=c(-180,180))|
+worldmap + coord_quickmap()</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="faceting" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Faceting</h1>
+<p>There are three types of faceting:</p>
+<ul>
+<li><em>facet_null()</em>: a single plot, the default.</li>
+<li><em>facet_wrap()</em>: “wraps” a 1d ribbon of panels into 2d.</li>
+<li><em>facet_grid()</em>: produces a 2d grid of panels defined by variables which form the rows and columns.</li>
+</ul>
+<div id="facet-wrap" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Facet wrap</h2>
+<p><code>facet_wrap()</code> wraps a long ribbon of panels into 2d. <code>as.table</code> controls whether the facets are laid out like a table (<code>TRUE</code>), with highest values at the bottom-right, or a plot (<code>FALSE</code>), with the highest values at the top-right. <code>dir</code> controls the direction of wrap: horizontal or vertical.</p>
+<pre class="r"><code>mpg2 &lt;- subset(mpg, cyl != 5 &amp; drv %in% c(&quot;4&quot;, &quot;f&quot;) &amp; class != &quot;2seater&quot;)
+
+base &lt;- ggplot(mpg2, aes(displ, hwy)) + 
+  geom_blank() + 
+  xlab(NULL) + 
+  ylab(NULL)
+
+base + facet_wrap(~class, ncol = 3)|
+base + facet_wrap(~class, ncol = 3, as.table = FALSE)|
+base + facet_wrap(~class, ncol = 3, dir = &quot;v&quot;)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="facet-grid" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Facet grid</h2>
+<p><code>facet_grid()</code> lays out plots in a 2d grid, as defined by a formula:</p>
+<ul>
+<li><code>. ~ a</code> spreads the values of a across the columns.</li>
+<li><code>b ~ .</code> spreads the values of b down the rows.</li>
+<li><code>a ~ b</code> spreads a across columns and b down rows.</li>
+<li>You can use multiple variables in the rows or columns, by “adding” them together, e.g. <code>a + b ~ c + d</code>.</li>
+</ul>
+<pre class="r"><code>base + facet_grid(drv ~ cyl)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-18-1.png" width="384" style="display: block; margin: auto;" /></p>
+</div>
+<div id="controlling-scales" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Controlling scales</h2>
+<p>For both <code>facet_wrap()</code> and <code>facet_grid()</code> you can control whether the position scales are the same in all panels (fixed) or allowed to vary between panels (free) with the <code>scales</code> parameter:</p>
+<ul>
+<li><code>scales = "fixed"</code>: x and y scales are fixed across all panels.</li>
+<li><code>scales = "free_x"</code>: the x scale is free, and the y scale is fixed.</li>
+<li><code>scales = "free_y"</code>: the y scale is free, and the x scale is fixed.</li>
+<li><code>scales = "free"</code>: x and y scales vary across panels.</li>
+</ul>
+<p><code>facet_grid()</code> has an additional parameter called <code>space</code>, which takes the same values as <code>scales</code>. When space is “free”, each column (or row) will have width (or height) proportional to the range of the scale for that column (or row). This makes the scaling equal across the whole plot: 1 cm on each panel maps to the same range of data.</p>
+<pre class="r"><code>mpg2$model &lt;- reorder(mpg2$model, mpg2$cty)
+mpg2$manufacturer &lt;- reorder(mpg2$manufacturer, -mpg2$cty)
+ggplot(mpg2, aes(cty, model)) + 
+  geom_point() + 
+  facet_grid(manufacturer ~ ., scales = &quot;free&quot;, space = &quot;free&quot;) +
+  theme(strip.text.y = element_text(angle = 0))</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="missing-faceting-variables" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Missing faceting variables</h2>
+<p>When one of the dataset is missing a faceting variable, ggplot will display the map in every facet: missing faceting variables are treated like they have all values.</p>
+<pre class="r"><code>df1 &lt;- data.frame(x = 1:3, y = 1:3, gender = c(&quot;f&quot;, &quot;f&quot;, &quot;m&quot;))
+df2 &lt;- data.frame(x = 2, y = 2)
+
+ggplot(df1, aes(x, y)) + 
+  geom_point(data = df2, colour = &quot;red&quot;, size = 2) + 
+  geom_point() + 
+  facet_wrap(~gender)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="themes" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Themes</h1>
+<p>The theming system is composed of four main components:</p>
+<ul>
+<li>Theme <strong>elements</strong> specify the non-data elements that you can control. For example, the <code>plot.title</code> element controls the appearance of the plot title; <code>axis.ticks.x</code>, the ticks on the x axis; <code>legend.key.height</code>, the height of the keys in the legend.</li>
+<li>Each element is associated with an <strong>element function</strong>, which describes the visual properties of the element. For example, <code>element_text()</code> sets the font size, color and face of text elements like <code>plot.title</code>.</li>
+<li>The <code>theme()</code> function which allows you to override the default theme
+elements by calling element functions, like <code>theme(plot.title = element_text(colour = "red"))</code>.</li>
+<li>Complete <strong>themes</strong>, like <code>theme_grey()</code> set all of the theme elements to values designed to work together harmoniously.</li>
+</ul>
+<div id="complete-themes" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Complete themes</h2>
+<p>ggplot2 comes with a number of built in themes:</p>
+<ul>
+<li><code>theme_grey()</code>: a theme with a light grey background and white gridlines.</li>
+<li><code>theme_bw()</code>: a variation on <code>theme_grey()</code> that uses a white background and thin grey grid lines.</li>
+<li><code>theme_linedraw()</code>: A theme with only black lines of various widths on white backgrounds, reminiscent of a line drawing.</li>
+<li><code>theme_light()</code>: similar to <code>theme_linedraw()</code> but with light grey lines and axes, to direct more attention towards the data.</li>
+<li><code>theme_dark()</code>: the dark cousin of <code>theme_light()</code>, with similar line sizes but a dark background. Useful to make thin colored lines pop out.</li>
+<li><code>theme_minimal()</code>: A minimalistic theme with no background annotations.</li>
+<li><code>theme_classic()</code>: A classic-looking theme, with x and y axis lines and no gridlines.</li>
+<li><code>theme_void()</code>: A completely empty theme.</li>
+</ul>
+<pre class="r"><code>df &lt;- data.frame(x = 1:3, y = 1:3)
+base &lt;- ggplot(df, aes(x, y)) + geom_point()
+figure &lt;- list()
+figure[[1]] &lt;- base + theme_grey() + ggtitle(&quot;theme_grey()&quot;)
+figure[[2]] &lt;- base + theme_bw() + ggtitle(&quot;theme_bw()&quot;)
+figure[[3]] &lt;- base + theme_linedraw() + ggtitle(&quot;theme_linedraw()&quot;)
+figure[[4]] &lt;- base + theme_light() + ggtitle(&quot;theme_light()&quot;)
+figure[[5]] &lt;- base + theme_dark() + ggtitle(&quot;theme_dark()&quot;)
+figure[[6]] &lt;- base + theme_minimal()  + ggtitle(&quot;theme_minimal()&quot;)
+figure[[7]] &lt;- base + theme_classic() + ggtitle(&quot;theme_classic()&quot;)
+figure[[8]] &lt;- base + theme_void() + ggtitle(&quot;theme_void()&quot;)
+wrap_plots(figure,ncol = 4)</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-21-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>All themes have a <code>base_size</code> parameter which controls the base font size. As well as applying themes a plot at a time, you can change the default theme with <code>theme_set()</code>, such as <code>theme_set(theme_bw())</code>.</p>
+</div>
+<div id="modifying-theme-components" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Modifying theme components</h2>
+<p>To modify an individual theme component you use code like <code>plot + theme(element.name = element_function())</code>.</p>
+<p>here are four basic types of built-in element functions: text, lines, rectangles, and blank.</p>
+<ul>
+<li><code>element_text()</code> draws labels and headings. You can control the font <code>family</code>, <code>face</code>, <code>colour</code>, <code>size</code> (in points), <code>hjust</code>, <code>vjust</code>, <code>angle</code> (in degrees) and <code>lineheight</code> (as ratio of <code>fontcase</code>). More details on the parameters can be found in <code>vignette("ggplot2-specs")</code>. Margins around the text are controlled by the <code>margin</code> argument and <code>margin()</code> function.</li>
+<li><code>element_line()</code> draws lines parameterised by <code>colour</code>, <code>size</code> and <code>linetype</code></li>
+<li><code>element_rect()</code> draws rectangles, mostly used for backgrounds, parameterised by <code>fill</code> colour and border <code>colour</code>, <code>size</code> and <code>linetype</code>.</li>
+<li><code>element_blank()</code> draws nothing. Use this if you don’t want anything drawn, and no space allocated for that element.
+A few other settings take grid units. Create them with <code>unit(1, "cm")</code> or <code>unit(0.25, "in")</code>.</li>
+</ul>
+<p>To modify theme elements for all future plots, use <code>theme_update()</code>. It returns the previous theme settings (<code>theme_set</code> also returns the old theme), so you can easily restore the original parameters.</p>
+<pre class="r"><code>old_theme &lt;- theme_update(
+  plot.background = element_rect(fill = &quot;lightblue3&quot;, colour = NA),
+  panel.background = element_rect(fill = &quot;lightblue&quot;, colour = NA),
+  axis.text = element_text(colour = &quot;linen&quot;),
+  axis.title = element_text(colour = &quot;linen&quot;)
+)
+# plot with new theme and set back to old theme
+base + theme_set(old_theme)|
+base # old theme</code></pre>
+<p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-22-1.png" width="384" style="display: block; margin: auto;" /></p>
+</div>
+<div id="theme-elements" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Theme elements</h2>
+<p>There are around 40 unique elements that control the appearance of the plot. They can be roughly grouped into five categories: plot, axis, legend, panel and facet.</p>
+<div id="plot-elements" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Plot elements</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Element</th>
+<th align="left">Setter</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">plot.background</td>
+<td align="left"><code>element_rect()</code></td>
+<td align="left">plot background</td>
+</tr>
+<tr class="even">
+<td align="left">plot.title</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">plot title</td>
+</tr>
+<tr class="odd">
+<td align="left">plot.margin</td>
+<td align="left"><code>margin()</code></td>
+<td align="left">margins around plot</td>
+</tr>
+</tbody>
+</table>
+<p>To make the background transparent, set <code>fill = NA</code>.</p>
+</div>
+<div id="axis-elements" class="section level3" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Axis elements</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Element</th>
+<th align="left">Setter</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">axis.line</td>
+<td align="left"><code>element_line()</code></td>
+<td align="left">line parallel to axis</td>
+</tr>
+<tr class="even">
+<td align="left">axis.text</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">tick labels</td>
+</tr>
+<tr class="odd">
+<td align="left">axis.text.x</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">x-axis tick labels</td>
+</tr>
+<tr class="even">
+<td align="left">axis.text.y</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">y-axis tick labels</td>
+</tr>
+<tr class="odd">
+<td align="left">axis.title</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">axis titles</td>
+</tr>
+<tr class="even">
+<td align="left">axis.title.x</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">x-axis title</td>
+</tr>
+<tr class="odd">
+<td align="left">axis.title.y</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">y-axis title</td>
+</tr>
+<tr class="even">
+<td align="left">axis.ticks</td>
+<td align="left"><code>element_line()</code></td>
+<td align="left">axis tick marks</td>
+</tr>
+<tr class="odd">
+<td align="left">axis.ticks.length</td>
+<td align="left"><code>unit()</code></td>
+<td align="left">length of tick marks</td>
+</tr>
+</tbody>
+</table>
+<p>Note that <code>axis.line</code> is hidden in default themes. <code>axis.text</code> (and axis.title) comes in three forms: <code>axis.text</code>, <code>axis.text.x</code>, and <code>axis.text.y</code>. Use the first form if you want to modify the properties of both axes at once. For example. setting <code>axis.text.x = element_text(angle = -30, vjust = 1, hjust = 0)</code> could adjust axis.text.x that avoid overlapping.</p>
+</div>
+<div id="legend-elements" class="section level3" number="6.3.3">
+<h3><span class="header-section-number">6.3.3</span> Legend elements</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Element</th>
+<th align="left">Setter</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">legend.background</td>
+<td align="left"><code>element_rect()</code></td>
+<td align="left">legend background</td>
+</tr>
+<tr class="even">
+<td align="left">legend.key</td>
+<td align="left"><code>element_rect()</code></td>
+<td align="left">background of legend keys</td>
+</tr>
+<tr class="odd">
+<td align="left">legend.key.size</td>
+<td align="left"><code>unit()</code></td>
+<td align="left">legend key size</td>
+</tr>
+<tr class="even">
+<td align="left">legend.key.height</td>
+<td align="left"><code>unit()</code></td>
+<td align="left">legend key height</td>
+</tr>
+<tr class="odd">
+<td align="left">legend.key.width</td>
+<td align="left"><code>unit()</code></td>
+<td align="left">legend key width</td>
+</tr>
+<tr class="even">
+<td align="left">legend.margin</td>
+<td align="left"><code>unit()</code></td>
+<td align="left">legend margin</td>
+</tr>
+<tr class="odd">
+<td align="left">legend.text</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">legend labels</td>
+</tr>
+<tr class="even">
+<td align="left">legend.text.align</td>
+<td align="left">0–1</td>
+<td align="left">legend label alignment (0 = right, 1 = left)</td>
+</tr>
+<tr class="odd">
+<td align="left">legend.title</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">legend name</td>
+</tr>
+<tr class="even">
+<td align="left">legend.title.align</td>
+<td align="left">0–1</td>
+<td align="left">legend name alignment (0 = right, 1 = left)</td>
+</tr>
+</tbody>
+</table>
+<p>You can also modify the appearance of individual legends by modifying the same elements in <code>guide_legend()</code> or <code>guide_colourbar()</code>.</p>
+</div>
+<div id="panel-elements" class="section level3" number="6.3.4">
+<h3><span class="header-section-number">6.3.4</span> Panel elements</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Element</th>
+<th align="left">Setter</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">panel.background</td>
+<td align="left"><code>element_rect()</code></td>
+<td align="left">panel background (under data)</td>
+</tr>
+<tr class="even">
+<td align="left">panel.border</td>
+<td align="left"><code>element_rect()</code></td>
+<td align="left">panel border (over data)</td>
+</tr>
+<tr class="odd">
+<td align="left">panel.grid.major</td>
+<td align="left"><code>element_line()</code></td>
+<td align="left">major grid lines</td>
+</tr>
+<tr class="even">
+<td align="left">panel.grid.major.x</td>
+<td align="left"><code>element_line()</code></td>
+<td align="left">vertical major grid lines</td>
+</tr>
+<tr class="odd">
+<td align="left">panel.grid.major.y</td>
+<td align="left"><code>element_line()</code></td>
+<td align="left">horizontal major grid lines</td>
+</tr>
+<tr class="even">
+<td align="left">panel.grid.minor</td>
+<td align="left"><code>element_line()</code></td>
+<td align="left">minor grid lines</td>
+</tr>
+<tr class="odd">
+<td align="left">panel.grid.minor.x</td>
+<td align="left"><code>element_line()</code></td>
+<td align="left">vertical minor grid lines</td>
+</tr>
+<tr class="even">
+<td align="left">panel.grid.minor.y</td>
+<td align="left"><code>element_line()</code></td>
+<td align="left">horizontal minor grid lines</td>
+</tr>
+<tr class="odd">
+<td align="left">aspect.ratio</td>
+<td align="left">numeric</td>
+<td align="left">plot aspect ratio</td>
+</tr>
+</tbody>
+</table>
+<p>The background is drawn underneath the data, and the <strong>border is drawn on top of it</strong>. For that reason, you’ll always need to assign <code>fill = NA</code> when overriding <code>panel.border</code>.
+Note that aspect ratio controls the <strong>aspect ratio of the panel</strong>, not the overall plot.</p>
+</div>
+<div id="faceting-elements" class="section level3" number="6.3.5">
+<h3><span class="header-section-number">6.3.5</span> Faceting elements</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Element</th>
+<th align="left">Setter</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">strip.background</td>
+<td align="left"><code>element_rect()</code></td>
+<td align="left">background of panel strips</td>
+</tr>
+<tr class="even">
+<td align="left">strip.text</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">strip text</td>
+</tr>
+<tr class="odd">
+<td align="left">strip.text.x</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">horizontal strip text</td>
+</tr>
+<tr class="even">
+<td align="left">strip.text.y</td>
+<td align="left"><code>element_text()</code></td>
+<td align="left">vertical strip text</td>
+</tr>
+<tr class="odd">
+<td align="left">panel.margin</td>
+<td align="left"><code>unit()</code></td>
+<td align="left">margin between facets</td>
+</tr>
+<tr class="even">
+<td align="left">panel.margin.x</td>
+<td align="left"><code>unit()</code></td>
+<td align="left">margin between facets (vertical)</td>
+</tr>
+<tr class="odd">
+<td align="left">panel.margin.y</td>
+<td align="left"><code>unit()</code></td>
+<td align="left">margin between facets (horizontal)</td>
+</tr>
+</tbody>
+</table>
+<p>Element strip.text.x affects both <code>facet_wrap()</code> or <code>facet_grid()</code>; <code>strip.text.y</code> only affects <code>facet_grid()</code>.</p>
+</div>
+</div>
+<div id="saving-your-output" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Saving your output</h2>
+<p>There are two ways to save output from ggplot2.</p>
+<ul>
+<li>the standard R approach:</li>
+</ul>
+<pre class="r"><code>pdf(&quot;output.pdf&quot;, width = 6, height = 6)
+ggplot(mpg, aes(displ, cty)) + geom_point()
+dev.off()</code></pre>
+<ul>
+<li><code>ggsave()</code>:</li>
+</ul>
+<pre class="r"><code>ggplot(mpg, aes(displ, cty)) + geom_point()
+ggsave(&quot;output.pdf&quot;)</code></pre>
+<p><code>ggsave()</code> can be used after you’ve drawn a plot. It has the following important arguments:</p>
+<ul>
+<li><code>path</code>, specifies the path where the image should be saved. <code>ggsave()</code> can produce <code>.eps</code>, <code>.pdf</code>, <code>.svg</code>, <code>.wmf</code>,<code>.png</code>, <code>.jpg</code>, <code>.bmp</code>, and <code>.tiff</code>.</li>
+<li><code>width</code> and <code>height</code> control the output size, specified in inches. The default value is the size of the on-screen graphics device.</li>
+<li>For raster graphics (i.e. <code>.png</code>, <code>.jpg</code>), the <code>dpi</code> argument controls the
+resolution of the plot.</li>
+</ul>
 </div>
 </div>

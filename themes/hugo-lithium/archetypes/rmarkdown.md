@@ -6,7 +6,7 @@ draft: yes
 output:
   blogdown::html_page:
     toc: yes
-    toc_depth: 3
+    toc_depth: 2
     number_sections: yes
 ---
 

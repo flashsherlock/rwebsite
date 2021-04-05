@@ -1,0 +1,29 @@
+---
+title: 'ggplot2: Extending ggplot2'
+author: Fei
+date: '2021-04-05'
+slug: ggplot2-extending-ggplot2
+categories:
+  - R
+tags:
+  - plot
+  - R
+weight: 1
+draft: yes
+output:
+  blogdown::html_page:
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+library(tidyverse)
+library(patchwork)
+```
+
+# Programming with ggplot2
+To make your code more flexible, you need to reduce duplicated code by writing [functions](http://adv-r.had.co.nz/Functions.html). 
+
+## Single components
