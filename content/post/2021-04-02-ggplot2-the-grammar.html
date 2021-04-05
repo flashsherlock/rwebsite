@@ -336,14 +336,37 @@ base |
 base + scale_colour_continuous(guide = guide_coloursteps())|
 base + guides(colour = guide_coloursteps())</code></pre>
 <p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-11-1.png" width="864" style="display: block; margin: auto;" /></p>
-<p>Scale guides are more complex than scale names: where the <code>name</code> argument (and <code>labs()</code> ) takes text as input, the <code>guide</code> argument (and <code>guides()</code>) require a guide object created by a <strong>guide function</strong>:
-| Scale type | Default guide type |<br />
-|:—————————————————–|:——————–|
-| continuous scales for colour/fill aesthetics | colourbar |
-| binned scales for colour/fill aesthetics | coloursteps |
-| position scales (continuous, binned and discrete) | axis |
-| discrete scales (except position scales) | legend |
-| binned scales (except position/colour/fill scales) | bins |</p>
+<p>Scale guides are more complex than scale names: where the <code>name</code> argument (and <code>labs()</code> ) takes text as input, the <code>guide</code> argument (and <code>guides()</code>) require a guide object created by a <strong>guide function</strong>:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Scale type</th>
+<th align="left">Default guide type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">continuous scales for colour/fill aesthetics</td>
+<td align="left">colourbar</td>
+</tr>
+<tr class="even">
+<td align="left">binned scales for colour/fill aesthetics</td>
+<td align="left">coloursteps</td>
+</tr>
+<tr class="odd">
+<td align="left">position scales (continuous, binned and discrete)</td>
+<td align="left">axis</td>
+</tr>
+<tr class="even">
+<td align="left">discrete scales (except position scales)</td>
+<td align="left">legend</td>
+</tr>
+<tr class="odd">
+<td align="left">binned scales (except position/colour/fill scales)</td>
+<td align="left">bins</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="legend-merging-and-splitting" class="section level2" number="3.4">
 <h2><span class="header-section-number">3.4</span> Legend merging and splitting</h2>
@@ -694,17 +717,17 @@ base # old theme</code></pre>
 <tr class="odd">
 <td align="left">legend.key.size</td>
 <td align="left"><code>unit()</code></td>
-<td align="left">legend key size</td>
+<td align="left">key size</td>
 </tr>
 <tr class="even">
 <td align="left">legend.key.height</td>
 <td align="left"><code>unit()</code></td>
-<td align="left">legend key height</td>
+<td align="left">key height</td>
 </tr>
 <tr class="odd">
 <td align="left">legend.key.width</td>
 <td align="left"><code>unit()</code></td>
-<td align="left">legend key width</td>
+<td align="left">key width</td>
 </tr>
 <tr class="even">
 <td align="left">legend.margin</td>
@@ -719,7 +742,7 @@ base # old theme</code></pre>
 <tr class="even">
 <td align="left">legend.text.align</td>
 <td align="left">0–1</td>
-<td align="left">legend label alignment (0 = right, 1 = left)</td>
+<td align="left">label alignment (0 = right, 1 = left)</td>
 </tr>
 <tr class="odd">
 <td align="left">legend.title</td>
@@ -729,7 +752,7 @@ base # old theme</code></pre>
 <tr class="even">
 <td align="left">legend.title.align</td>
 <td align="left">0–1</td>
-<td align="left">legend name alignment (0 = right, 1 = left)</td>
+<td align="left">name alignment (0 = right, 1 = left)</td>
 </tr>
 </tbody>
 </table>

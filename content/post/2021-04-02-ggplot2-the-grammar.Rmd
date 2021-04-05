@@ -271,6 +271,7 @@ base + guides(colour = guide_coloursteps())
 ```
 
 Scale guides are more complex than scale names: where the `name` argument (and `labs()` ) takes text as input, the `guide` argument (and `guides()`) require a guide object created by a **guide function**:
+
 | Scale type                                           | Default guide type  |       
 |:-----------------------------------------------------|:--------------------|
 | continuous scales for colour/fill aesthetics         | colourbar           |
@@ -548,14 +549,14 @@ Element             | Setter                    | Description                   
 :-------------------|:--------------------------|:--------------------------------------------|
 legend.background   |  `element_rect()`         | legend background                           |
 legend.key          |  `element_rect()`         | background of legend keys                   |
-legend.key.size     |  `unit()`                 | legend key size                             |
-legend.key.height   |  `unit()`                 | legend key height                           |
-legend.key.width    |  `unit()`                 | legend key width                            |
+legend.key.size     |  `unit()`                 | key size                                    |
+legend.key.height   |  `unit()`                 | key height                                  |
+legend.key.width    |  `unit()`                 | key width                                   |
 legend.margin       |  `unit()`                 | legend margin                               |
 legend.text         |  `element_text()`         | legend labels                               |
-legend.text.align   |  0--1                     | legend label alignment (0 = right, 1 = left)|
+legend.text.align   |  0--1                     | label alignment (0 = right, 1 = left)       |
 legend.title        |  `element_text()`         | legend name                                 |
-legend.title.align  |  0--1                     | legend name alignment (0 = right, 1 = left) |
+legend.title.align  |  0--1                     | name alignment (0 = right, 1 = left)        |
 
 You can also modify the appearance of individual legends by modifying the same elements in `guide_legend()` or `guide_colourbar()`.
 
