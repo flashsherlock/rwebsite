@@ -9,7 +9,7 @@ tags:
   - plot
   - R
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: yes
@@ -24,6 +24,26 @@ output:
 <li><a href="#programming-with-ggplot2"><span class="toc-section-number">1</span> Programming with ggplot2</a>
 <ul>
 <li><a href="#single-components"><span class="toc-section-number">1.1</span> Single components</a></li>
+<li><a href="#multiple-components"><span class="toc-section-number">1.2</span> Multiple components</a></li>
+<li><a href="#plot-functions"><span class="toc-section-number">1.3</span> Plot functions</a></li>
+<li><a href="#functional-programming"><span class="toc-section-number">1.4</span> Functional programming</a></li>
+</ul></li>
+<li><a href="#ggplot2-internals"><span class="toc-section-number">2</span> ggplot2 internals</a>
+<ul>
+<li><a href="#the-plot-method"><span class="toc-section-number">2.1</span> The plot() method</a></li>
+<li><a href="#the-build-step"><span class="toc-section-number">2.2</span> The build step</a></li>
+<li><a href="#the-gtable-step"><span class="toc-section-number">2.3</span> The gtable step</a></li>
+<li><a href="#introducing-ggproto"><span class="toc-section-number">2.4</span> Introducing ggproto</a></li>
+</ul></li>
+<li><a href="#writing-ggplot2-extensions"><span class="toc-section-number">3</span> Writing ggplot2 extensions</a>
+<ul>
+<li><a href="#new-themes"><span class="toc-section-number">3.1</span> New themes</a></li>
+<li><a href="#new-stats"><span class="toc-section-number">3.2</span> New stats</a></li>
+<li><a href="#new-geoms"><span class="toc-section-number">3.3</span> New geoms</a></li>
+<li><a href="#new-coords"><span class="toc-section-number">3.4</span> New coords</a></li>
+<li><a href="#new-scales"><span class="toc-section-number">3.5</span> New scales</a></li>
+<li><a href="#new-positions"><span class="toc-section-number">3.6</span> New positions</a></li>
+<li><a href="#new-facets"><span class="toc-section-number">3.7</span> New facets</a></li>
 </ul></li>
 </ul>
 </div>
@@ -54,5 +74,270 @@ ggplot(mpg, aes(displ, 1 / hwy)) +
   geom_point() + 
   geom_lm(y ~ poly(x, 2), size = 1, colour = &quot;red&quot;)</code></pre>
 <p><img src="/post/2021-04-05-ggplot2-extending-ggplot2_files/figure-html/unnamed-chunk-2-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>When included in the function definition “<code>...</code>” allows a function to accept arbitrary additional arguments. Inside the function, you can then use “<code>...</code>” to pass those arguments on to another function.</p>
+</div>
+<div id="multiple-components" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Multiple components</h2>
+<p>ggplot2 has a convenient way of adding multiple components to a plot in one step with a list.</p>
+<pre class="r"><code>geom_mean &lt;- function(se = TRUE) {
+  list(
+    stat_summary(fun = &quot;mean&quot;, geom = &quot;bar&quot;, fill = &quot;grey70&quot;),
+    if (se)
+    # confidence limits based on t-distribution
+    stat_summary(fun.data = &quot;mean_cl_normal&quot;, geom = &quot;errorbar&quot;, width = 0.4)
+    )}
+ggplot(mpg, aes(class, cty)) + geom_mean()|
+ggplot(mpg, aes(drv, cty)) + geom_mean(se = FALSE)</code></pre>
+<p><img src="/post/2021-04-05-ggplot2-extending-ggplot2_files/figure-html/unnamed-chunk-3-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>You can also include any of the following object types in the list:</p>
+<ul>
+<li>A data.frame (If you add a data frame by itself, you’ll need to use <code>%+%</code>, but this is not necessary if the data frame is in a list.)</li>
+<li>An <code>aes()</code> object, which will be combined with the existing default aesthetic mapping.</li>
+<li>Scales, with a warning if they’ve already been set by the user.</li>
+<li>Coordinate systems and faceting specification.</li>
+<li>Theme components.</li>
+</ul>
+<p>It’s often useful to add standard annotations (e.g.<a href="https://ggplot2.tidyverse.org/reference/borders.html"><code>borders()</code></a>) to a plot. There are two other options that you should set, which ensure that the layer is self-contained:</p>
+<ul>
+<li><code>inherit.aes = FALSE</code> prevents the layer from inheriting aesthetics from the parent plot. This ensures your annotation works regardless of what else is on the plot.</li>
+<li><code>show.legend = FALSE</code> ensures that your annotation won’t appear in the legend.</li>
+</ul>
+<p>If you want to pass additional arguments to the components in your function, <code>...</code> is no good: there’s no way to direct different arguments to different components. To get you started, here’s one approach using <a href="https://rdrr.io/r/utils/modifyList.html"><code>modifyList()</code></a> and <a href="https://rdrr.io/r/base/do.call.html"><code>do.call()</code></a>:</p>
+<pre class="r"><code>geom_mean &lt;- function(..., bar.params = list(), errorbar.params = list()) {
+  params &lt;- list(...)
+  bar.params &lt;- modifyList(params, bar.params)
+  errorbar.params  &lt;- modifyList(params, errorbar.params)
+  
+  bar &lt;- do.call(&quot;stat_summary&quot;, modifyList(
+    list(fun = &quot;mean&quot;, geom = &quot;bar&quot;, fill = &quot;grey70&quot;),
+    bar.params)
+  )
+  errorbar &lt;- do.call(&quot;stat_summary&quot;, modifyList(
+    list(fun.data = &quot;mean_cl_normal&quot;, geom = &quot;errorbar&quot;, width = 0.4),
+    errorbar.params)
+  )
+# add components to a list
+  list(bar, errorbar)
+}
+
+ggplot(mpg, aes(class, cty)) + 
+  geom_mean(
+    colour = &quot;steelblue&quot;,
+    errorbar.params = list(width = 0.5, size = 1)
+  )|
+ggplot(mpg, aes(class, cty)) + 
+  geom_mean(
+    bar.params = list(fill = &quot;steelblue&quot;),
+    errorbar.params = list(colour = &quot;blue&quot;)
+  )</code></pre>
+<p><img src="/post/2021-04-05-ggplot2-extending-ggplot2_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="plot-functions" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Plot functions</h2>
+<p>Instead of creating components, you might want to write a function that takes data and parameters and returns a complete plot. You can take a similar approach to drawing <a href="https://datavizcatalogue.com/methods/parallel_coordinates.html">parallel coordinates plots (PCPs)</a>.</p>
+<pre class="r"><code>piechart &lt;- function(data, mapping) {
+  ggplot(data, mapping) +
+    geom_bar(width = 1) + 
+    coord_polar(theta = &quot;y&quot;) + 
+    xlab(NULL) + 
+    ylab(NULL)
+}
+# pcp
+pcp_data &lt;- function(df) {
+  is_numeric &lt;- vapply(df, is.numeric, logical(1))
+
+  # Rescale numeric columns
+  rescale01 &lt;- function(x) {
+    rng &lt;- range(x, na.rm = TRUE)
+    (x - rng[1]) / (rng[2] - rng[1])
+  }
+  df[is_numeric] &lt;- lapply(df[is_numeric], rescale01)
+  # Add row identifier
+  df$.row &lt;- rownames(df)
+  # Treat numerics as value (aka measure) variables
+  # gather_ is the standard-evaluation version of gather, and
+  # is usually easier to program with.
+  tidyr::gather_(df, &quot;variable&quot;, &quot;value&quot;, names(df)[is_numeric])
+}
+pcp &lt;- function(df, ...) {
+  df &lt;- pcp_data(df)
+  ggplot(df, aes(variable, value, group = .row)) + geom_line(...)
+}
+piechart(mpg, aes(factor(1), fill = class))|
+pcp(mpg, aes(colour = drv))</code></pre>
+<p><img src="/post/2021-04-05-ggplot2-extending-ggplot2_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>there’s no way to store the name of a variable in an object and then refer to it in <code>aes()</code>, but <code>aes_()</code> gives us three options for how a user can supply variables:</p>
+<ul>
+<li>as a string (Using a quoted call, created by <code>quote()</code>, <code>substitute()</code>, <code>as.name()</code>, or <code>parse()</code>)</li>
+<li>as a formula (created with <code>~</code>).</li>
+<li>as a bare expression.</li>
+</ul>
+<pre class="r"><code>piechart1 &lt;- function(data, var, ...) {
+  piechart(data, aes_(~factor(1), fill = as.name(var)))
+}
+piechart2 &lt;- function(data, var, ...) {
+  piechart(data, aes_(~factor(1), fill = var))
+}
+piechart3 &lt;- function(data, var, ...) {
+  piechart(data, aes_(~factor(1), fill = substitute(var)))
+}
+piechart1(mpg, &quot;class&quot;) + theme(legend.position = &quot;none&quot;)|
+piechart2(mpg, ~class) + theme(legend.position = &quot;none&quot;)|
+piechart3(mpg, class) + theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/post/2021-04-05-ggplot2-extending-ggplot2_files/figure-html/unnamed-chunk-6-1.png" width="432" style="display: block; margin: auto;" /></p>
+</div>
+<div id="functional-programming" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Functional programming</h2>
+<p>Since ggplot2 objects are just regular R objects, you can put them in a list. This means you can apply all of R’s great <a href="http://adv-r.had.co.nz/Functional-programming.html">functional programming</a> tools.</p>
+<pre class="r"><code>geoms &lt;- list(
+  geom_point(),
+  geom_boxplot(aes(group = cut_width(displ, 1))),
+  list(geom_point(), geom_smooth())
+)
+
+p &lt;- ggplot(mpg, aes(displ, hwy))
+wrap_plots(lapply(geoms, function(g) p + g),ncol = 3)</code></pre>
+<p><img src="/post/2021-04-05-ggplot2-extending-ggplot2_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="ggplot2-internals" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> ggplot2 internals</h1>
+<div id="the-plot-method" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> The plot() method</h2>
+<p>The code in our simplified print method reveals four distinct steps:</p>
+<ul>
+<li>First, it calls <code>ggplot_build()</code> where the data for each layer is prepared and organised into a standardised format suitable for plotting.</li>
+<li>Second, the prepared data is passed to the <code>ggplot_build()</code> and turns it into it into graphic elements stored in a gtable (we’ll come back to what that is later).</li>
+<li>Third, the gtable object is converted to an image with the assistance of the grid package.</li>
+<li>Fourth, the original ggplot object is invisibly returned to the user.</li>
+</ul>
+<pre class="r"><code>p &lt;- ggplot(mpg, aes(displ, hwy, color = drv)) + 
+  geom_point(position = &quot;jitter&quot;) +
+  geom_smooth(method = &quot;lm&quot;, formula = y ~ x) + 
+  facet_wrap(vars(year)) + 
+  ggtitle(&quot;A plot for expository purposes&quot;)
+# simple ggprint as an 
+ggprint &lt;- function(x) {
+  data &lt;- ggplot_build(x)
+  gtable &lt;- ggplot_gtable(data)
+  grid::grid.newpage()
+  grid::grid.draw(gtable)
+  return(invisible(x))
+}
+
+ggprint(p)</code></pre>
+<p><img src="/post/2021-04-05-ggplot2-extending-ggplot2_files/figure-html/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+<div id="the-build-step" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> The build step</h2>
+<div id="data-preparation" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Data preparation</h3>
+<p>A layer can either provide data in one of three ways:</p>
+<ul>
+<li>supply its own (e.g., if the data argument to a geom is a data frame),</li>
+<li>inherit the global data supplied to ggplot(),</li>
+<li>provide a function that returns a data frame when applied to the global data</li>
+</ul>
+<p>In all three cases the result is a data frame that is passed to the plot layout. During this process the data associated with each layer will be augmented with a PANEL column.</p>
+</div>
+<div id="data-transformation" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Data transformation</h3>
+<p>It is at this stage of the process that any argument to trans in a scale has an effect, and all subsequent rendering will take place in this transformed space.</p>
+<p>The second step in the process is to map the position aesthetics using the position scales, which unfolds differently depending on the kind of scale involved.</p>
+<p>At the third stage in this transformation the data is handed to the layer stat where any statistical transformation takes place. Notice that this is why stat() expressions – including the formula used to specify the regression model in the <code>geom_smooth()</code> layer – cannot refer to the original data (must use <code>y~x</code> etc.). It simply doesn’t exist at this point.</p>
+<p>The last part of the data transformation is to train and map all non-positional aesthetics, i.e. convert whatever discrete or continuous input that is mapped to graphical parameters such as colours, linetypes, sizes etc. At the very last step, both the stat and the facet gets a last chance to modify the data in its final mapped form with their <code>finish_data()</code> methods before the build step is done.</p>
+</div>
+<div id="output" class="section level3" number="2.2.3">
+<h3><span class="header-section-number">2.2.3</span> Output</h3>
+<p>The return value of <code>ggplot_build()</code> is a list structure with the <code>ggplot_built</code> class. It contains the computed data, as well as a <code>Layout</code> object holding information about the trained coordinate system and faceting. Further it holds a copy of the original plot object, but now with trained scales.</p>
+</div>
+</div>
+<div id="the-gtable-step" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> The gtable step</h2>
+<p>The purpose of <code>ggplot_gtable()</code> is to take the output of the build step and turn it into a single <code>gtable</code> object that can be plotted using grid. At this point the main elements responsible for further computations are the geoms, the coordinate system, the facet, and the theme. The stats and position adjustments have all played their part already.</p>
+<p>The first thing that happens is that the data is converted into its graphical representation.</p>
+<ol style="list-style-type: decimal">
+<li>each layer is converted into a list of graphical objects (<code>grobs</code>).</li>
+<li>the geom does some additional transformation of the data.</li>
+</ol>
+<p>The output is the basis of the final gtable object. Then, legends will be rendered and added to the main gtable object, while another type of guide-axes has already been assembled.</p>
+<p>The only thing remaining is to add title, subtitle, caption, and tag as well as add background and margins, at which point the final gtable is done.</p>
+</div>
+<div id="introducing-ggproto" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Introducing ggproto</h2>
+<p>ggproto is a custom build class system made specifically for ggplot2 to facilitate portable extension classes. A ggproto object is created using the <code>ggproto()</code> function, which takes a class name, a parent class and a range of fields and methods:</p>
+<pre class="r"><code>Person &lt;- ggproto(&quot;Person&quot;, NULL,
+  first = &quot;&quot;,
+  last = &quot;&quot;,
+  birthdate = NA,
+  
+  full_name = function(self) {
+    paste(self$first, self$last)
+  },
+  age = function(self) {
+    days_old &lt;- Sys.Date() - self$birthdate
+    floor(as.integer(days_old) / 365.25)
+  },
+  description = function(self) {
+    paste(self$full_name(), &quot;is&quot;, self$age(), &quot;old&quot;)
+  }
+)
+# New instances of the class is constructed 
+# by subclassing the object 
+Me &lt;- ggproto(NULL, Person,
+  first = &quot;Thomas Lin&quot;,
+  last = &quot;Pedersen&quot;,
+  birthdate = as.Date(&quot;1985/10/12&quot;)
+)
+
+Me$description()
+#&gt; [1] &quot;Thomas Lin Pedersen is 35 old&quot;</code></pre>
+</div>
+</div>
+<div id="writing-ggplot2-extensions" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Writing ggplot2 extensions</h1>
+<p>ggplot2 has been designed in a way that makes it relatively easy to extend the functionality with new types of the common grammar components. There’s a complete example-<a href="https://ggplot2-book.org/spring1.html">Case study: springs</a>.</p>
+<div id="new-themes" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> New themes</h2>
+<p>Themes are probably the easiest form of extensions as they only require you to write code you would normally write when creating plots with ggplot2. It is usually easier and less error-prone to modify an existing theme. Certain parts of the theme can be replaced using the exported <code>%+replace%</code> operator.</p>
+</div>
+<div id="new-stats" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> New stats</h2>
+<p>the main logic of a stat is encapsulated in a tiered succession of calls: <code>compute_layer()</code>, <code>compute_panel()</code>, and <code>compute_group()</code>.</p>
+<p>The default behavior of <code>compute_layer()</code> is to split the data by the <code>PANEL</code> column, call <code>compute_panel()</code>, and reassemble the results. Likewise, the default behavior of <code>compute_panel()</code> is to split the panel data by the group column, call <code>compute_group()</code>, and reassemble the results.</p>
+<p>Thus, it is only necessary to define <code>compute_group()</code>, i.e. how a single group should be transformed, in order to have a working stat. Outside of the <code>compute_*()</code> functions, the remaining logic is found in the <code>setup_params()</code> and <code>setup_data()</code> functions.</p>
+</div>
+<div id="new-geoms" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> New geoms</h2>
+<p>The main functionality of geoms is, like for stats, a tiered succession of calls: <code>draw_layer()</code>, <code>draw_panel()</code>, and <code>draw_group()</code>, and it follows much the same logic as for stats.</p>
+</div>
+<div id="new-coords" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> New coords</h2>
+<p>The only place where you might call any methods from a coord is in a geoms <code>draw_*()</code> method where the <code>transform()</code> method is called on the data to turn the position data into the right format before creating grobs from it. <code>coord_sf()</code> supports all the various projections needed in cartography.</p>
+</div>
+<div id="new-scales" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> New scales</h2>
+<p>The simplest is the case where you would like to provide a convenient wrapper for a new palette to an existing scale. For this case it will be sufficient to provide a new scale constructor that passes the relevant palette into the relevant basic scale constructor e.g. the viridis scale:</p>
+<pre class="r"><code>print(scale_fill_viridis_c)
+#&gt; function (..., alpha = 1, begin = 0, end = 1, direction = 1, 
+#&gt;     option = &quot;D&quot;, values = NULL, space = &quot;Lab&quot;, na.value = &quot;grey50&quot;, 
+#&gt;     guide = &quot;colourbar&quot;, aesthetics = &quot;fill&quot;) 
+#&gt; {
+#&gt;     continuous_scale(aesthetics, &quot;viridis_c&quot;, gradient_n_pal(viridis_pal(alpha, 
+#&gt;         begin, end, direction, option)(6), values, space), na.value = na.value, 
+#&gt;         guide = guide, ...)
+#&gt; }
+#&gt; &lt;bytecode: 0x7f9c12fbbd28&gt;
+#&gt; &lt;environment: namespace:ggplot2&gt;</code></pre>
+<p>Another relatively simple case is where you provide a geom that takes a new type of aesthetic (e.g. line width) that needs to be scaled.</p>
+<p>A last possibility is creating a new primary scale type besides continuous, discrete, and binned scales.</p>
+</div>
+<div id="new-positions" class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> New positions</h2>
+<p>Positions recieves the data just before it is passed along to drawing, and can alter it in any way it likes, though there is an implicit agreement that only position aesthetics are affected by position adjustments. The Position class is slightly simpler than the other ggproto classes as it has a very narrow scope.</p>
+</div>
+<div id="new-facets" class="section level2" number="3.7">
+<h2><span class="header-section-number">3.7</span> New facets</h2>
+<p>Facets are responsible for recieving all the different panels, attching axes (and strips) to them, and arranging them in the expected manner. All of this requires a lot of gtable manipulation and grid understanding and can be a daunting undertaking.</p>
 </div>
 </div>
