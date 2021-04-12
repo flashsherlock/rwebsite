@@ -329,7 +329,7 @@ allow you to read observations from the plot or map them back to their original 
 </div>
 <div id="scale-breaks" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> Scale breaks</h2>
-<p>Where labs() provides a shorthand way to specify the name argument to one or more scales, the guides() function allows you to specify guide arguments to one or more scales. In the same way that labs(colour = “a colour scale name”) specifies the name associated with the colour scale, a command such as guides(colour = guide_coloursteps()) can be used to specify its associated guide:</p>
+<p>Where <code>labs()</code> provides a shorthand way to specify the name argument to one or more scales, the <code>guides()</code> function allows you to specify guide arguments to one or more scales. In the same way that <code>labs(colour = "a colour scale name")</code> specifies the name associated with the color scale, a command such as <code>guides(colour = guide_coloursteps())</code> can be used to specify its associated guide:</p>
 <pre class="r"><code>base &lt;- ggplot(mpg, aes(displ, hwy, colour = cyl)) + geom_point()
 
 base |
@@ -386,7 +386,7 @@ ggplot(toy, aes(up, up)) +
   geom_point(size = 4, colour = &quot;grey20&quot;, show.legend = TRUE) +
   geom_point(aes(colour = txt), size = 2) </code></pre>
 <p><img src="/post/2021-04-02-ggplot2-the-grammar_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>The <code>ggnewscale::new_scale_colour()</code> command acts as an instruction to ggplot2 to initialise a new color scale: scale and guide commands that appear above the <code>new_scale_colour()</code> command will be applied to the first color scale, and commands that appear below are applied to the second color scale.</p>
+<p>The <code>ggnewscale::new_scale_colour()</code> command acts as an instruction to ggplot2 to initialize a new color scale: scale and guide commands that appear above the <code>new_scale_colour()</code> command will be applied to the first color scale, and commands that appear below are applied to the second color scale.</p>
 <pre class="r"><code>base &lt;- ggplot(mpg, aes(displ, hwy)) + 
   geom_point(aes(colour = factor(year)), size = 5) + 
   scale_colour_brewer(&quot;year&quot;, type = &quot;qual&quot;, palette = 5) 
@@ -580,7 +580,7 @@ wrap_plots(figure,ncol = 4)</code></pre>
 <div id="modifying-theme-components" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> Modifying theme components</h2>
 <p>To modify an individual theme component you use code like <code>plot + theme(element.name = element_function())</code>.</p>
-<p>here are four basic types of built-in element functions: text, lines, rectangles, and blank.</p>
+<p>Here are four basic types of built-in element functions: text, lines, rectangles, and blank.</p>
 <ul>
 <li><code>element_text()</code> draws labels and headings. You can control the font <code>family</code>, <code>face</code>, <code>colour</code>, <code>size</code> (in points), <code>hjust</code>, <code>vjust</code>, <code>angle</code> (in degrees) and <code>lineheight</code> (as ratio of <code>fontcase</code>). More details on the parameters can be found in <code>vignette("ggplot2-specs")</code>. Margins around the text are controlled by the <code>margin</code> argument and <code>margin()</code> function.</li>
 <li><code>element_line()</code> draws lines parameterised by <code>colour</code>, <code>size</code> and <code>linetype</code></li>

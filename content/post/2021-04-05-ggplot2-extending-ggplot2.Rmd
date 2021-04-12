@@ -148,7 +148,7 @@ piechart(mpg, aes(factor(1), fill = class))|
 pcp(mpg, aes(colour = drv))
 ```
 
-there’s no way to store the name of a variable in an object and then refer to it in `aes()`, but `aes_()` gives us three options for how a user can supply variables: 
+There’s no way to store the name of a variable in an object and then refer to it in `aes()`, but `aes_()` gives us three options for how a user can supply variables: 
 
 * as a string (Using a quoted call, created by `quote()`, `substitute()`, `as.name()`, or `parse()`)
 * as a formula (created with `~`).
@@ -188,7 +188,7 @@ wrap_plots(lapply(geoms, function(g) p + g),ncol = 3)
 ## The plot() method
 The code in our simplified print method reveals four distinct steps:
 
-- First, it calls `ggplot_build()` where the data for each layer is prepared and organised into a standardised format suitable for plotting.
+- First, it calls `ggplot_build()` where the data for each layer is prepared and organized into a standardized format suitable for plotting.
 - Second, the prepared data is passed to the `ggplot_build()` and turns it into it into graphic elements stored in a gtable (we'll come back to what that is later). 
 - Third, the gtable object is converted to an image with the assistance of the grid package.
 - Fourth, the original ggplot object is invisibly returned to the user.
@@ -216,19 +216,19 @@ ggprint(p)
 A layer can either provide data in one of three ways: 
 
 * supply its own (e.g., if the data argument to a geom is a data frame), 
-* inherit the global data supplied to ggplot(),
+* inherit the global data supplied to `ggplot()`,
 * provide a function that returns a data frame when applied to the global data
 
-In all three cases the result is a data frame that is passed to the plot layout. During this process the data associated with each layer will be augmented with a PANEL column. 
+In all three cases the result is a data frame that is passed to the plot layout. During this process the data associated with each layer will be augmented with a `PANEL` column. 
 
 ### Data transformation
 It is at this stage of the process that any argument to trans in a scale has an effect, and all subsequent rendering will take place in this transformed space.
 
-The second step in the process is to map the position aesthetics using the position scales, which unfolds differently depending on the kind of scale involved. 
+The second step in the process is to map the position aesthetics using the position scales, which unfolds differently depending on the kind of scale involved.
 
-At the third stage in this transformation the data is handed to the layer stat where any statistical transformation takes place. Notice that this is why stat() expressions – including the formula used to specify the regression model in the `geom_smooth()` layer – cannot refer to the original data (must use `y~x` etc.). It simply doesn’t exist at this point.
+At the third stage in this transformation the data is handed to the layer stat where any statistical transformation takes place. Notice that this is why `stat()` expressions – including the formula used to specify the regression model in the `geom_smooth()` layer – cannot refer to the original data (must use `y~x` etc.). It simply doesn’t exist at this point.
 
-The last part of the data transformation is to train and map all non-positional aesthetics, i.e. convert whatever discrete or continuous input that is mapped to graphical parameters such as colours, linetypes, sizes etc. At the very last step, both the stat and the facet gets a last chance to modify the data in its final mapped form with their `finish_data()` methods before the build step is done.
+The last part of the data transformation is to train and map all non-positional aesthetics, i.e. convert whatever discrete or continuous input that is mapped to graphical parameters such as colors, linetypes, sizes etc. At the very last step, both the stat and the facet gets a last chance to modify the data in its final mapped form with their `finish_data()` methods before the build step is done.
 
 ### Output
 The return value of `ggplot_build()` is a list structure with the `ggplot_built` class. It contains the computed data, as well as a `Layout` object holding information about the trained coordinate system and faceting. Further it holds a copy of the original plot object, but now with trained scales.
@@ -285,7 +285,7 @@ ggplot2 has been designed in a way that makes it relatively easy to extend the f
 Themes are probably the easiest form of extensions as they only require you to write code you would normally write when creating plots with ggplot2. It is usually easier and less error-prone to modify an existing theme. Certain parts of the theme can be replaced using the exported `%+replace%` operator.
 
 ## New stats
-the main logic of a stat is encapsulated in a tiered succession of calls: `compute_layer()`, `compute_panel()`, and `compute_group()`. 
+The main logic of a stat is encapsulated in a tiered succession of calls: `compute_layer()`, `compute_panel()`, and `compute_group()`. 
 
 The default behavior of `compute_layer()` is to split the data by the `PANEL` column, call `compute_panel()`, and reassemble the results. Likewise, the default behavior of `compute_panel()` is to split the panel data by the group column, call `compute_group()`, and reassemble the results. 
 
