@@ -197,6 +197,24 @@ cfg.spmmethod  = 'new';
 fsmri_mni = ft_volumenormalise(cfg, fsmri_acpc);
 ```
 
+The normalized image `fsmri_mni` can be saved in nifti format. To obtain electrode positions in standard MNI space, use `ft_warp_apply` to transform positions with deformation parameters contained in `fsmri_mni`.
+
+``` matlab
+% save normalized image
+cfg           = [];
+cfg.filename  = [filepath '/' subjID '_MRI_mni'];
+cfg.filetype  = 'nifti';
+cfg.parameter = 'anatomy';
+ft_volumewrite(cfg, fsmri_mni);
+% obtain electrode positions in standard MNI space
+elec_mni_fv = elec_acpc_f;
+elec_mni_fv.elecpos = ft_warp_apply(fsmri_mni.params, elec_acpc_f.elecpos, 'individual2sn');
+elec_mni_fv.chanpos = ft_warp_apply(fsmri_mni.params, elec_acpc_f.chanpos, 'individual2sn');
+elec_mni_fv.coordsys = 'mni';
+% Save normalized electrodes
+save([subjID '_elec_mni_fv.mat'], 'elec_mni_fv');
+```
+
 # Anatomical labeling
 
 Fieldtrip provides a function `ft_volumelookup` which can look up coordinates in an atlas loaded by `ft_read_atlas`. AAl and other atlases can be found in the "atlas" directory located in the path of Fieldtip. Brainnetome atlas seems more accurate than AAL atlas. The result returned by `ft_volumelookup` is a structure array, indicating the index of atlas labels for each coordinate. Therefore, you need to use these indexes to find the label names.
