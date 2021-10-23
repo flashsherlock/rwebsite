@@ -1,0 +1,59 @@
+---
+title: How to 3D-print your brain
+author: Fei
+date: '2021-10-23'
+slug: how-to-print-your-brain
+categories:
+  - Instruction
+tags:
+  - fMRI
+weight: 1
+draft: yes
+output:
+  blogdown::html_page:
+    toc: no
+    toc_depth: 2
+    number_sections: yes
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="my-little-brain" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> My little brain</h1>
+<p>In this National Day holiday, I made a 3D model of my brain and found a company on Taobao to 3D-print it. The final product is 10cm × 9cm × 6.5cm in volume and about 200 grams weights. It looks so nice that every sulcus and gyrus was full of details. It is a really fantastic feeling to hold my brain in my hands.</p>
+<p><img src="/post/2021-10-23-how-to-print-your-brain_files/brain.png" style="width: 80%; display: block; margin:0 auto"/></p>
+<p>Here, I will share what I did so that you can also print your own brain. The whole process is not very complicate, so take it easy.</p>
+</div>
+<div id="print-your-brain-step-by-step" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Print your brain step-by-step</h1>
+<div id="scan-your-brain" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Scan your brain</h2>
+<p>First of all, you need to scan your brain with MRI, getting a T1 anatomical image. Participating in a MRI study is the best way to get this image.</p>
+</div>
+<div id="reconstruct-brain-surfaces" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Reconstruct brain surfaces</h2>
+<p>Use <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferWiki">Freesurfer</a> command <code>recon-all</code> to reconstruct brain surfaces. Here is a template of this command.</p>
+<pre class="bash"><code>recon-all         \
+  -sd subject_dir \ # root directory of the image
+  -s subject_name \ # output directory
+  -i input_image  \ # filename
+  -all            \ # run all processing steps
+  -parallel       \ # use more threads to improve speed
+  -threads num_of_threads</code></pre>
+</div>
+<div id="convert-and-edit-the-surface" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Convert and edit the surface</h2>
+</div>
+<div id="refine-the-brain-model" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Refine the brain model</h2>
+</div>
+</div>
+<div id="other-related-tutorials" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Other related tutorials</h1>
+<p>I could not have printed my brain without the help of these perspicuous blog articles. You can also read these articles.</p>
+<ul>
+<li><a href="https://www.instructables.com/3D-print-your-own-brain/">3D Print Your Own Brain</a></li>
+<li><a href="https://blog.csdn.net/weixin_39609527/article/details/112671919">3d需要学linux_我的脑子—从核磁共振图像到3D打印</a></li>
+</ul>
+</div>

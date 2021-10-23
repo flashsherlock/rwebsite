@@ -1,0 +1,57 @@
+---
+title: How to 3D-print your brain
+author: Fei
+date: '2021-10-23'
+slug: how-to-print-your-brain
+categories:
+  - Instruction
+tags:
+  - fMRI
+weight: 1
+draft: yes
+output:
+  blogdown::html_page:
+    toc: no
+    toc_depth: 2
+    number_sections: yes
+---
+
+# My little brain
+
+In this National Day holiday, I made a 3D model of my brain and found a company on Taobao to 3D-print it. The final product is 10cm × 9cm × 6.5cm in volume and about 200g weights. It looks so nice that every sulcus and gyrus was full of details. It is a really fantastic feeling to hold my brain in my hands.
+
+<img src="/post/2021-10-23-how-to-print-your-brain_files/brain.png" style="width: 80%; display: block; margin:0 auto"/>
+
+Here, I will share what I did so that you can also print your own brain. The whole process is not very complicate, so take it easy.
+
+# Print your brain step-by-step
+
+## Scan your brain
+
+First of all, you need to scan your brain with MRI, getting a T1 anatomical image. Participating in a MRI study is the best way to get this image.
+
+## Reconstruct brain surfaces
+
+Use [Freesurfer](https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferWiki) command `recon-all` to reconstruct brain surfaces. Here is a template of this command. 
+
+```bash
+recon-all         \
+  -sd subject_dir \ # root directory of the image
+  -s subject_name \ # output directory
+  -i input_image  \ # filename
+  -all            \ # run all processing steps
+  -parallel       \ # use more threads to improve speed
+  -threads num_of_threads
+```
+
+## Convert and edit the surface
+
+## Refine the brain model
+
+# Other related tutorials
+
+I could not have printed my brain without the help of these perspicuous blog articles. You can also read these articles.
+
+* [3D Print Your Own Brain](https://www.instructables.com/3D-print-your-own-brain/)
+* [3d需要学linux_我的脑子—从核磁共振图像到3D打印](https://blog.csdn.net/weixin_39609527/article/details/112671919)
+
