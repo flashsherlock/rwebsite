@@ -1,5 +1,5 @@
 ---
-title: How to 3D-print your brain
+title: 3D-print your brain
 author: Fei
 date: '2021-10-23'
 slug: how-to-print-your-brain
@@ -11,17 +11,30 @@ weight: 1
 draft: yes
 output:
   blogdown::html_page:
-    toc: no
+    toc: yes
     toc_depth: 2
     number_sections: yes
 ---
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
+<div id="TOC">
+<ul>
+<li><a href="#my-little-brain"><span class="toc-section-number">1</span> My little brain</a></li>
+<li><a href="#print-your-brain-step-by-step"><span class="toc-section-number">2</span> Print your brain step-by-step</a>
+<ul>
+<li><a href="#scan-your-brain"><span class="toc-section-number">2.1</span> Scan your brain</a></li>
+<li><a href="#reconstruct-brain-surfaces"><span class="toc-section-number">2.2</span> Reconstruct brain surfaces</a></li>
+<li><a href="#convert-and-edit-the-surfaces"><span class="toc-section-number">2.3</span> Convert and edit the surfaces</a></li>
+<li><a href="#refine-the-brain-model-and-print-it"><span class="toc-section-number">2.4</span> Refine the brain model and print it</a></li>
+</ul></li>
+<li><a href="#other-related-tutorials"><span class="toc-section-number">3</span> Other related tutorials</a></li>
+</ul>
+</div>
 
 <div id="my-little-brain" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> My little brain</h1>
-<p>In this National Day holiday, I made a 3D model of my brain and found a company on Taobao to 3D-print it. The final product is 10cm × 9cm × 6.5cm in volume and about 200 grams weights. It looks so nice that every sulcus and gyrus was full of details. It is a really fantastic feeling to hold my brain in my hands.</p>
+<p>In this National Day holiday, I made a 3D model of my brain and found a company on Taobao to 3D-print it. The finished product is about 10cm × 9cm × 6.5cm in volume (60% of the real size) and about 200g in weight. It looks so nice that every sulcus and gyrus is full of details. It is a really fantastic feeling to hold my brain in my hands.</p>
 <p><img src="/post/2021-10-23-how-to-print-your-brain_files/brain.png" style="width: 80%; display: block; margin:0 auto"/></p>
 <p>Here, I will share what I did so that you can also print your own brain. The whole process is not very complicate, so take it easy.</p>
 </div>
@@ -29,11 +42,12 @@ output:
 <h1><span class="header-section-number">2</span> Print your brain step-by-step</h1>
 <div id="scan-your-brain" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Scan your brain</h2>
-<p>First of all, you need to scan your brain with MRI, getting a T1 anatomical image. Participating in a MRI study is the best way to get this image.</p>
+<p>First of all, you need to scan your brain with MRI, getting a T1 anatomical image. In my opinion, participating in a MRI study is the best way to get this image:).</p>
 </div>
 <div id="reconstruct-brain-surfaces" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Reconstruct brain surfaces</h2>
-<p>Use <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferWiki">Freesurfer</a> command <code>recon-all</code> to reconstruct brain surfaces. Here is a template of this command.</p>
+<p>Based on the anatomical image, a preliminary brain model can be created by <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferWiki">FreeSurfer</a>. The command <code>recon-all</code> performs cortical reconstruction
+process, generating serveral brain surfaces. Below is a template of this command.</p>
 <pre class="bash"><code>recon-all         \
   -sd subject_dir \ # root directory of the image
   -s subject_name \ # output directory
@@ -42,11 +56,28 @@ output:
   -parallel       \ # use more threads to improve speed
   -threads num_of_threads</code></pre>
 </div>
-<div id="convert-and-edit-the-surface" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Convert and edit the surface</h2>
+<div id="convert-and-edit-the-surfaces" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Convert and edit the surfaces</h2>
+<p>After the cortical reconstruction process is finished (3-10 hours later), the surfaces (meshes) are stored in the <em>“surf”</em> folder under the <em>“subject_name”</em> folder. What we need are left and right hemispheres of the pial surface, named <em>“lh.pial”</em> and <em>“rh.pial”</em> respectively. To make these surfaces readable by other softwares, we have to run the command <code>mris_convert</code>, which converts the surfaces into <code>stl</code> format.</p>
+<pre class="bash"><code># left hemisphere
+mris_convert lh.pial lh.pial.stl
+# right hemisphere
+mris_convert rh.pial rh.pial.stl</code></pre>
+<p>To combine and edit these two hemisphere meshes, you need to install <a href="https://www.meshlab.net/#download">MeshLab</a>. Please note that <strong>MeshLab can not undo the changes you have made</strong>. If you make some mistakes, you can only reload the original mesh.</p>
+<p>First of all, open the two files obtained from FreeSurfer in MeshLab, click on <em>“Filters” -&gt; “Mesh Layer” -&gt; “Flatten Visible Layers”</em> and apply, then you will see the meshes are merged.</p>
+<p><img src="/post/2021-10-23-how-to-print-your-brain_files/flatten.png" style="width: 80%; display: block; margin:0 auto"/></p>
+<p>The pial surface generated by FreeSurfer is too complex. Click on <em>“Filters” -&gt; “Remeshing, Simplification, Reconstruction” -&gt; “Quadratic Edge Collapse Decimation”</em> and enter an appropriate target number of faces (I used 70000). This process reduces the number of faces, which also smooth the surface.</p>
+<p><img src="/post/2021-10-23-how-to-print-your-brain_files/remesh.png" style="width: 80%; display: block; margin:0 auto"/></p>
+<p>To make the surface smoother, you can click <em>“Filters” -&gt; “Smoothing, Fairing and Deformation” -&gt; “Laplacian Smooth”</em> and click apply.</p>
+<p><img src="/post/2021-10-23-how-to-print-your-brain_files/smooth.png" style="width: 80%; display: block; margin:0 auto"/></p>
+<p>Then you can export the mesh by clicking on <em>“File” -&gt; “Export Mesh As…”</em> and selecting <code>stl</code> format.</p>
 </div>
-<div id="refine-the-brain-model" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> Refine the brain model</h2>
+<div id="refine-the-brain-model-and-print-it" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Refine the brain model and print it</h2>
+<p><a href="https://www.meshmixer.com/download.html">Meshmixer</a> is a free software providing lots tools that can refine the brain model. Several brushes (e.g. BubbleSmooth, ShrinkSmooth and RobustSmooth) are useful to smooth the mesh and remove spikes.</p>
+<p><img src="/post/2021-10-23-how-to-print-your-brain_files/meshmixer.png" style="width: 100%; display: block; margin:0 auto"/></p>
+<p>As long as the brain model is ready, you can send it to a 3D printing service to print it out!</p>
+<p><img src="/post/2021-10-23-how-to-print-your-brain_files/out.png" style="width: 80%; display: block; margin:0 auto"/></p>
 </div>
 </div>
 <div id="other-related-tutorials" class="section level1" number="3">
@@ -54,6 +85,7 @@ output:
 <p>I could not have printed my brain without the help of these perspicuous blog articles. You can also read these articles.</p>
 <ul>
 <li><a href="https://www.instructables.com/3D-print-your-own-brain/">3D Print Your Own Brain</a></li>
+<li><a href="https://nikkimarinsek.com/blog/how-to-3d-print-your-brain">How to 3D-print your brain</a></li>
 <li><a href="https://blog.csdn.net/weixin_39609527/article/details/112671919">3d需要学linux_我的脑子—从核磁共振图像到3D打印</a></li>
 </ul>
 </div>
