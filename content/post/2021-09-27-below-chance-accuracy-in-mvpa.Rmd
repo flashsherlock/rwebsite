@@ -1,0 +1,26 @@
+---
+title: Below chance accuracy in MVPA
+author: Fei
+date: '2021-09-27'
+categories:
+  - reading
+tags:
+  - data
+  - fMRI
+slug: below-chance-accuracy-in-mvpa
+weight: 1
+draft: yes
+output:
+  blogdown::html_page:
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+```
+
+# Overview
+
+# Reasons

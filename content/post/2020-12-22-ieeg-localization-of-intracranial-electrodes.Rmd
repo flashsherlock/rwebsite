@@ -3,9 +3,10 @@ title: 'iEEG: Localization of intracranial electrodes'
 author: Fei
 date: '2021-01-12'
 categories:
-  - reading
+  - Instruction
 tags:
   - data
+  - iEEG
 slug: ieeg-localization-of-intracranial-electrodes
 weight: 1
 draft: no
