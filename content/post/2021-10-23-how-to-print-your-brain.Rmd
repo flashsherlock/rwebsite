@@ -76,7 +76,7 @@ Then you can export the mesh by clicking on _"File" -> "Export Mesh As..."_ and 
 
 ## Refine the brain model and print it
 
-[Meshmixer](https://www.meshmixer.com/download.html) is a free software providing lots tools that can refine the brain model. Several brushes (e.g. BubbleSmooth, ShrinkSmooth and RobustSmooth) are useful to smooth the mesh and remove spikes.
+[Meshmixer](https://www.meshmixer.com/download.html) is a free software providing lots of tools that can refine the brain model. Several brushes (e.g. BubbleSmooth, ShrinkSmooth and RobustSmooth) are useful to smooth the mesh and remove spikes.
 
 <img src="/post/2021-10-23-how-to-print-your-brain_files/meshmixer.png" style="width: 100%; display: block; margin:0 auto"/>
 
