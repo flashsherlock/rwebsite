@@ -33,11 +33,12 @@ output:
 library(&quot;dplyr&quot;)
 library(&quot;e1071&quot;)
 # --------training function ---------
-f_train &lt;- function(n, nv = 2,
-                    r=F, c=n) {
+f_train &lt;- function(n, s = 1,
+                    r = F, c = n) {
   # nv: number of features
+  nv &lt;- 2
   # n: number of observations
-  set.seed(1)
+  set.seed(s)
   # generate random data
   rNum &lt;- rnorm(nv * n)
   rNum &lt;- matrix(rNum, n, nv)
@@ -69,20 +70,20 @@ p &lt;- expand.grid(iTest = 1:200,
                  n = seq(10, 210, 50))
 data_test &lt;- p %&gt;%
   group_by(iTest, n) %&gt;%
-  do(data.frame(acc = f_train(.$n)))</code></pre>
+  do(data.frame(acc = f_train(.$n,.$iTest)))</code></pre>
 <p><img src="/post/2021-09-27-below-chance-accuracy-in-mvpa_files/figure-html/plot_data-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>As the sample size increases, variability decreases, and the mean accuracy tends to be 50%. However, there is a persistent small down bias on average, which can be eliminated using sampling with replacement.</p>
 <pre class="r"><code># with replacement, leave one out
 data_test &lt;- p %&gt;%
   group_by(iTest, n) %&gt;%
-  do(data.frame(acc = f_train(.$n,
+  do(data.frame(acc = f_train(.$n,.$iTest,
                               r = T)))</code></pre>
 <p><img src="/post/2021-09-27-below-chance-accuracy-in-mvpa_files/figure-html/unnamed-chunk-5-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>In addition, change to 10-fold cross validation may also decrease the variability.</p>
 <pre class="r"><code># with replacement, 10-fold cross validation
 data_test &lt;- p %&gt;%
   group_by(iTest, n) %&gt;%
-  do(data.frame(acc = f_train(.$n,
+  do(data.frame(acc = f_train(.$n,.$iTest,
                               r = F, c=10)))</code></pre>
 <p><img src="/post/2021-09-27-below-chance-accuracy-in-mvpa_files/figure-html/unnamed-chunk-7-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>Some references:</p>

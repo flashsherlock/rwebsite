@@ -40,11 +40,12 @@ library("ggplot2")
 library("dplyr")
 library("e1071")
 # --------training function ---------
-f_train <- function(n, nv = 2,
-                    r=F, c=n) {
+f_train <- function(n, s = 1,
+                    r = F, c = n) {
   # nv: number of features
+  nv <- 2
   # n: number of observations
-  set.seed(1)
+  set.seed(s)
   # generate random data
   rNum <- rnorm(nv * n)
   rNum <- matrix(rNum, n, nv)
@@ -80,7 +81,7 @@ p <- expand.grid(iTest = 1:200,
                  n = seq(10, 210, 50))
 data_test <- p %>%
   group_by(iTest, n) %>%
-  do(data.frame(acc = f_train(.$n)))
+  do(data.frame(acc = f_train(.$n,.$iTest)))
 ```
 
 
@@ -100,7 +101,7 @@ As the sample size increases, variability decreases, and the mean accuracy tends
 # with replacement, leave one out
 data_test <- p %>%
   group_by(iTest, n) %>%
-  do(data.frame(acc = f_train(.$n,
+  do(data.frame(acc = f_train(.$n,.$iTest,
                               r = T)))
 ```
 
@@ -113,7 +114,7 @@ In addition, change to 10-fold cross validation may also decrease the variabilit
 # with replacement, 10-fold cross validation
 data_test <- p %>%
   group_by(iTest, n) %>%
-  do(data.frame(acc = f_train(.$n,
+  do(data.frame(acc = f_train(.$n,.$iTest,
                               r = F, c=10)))
 ```
 
