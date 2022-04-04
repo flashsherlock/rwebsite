@@ -1,15 +1,15 @@
 ---
-title: Below chance accuracy in MVPA
+title: Below-chance accuracy in MVPA
 author: Fei
 date: '2021-09-27'
 categories:
   - reading
 tags:
-  - data
+  - MVPA
   - fMRI
 slug: below-chance-accuracy-in-mvpa
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: yes
@@ -18,9 +18,113 @@ output:
 ---
 
 ```{r include=FALSE}
-knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+knitr::opts_chunk$set(warning = F, message = F, cache = T,
+                      tidy=F,fig.align='center',fig.showtext=TRUE,
+                      fig.height=2, fig.width=4,
+                      results="hold",fig.show = "hold")
 ```
 
-# Overview
+Sometimes, the decoding accuracy of MVPA may lower than chance level, which is confusing. I have found several reasons that may lead to below-chance accuracy in decoding analysis. 
 
-# Reasons
+* special data structure (bias)
+* model parameters (linear vs. non linear)
+* cross validation methods (leave-one-out vs. k-fold)
+* sample size (small vs. large)
+
+In short, below-chance accuracy is likely caused by data structure and decoding methods, which [can not be simply interpreted as anti-learning](http://mvpa.blogspot.com/2013/04/below-chance-classification-accuracy.html).
+
+For [example](https://stats.stackexchange.com/questions/220582/svm-always-gives-me-in-average-below-chances-cross-validation-accuracy-with-ra), when training with totally random data, the decoding accuracy should fluctuate at the chance level (50%), but actually it may lower than 50%.
+
+```{r}
+library("ggplot2")
+library("dplyr")
+library("e1071")
+# --------training function ---------
+f_train <- function(n, nv = 2,
+                    r=F, c=n) {
+  # nv: number of features
+  # n: number of observations
+  set.seed(1)
+  # generate random data
+  rNum <- rnorm(nv * n)
+  rNum <- matrix(rNum, n, nv)
+  d <- as.data.frame(rNum)
+  
+  # generate random labels
+  n2 <- n / 2
+  labels <- c(array(1, n2),
+              array(2, n2))
+  if (r) {
+  labels <- sample.int(2,n,replace=T)}
+  else {
+  labels <-  sample(labels)}
+  d$condition <- factor(labels)
+
+  # training
+  m_trained <- svm(condition ~ .,
+    data = d,
+    cross = c,
+    # cross = nrow(d), # leave one out
+    kernel = "linear",
+    cost = 1
+  )
+  # get CV
+  acc <- m_trained$tot.accuracy
+}
+```
+
+
+```{r}
+# no replacement, leave one out
+p <- expand.grid(iTest = 1:200, 
+                 n = seq(10, 210, 50))
+data_test <- p %>%
+  group_by(iTest, n) %>%
+  do(data.frame(acc = f_train(.$n)))
+```
+
+
+```{r plot_data, echo=FALSE}
+# ----------------------------------- Plot ----------------------------------- #
+plot_data <- function(data_test) {
+  ggplot(data_test, aes(x = n, y = acc)) +
+    geom_hline(yintercept = 50) +
+    stat_summary(fun = "mean", colour = "red", geom = "line") +
+    stat_summary(fun.data = "mean_sdl", geom = "ribbon", alpha = 0.2)
+}
+plot_data(data_test)
+```
+
+As the sample size increases, variability decreases, and the mean accuracy tends to be 50%. However, there is a persistent small down bias on average, which can be eliminated using sampling with replacement.
+```{r}
+# with replacement, leave one out
+data_test <- p %>%
+  group_by(iTest, n) %>%
+  do(data.frame(acc = f_train(.$n,
+                              r = T)))
+```
+
+```{r echo=FALSE}
+plot_data(data_test)
+```
+
+In addition, change to 10-fold cross validation may also decrease the variability.
+```{r}
+# with replacement, 10-fold cross validation
+data_test <- p %>%
+  group_by(iTest, n) %>%
+  do(data.frame(acc = f_train(.$n,
+                              r = F, c=10)))
+```
+
+```{r echo=FALSE}
+plot_data(data_test)
+```
+
+Some references:
+
+1. [The same analysis approach: Practical protection against the pitfalls of novel neuroimaging analysis methods](https://doi.org/10.1016/j.neuroimage.2017.12.083)
+2. [How to control for confounds in decoding analyses of neuroimaging data](https://doi.org/10.1016/j.neuroimage.2018.09.074)
+3. [Classification Based Hypothesis Testing in Neuroscience: Below-Chance Level Classification Rates and Overlooked Statistical Properties of Linear Parametric Classifiers](https://doi.org/10.1002/hbm.23140)
+4. [Multivariate classification of neuroimaging data with nested subclasses: Biased accuracy and implications for hypothesis testing]( https://doi.org/10.1371/journal.pcbi.1006486)
+5. [Deconstructing multivariate decoding for the study of brain function](http://dx.doi.org/10.1016/j.neuroimage.2017.08.005)
