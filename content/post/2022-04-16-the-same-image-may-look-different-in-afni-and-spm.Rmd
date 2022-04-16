@@ -1,0 +1,74 @@
+---
+title: The same image may look different in AFNI and SPM
+author: Fei
+date: '2022-04-16'
+slug: the-same-image-may-look-different-in-afni-and-spm
+categories:
+  - Instruction
+tags:
+  - fMRI
+weight: 1
+draft: no
+output:
+  blogdown::html_page:
+    toc: yes
+    toc_depth: 1
+    number_sections: yes
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F, cache = TRUE,tidy=F,fig.align='center',fig.showtext=TRUE,results="hold",fig.show = "hold")
+```
+
+# Introduction
+
+It is well known that coordinate systems adopted by different neuroimaging software are different. For example, AFNI uses [RAI system](https://sscc.nimh.nih.gov/afni/doc/faq/59#) (-x = Right, -y = Anterior, -z = Inferior) by default while SPM uses LPI system. However, this could not explain why the same image may look different in AFNI and SPM (or MRIcron). Obliquity is probably the real reason.
+
+AFNI and SPM (or MRIcron) interpret the coordinate system differently when the image is [oblique](https://sscc.nimh.nih.gov/sscc/dglen/Obliquity). More specifically, [AFNI does not apply the oblique transformation](https://afni.nimh.nih.gov/afni/community/board/read.php?1,84182,84266#msg-84266) in the header while SPM does. This might cause unexpected results when transfer data from one software to the other.
+
+# Deal with obliquity
+
+To check whether the image is oblique, simply type `3dinfo` command.
+
+```bash
+# check whether the image is oblique
+3dinfo –is_oblique img_name.nii 
+# or just use `3dinfo img_name.nii`
+# and look at Data Axes Tilt
+```
+
+If you use MRIcron, you can look at the header information (Window -> Information), where non-zero quaternions indicate obliquity.
+
+<img src="/post/2022-04-16-the-same-image-may-look-different-in-afni-and-spm_files/orig.png" style="width: 95%; display: block; margin:0 auto"/>
+<!-- ![](/post/2022-04-16-the-same-image-may-look-different-in-afni-and-spm_files/orig.png) -->
+
+Replacing the transformation matrix in header with cardinal matrix changes the data axes tilt from oblique to plumb. This can be achieved via [`3drefit`](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/programs/3drefit_sphx.html#ahelp-3drefit) with the `-deoblique` option
+
+```bash
+# replace transformation matrix
+3drefit –deoblique img_name.nii 
+```
+
+Then you will see that quaternions become zeros in the header information.
+
+<img src="/post/2022-04-16-the-same-image-may-look-different-in-afni-and-spm_files/refit.png" style="width: 95%; display: block; margin:0 auto"/>
+<!-- ![](/post/2022-04-16-the-same-image-may-look-different-in-afni-and-spm_files/refit.png) -->
+
+As shown below (the crosshair indicates the origin), the deobliqued image looks same in AFNI and MRIcron. In addition, the deobliqued image looks the same as the original image in AFNI, because AFNI does not apply the oblique transformation.
+
+<img src="/post/2022-04-16-the-same-image-may-look-different-in-afni-and-spm_files/summary.png" style="width: 100%; display: block; margin:0 auto"/>
+<!-- ![](/post/2022-04-16-the-same-image-may-look-different-in-afni-and-spm_files/summary.png) -->
+
+By the way, `3dresample` also replace the transformation matrix automatically with cardinal matrix as `3drefit -deoblique` does. However, this does not really deoblique the volume. To do so, you should use [`3dwarp`](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/programs/3dWarp_sphx.html#ahelp-3dwarp) with `-deoblique` option.
+
+# References
+
+NIfTI header information:
+
+* [NIfTI-1 data format](https://afni.nimh.nih.gov/pub/dist/doc/nifti/nifti_revised.html)
+* [qform](https://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fields/nifti1fields_pages/figqformusage)
+* [usage of qform and sform](https://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fields/nifti1fields_pages/qsform_brief_usage#transforming)
+
+Other problems caused by obliquity:
+
+* [Dealing with oblique datasets](https://afni.nimh.nih.gov/afni/community/board/read.php?1,142949,142988#msg-142988)
