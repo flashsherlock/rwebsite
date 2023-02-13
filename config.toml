@@ -3,7 +3,7 @@ languageCode = "en-us"
 hasCJKLanguages = "true"
 title = "Fei"
 theme = "hugo-lithium"
-googleAnalytics = "UA-165298048-1"
+googleAnalytics = "G-3WJ71TQ2TX"
 disqusShortname = "gufei"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
@@ -49,7 +49,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     alt = "Logo"
 
 [markup]
-  defaultMarkdownHandler = "blackfriday"
+  defaultMarkdownHandler = "goldmark"
   [markup.highlight]
     codeFences = false
     guessSyntax = true
