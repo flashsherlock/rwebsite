@@ -53,3 +53,5 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   [markup.highlight]
     codeFences = false
     guessSyntax = true
+  [markup.goldmark.renderer]
+    unsafe = true
