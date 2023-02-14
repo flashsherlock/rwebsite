@@ -15,8 +15,5 @@
     </div>
     {{ partial "footer_highlightjs" . }}
     {{ partial "footer_mathjax" . }}
-    {{ if not .Site.IsServer }}
-      {{ template "_internal/google_analytics.html" . }}
-    {{ end }}
   </body>
 </html>
