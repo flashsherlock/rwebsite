@@ -5,7 +5,7 @@ title = "Fei"
 theme = "hugo-lithium"
 googleAnalytics = "G-3WJ71TQ2TX"
 disqusShortname = "gufei"
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
