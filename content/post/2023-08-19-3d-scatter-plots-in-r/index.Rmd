@@ -11,7 +11,7 @@ tags:
   - R
   - data
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: no
@@ -44,9 +44,9 @@ grid$value <- with(grid, f(x,y,z))
 threshold <- 0.01
 grid$roi <- ifelse(grid$value < -1*threshold,-1,ifelse(grid$value > threshold,1,0))
 # plot
-plot_ly(subset(grid,roi<=0),x=~x, y=~y, z=~z, split=~roi,type="scatter3d", mode="markers",
+plot_ly(subset(grid,roi<=1),x=~x, y=~y, z=~z, split=~roi,type="scatter3d", mode="markers",
                  color=~roi,size = I(30),symbol = I("square"),
-                 colors=colorRampPalette(c("black","white", "green"))(11)[c(3,7)], 
+                 colors=colorRampPalette(c("black","white", "green"))(11)[c(8,7,3)], 
                  hovertemplate = paste('%{x} %{y} %{z}<br>','%{marker.color:.2f}'))%>% hide_colorbar()
 
 ```
