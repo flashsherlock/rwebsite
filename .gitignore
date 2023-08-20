@@ -12,6 +12,7 @@ vendor
 index_cache
 public
 static/figures
-blogdown
+# fix postref https://github.com/rstudio/blogdown/issues/576
+/blogdown
 *.Rproj
 /public
