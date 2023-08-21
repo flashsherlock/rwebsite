@@ -30,10 +30,10 @@ $$(x^2+\frac{9}{4}y^2+z^2-1)^3-x^2z^3-\frac{9}{200}y^2z^3=0$$
 library(plotly)
 # function
 f <- function (x, y, z) {
-   return (-1 + x^2 + (9/4)*y^2 + z^2)^3 - x^2*z^3 - (9/200)*y^2*z^3
+   return ((-1 + x^2 + (9/4)*y^2 + z^2)^3 - x^2*z^3 - (9/200)*y^2*z^3)
 }
 # coordinates
-x <- seq(-1, 1, length.out = 20)
+x <- seq(-1.5, 1.5, length.out = 30)
 y <- x
 z <- x
 # create grid
@@ -41,13 +41,13 @@ grid <- expand.grid(x = x, y = y, z = z)
 # value
 grid$value <- with(grid, f(x,y,z))
 # mutate roi to -1,0 or 1 according to value
-threshold <- 0.01
+threshold <- 0.02
 grid$roi <- ifelse(grid$value < -1*threshold,-1,ifelse(grid$value > threshold,1,0))
 # plot
 plot_ly(subset(grid,roi<=1),x=~x, y=~y, z=~z, split=~roi,type="scatter3d", mode="markers",
                  color=~roi,size = I(30),symbol = I("square"),
-                 colors=colorRampPalette(c("black","white", "green"))(11)[c(8,7,3)], 
-                 hovertemplate = paste('%{x} %{y} %{z}<br>','%{marker.color:.2f}'))%>% hide_colorbar()
+                 colors=colorRampPalette(c("black","white", "red"))(101)[c(80,82,30)], 
+                 hovertemplate = paste('%{x} %{y} %{z}<br>'))%>% hide_colorbar()
 
 ```
 
