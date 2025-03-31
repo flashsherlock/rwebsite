@@ -1,0 +1,34 @@
+---
+title: 3d visualizations of MRI data
+author: Fei
+date: '2025-03-31'
+slug: 3d-visualizations-of-mri-data
+categories:
+  - Instruction
+tags:
+  - data
+  - fMRI
+  - plot
+weight: 1
+draft: yes
+output:
+  blogdown::html_page:
+    toc: yes
+    toc_depth: 1
+    number_sections: yes
+---
+
+# Introduction
+I found 3d visualization is really useful for understanding MRI results. Here is a brief guide which is mainly based on [this paper](https://f1000research.com/articles/4-466/v1).
+
+# Convert nii to VTK
+First of all, we should convert nii files to VTK format using [ITK-SNAP](https://www.itksnap.org/).
+
+# Render in 3d
+[Paraview](https://www.paraview.org/) is an open source visualization application which could render VTK files as surface in 3d.
+
+# Reference
+* [ITK-SNAP Documentation](https://www.itksnap.org/pmwiki/pmwiki.php?n=Documentation.SNAP3)
+* [Paraview tutorials](https://docs.paraview.org/en/latest/Tutorials/index.html)
+* [Paraview video tutorials ](https://www.bilibili.com/video/BV1mb4y167mJ)
+* [Animating a slice in ParaView](https://cfdengine.com/newsletter/174/)
