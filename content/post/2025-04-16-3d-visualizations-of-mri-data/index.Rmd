@@ -34,7 +34,7 @@ First of all, we should convert nii files to VTK format using [ITK-SNAP](https:/
 <!-- ![](images/itksnap.jpg) -->
 
 # Render in 3d
-[Paraview](https://www.paraview.org/) is an open source visualization application which could render VTK files as surface in 3d.
+[ParaView](https://www.paraview.org/) is an open source visualization application which could render VTK files as surface in 3d.
 
 1. Open VTK files, press Apply (Open as a group will generate time series).
 2. Show all in the pipeline browser.
@@ -45,8 +45,9 @@ First of all, we should convert nii files to VTK format using [ITK-SNAP](https:/
 <img src="images/paraview.jpg" style="width: 50%; display: block; margin:0 auto"/>
 <!-- ![](images/paraview.jpg) -->
 
-# Reference
+# References
 * [ITK-SNAP Documentation](https://www.itksnap.org/pmwiki/pmwiki.php?n=Documentation.SNAP3)
-* [Paraview tutorials](https://docs.paraview.org/en/latest/Tutorials/index.html)
-* [Paraview video tutorials ](https://www.bilibili.com/video/BV1mb4y167mJ)
+* [ParaView tutorials](https://docs.paraview.org/en/latest/Tutorials/index.html)
+* [ParaView video tutorials](https://www.bilibili.com/video/BV1mb4y167mJ)
 * [Animating a slice in ParaView](https://cfdengine.com/newsletter/174/)
+* [Link properties in ParaView](https://discourse.paraview.org/t/how-to-link-paraview-filter-details-between-views/7020/3)
