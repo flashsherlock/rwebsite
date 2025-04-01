@@ -24,8 +24,26 @@ I found 3d visualization is really useful for understanding MRI results. Here is
 # Convert nii to VTK
 First of all, we should convert nii files to VTK format using [ITK-SNAP](https://www.itksnap.org/).
 
+1. Open a main image (e.g. whole brain mask).
+2. Open a segmentation (e.g. ROIs).
+3. Export as surface mesh and select labels.
+4. Save as "VTK PolyData File". Separate files will be named as "prefix+value".
+5. A 3d view will be open in the bottom-left window after saving.
+
+<img src="images/itksnap.jpg" style="width: 85%; display: block; margin:0 auto"/>
+<!-- ![](images/itksnap.jpg) -->
+
 # Render in 3d
 [Paraview](https://www.paraview.org/) is an open source visualization application which could render VTK files as surface in 3d.
+
+1. Open VTK files, press Apply (Open as a group will generate time series).
+2. Show all in the pipeline browser.
+3. Select every file and add a `Group Datasets` filter.
+4. Change properties.
+5. Save state.
+
+<img src="images/paraview.jpg" style="width: 50%; display: block; margin:0 auto"/>
+<!-- ![](images/paraview.jpg) -->
 
 # Reference
 * [ITK-SNAP Documentation](https://www.itksnap.org/pmwiki/pmwiki.php?n=Documentation.SNAP3)

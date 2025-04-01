@@ -35,10 +35,28 @@ output:
 <div id="convert-nii-to-vtk" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Convert nii to VTK</h1>
 <p>First of all, we should convert nii files to VTK format using <a href="https://www.itksnap.org/">ITK-SNAP</a>.</p>
+<ol style="list-style-type: decimal">
+<li>Open a main image (e.g. whole brain mask).</li>
+<li>Open a segmentation (e.g. ROIs).</li>
+<li>Export as surface mesh and select labels.</li>
+<li>Save as “VTK PolyData File”. Separate files will be named as “prefix+value”.</li>
+<li>A 3d view will be open in the bottom-left window after saving.</li>
+</ol>
+<p><img src="images/itksnap.jpg" style="width: 85%; display: block; margin:0 auto"/>
+<!-- ![](images/itksnap.jpg) --></p>
 </div>
 <div id="render-in-3d" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Render in 3d</h1>
 <p><a href="https://www.paraview.org/">Paraview</a> is an open source visualization application which could render VTK files as surface in 3d.</p>
+<ol style="list-style-type: decimal">
+<li>Open VTK files, press Apply (Open as a group will generate time series).</li>
+<li>Show all in the pipeline browser.</li>
+<li>Select every file and add a <code>Group Datasets</code> filter.</li>
+<li>Change properties.</li>
+<li>Save state.</li>
+</ol>
+<p><img src="images/paraview.jpg" style="width: 50%; display: block; margin:0 auto"/>
+<!-- ![](images/paraview.jpg) --></p>
 </div>
 <div id="reference" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Reference</h1>
