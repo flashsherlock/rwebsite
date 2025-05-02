@@ -10,7 +10,7 @@ tags:
   - fMRI
   - plot
 weight: 1
-draft: yes
+draft: no
 output:
   blogdown::html_page:
     toc: yes
@@ -36,7 +36,7 @@ First of all, we should convert nii files to VTK format using [ITK-SNAP](https:/
 # Render in 3d
 [ParaView](https://www.paraview.org/) is an open source visualization application which could render VTK files as surface in 3d.
 
-1. Open VTK files, press Apply (Open as a group will generate time series).
+1. Open VTK files, and press Apply (Open as a group will generate time series).
 2. Show all in the pipeline browser.
 3. Select every file and add a `Group Datasets` filter.
 4. Change properties.
